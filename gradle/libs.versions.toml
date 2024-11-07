@@ -1,0 +1,59 @@
+[versions]
+detekt-version = "1.23.7"
+gradle-versions_filter-version = "0.1.16"
+kotlin_logging-version = "7.0.0"
+kotlin-version = "2.0.21"
+kotlinter-version = "4.4.1"
+kotlinx_coroutines-version = "1.9.0"
+kotlinx_serialization-version = "1.7.3"
+ktor-version = "3.0.1"
+logback-version = "1.5.12"
+prometheus-version = "1.13.6"
+serialization-version = "2.0.21"
+
+[libraries]
+kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "kotlin_logging-version" }
+
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx_coroutines-version" }
+kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx_serialization-version" }
+
+ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor-version" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor-version" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-version" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor-version" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor-version" }
+ktor-client-call-id = { group = "io.ktor", name = "ktor-client-call-id", version.ref = "ktor-version" }
+
+ktor-server-auth = { module = "io.ktor:ktor-server-auth-jvm", version.ref = "ktor-version" }
+ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt-jvm", version.ref = "ktor-version" }
+ktor-server-call-id = { module = "io.ktor:ktor-server-call-id-jvm", version.ref = "ktor-version" }
+ktor-server-call-logging = { module = "io.ktor:ktor-server-call-logging-jvm", version.ref = "ktor-version" }
+ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor-version" }
+ktor-server-compression = { module = "io.ktor:ktor-server-compression-jvm", version.ref = "ktor-version" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation-jvm", version.ref = "ktor-version" }
+ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor-version" }
+ktor-server-cors = { module = "io.ktor:ktor-server-cors-jvm", version.ref = "ktor-version" }
+ktor-server-host-common = { module = "io.ktor:ktor-server-host-common-jvm", version.ref = "ktor-version" }
+ktor-server-metrics-micrometer = { module = "io.ktor:ktor-server-metrics-micrometer-jvm", version.ref = "ktor-version" }
+ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages-jvm", version.ref = "ktor-version" }
+
+ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
+
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback-version" }
+
+micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "prometheus-version" }
+
+ktor-server-test-host = { module = "io.ktor:ktor-server-test-host-jvm", version.ref = "ktor-version" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-version" }
+
+[bundles]
+ktor-client = ["ktor-client-content-negotiation", "ktor-client-core", "ktor-client-logging", "ktor-client-cio", "ktor-client-call-id", "ktor-client-auth"]
+ktor-server = ["ktor-server-auth", "ktor-server-auth-jwt", "ktor-server-call-id", "ktor-server-call-logging", "ktor-server-content-negotiation", "ktor-server-core", "ktor-server-metrics-micrometer", "ktor-server-cio", "ktor-server-status-pages", "ktor-serialization", "kotlinx-serialization", "ktor-server-compression", "ktor-server-cors", "ktor-server-host-common"]
+
+[plugins]
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt-version" }
+kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter-version" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
+ktor = { id = "io.ktor.plugin", version.ref = "ktor-version" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization-version" }
+versions = { id = "se.ascp.gradle.gradle-versions-filter", version.ref = "gradle-versions_filter-version" }
