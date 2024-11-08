@@ -1,4 +1,5 @@
 [versions]
+cache4k-version = "0.13.0"
 detekt-version = "1.23.7"
 gradle-versions_filter-version = "0.1.16"
 kotlin_logging-version = "7.0.0"
@@ -12,6 +13,8 @@ prometheus-version = "1.13.6"
 serialization-version = "2.0.21"
 
 [libraries]
+cache4k = { group = "io.github.reactivecircus.cache4k", name="cache4k", version.ref = "cache4k-version" }
+
 kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "kotlin_logging-version" }
 
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx_coroutines-version" }

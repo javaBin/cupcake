@@ -1,6 +1,8 @@
 package no.java.cupcake
 
 import io.ktor.server.application.Application
+import no.java.cupcake.bring.BringService
+import no.java.cupcake.plugins.bringClient
 import no.java.cupcake.plugins.configureHTTP
 import no.java.cupcake.plugins.configureMonitoring
 import no.java.cupcake.plugins.configureRouting
@@ -15,8 +17,11 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    val bringClient = bringClient()
+    val bringService = BringService(bringClient)
+
     val client = sleepingPillClient()
-    val sleepingPillService = SleepingPillService(client)
+    val sleepingPillService = SleepingPillService(client, bringService)
 
     configureSerialization()
     configureMonitoring()

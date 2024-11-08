@@ -52,17 +52,19 @@ data class Speaker(
     val bio: String?,
     val postcode: String?,
     val location: String?,
+    val city: String?,
+    val county: String?,
 )
 
 @Serializable
 data class Session(
+    val id: String,
     val title: String,
     @SerialName("abstract") val description: String,
     val status: Status,
     val format: Format,
     val language: Language,
     val length: Int?,
-    val postcode: String,
     val speakers: List<Speaker>,
 )
 
@@ -109,10 +111,10 @@ data class SleepingPillTalk(
     val language: PrivateValue<String>,
     @SerialName("abstract") var abstractText: PrivateValue<String>?,
     val title: PrivateValue<String>,
-    // var pkomfeedbacks : FeedbacksData,
+    val pkomfeedbacks: PrivateValue<List<SleepingPillPkomFeedback>>?,
     val tagswithauthor: PrivateValue<List<SleepingPillTag>>?,
     val tags: PrivateValue<List<String>>?,
-    // var feedback : FeedbackSummary? = null // Optional field if present in some objects only.
+    val feedback: PrivateValue<SleepingPillFeedback>?,
 )
 
 @Serializable
@@ -122,28 +124,22 @@ data class SleepingPillTag(
 )
 
 @Serializable
-data class PrivateValue<T>(
-    val privateData: Boolean,
-    val value: T,
-)
-
-/*
-@Serializable
-data class FeedbacksData(
-    val privateData: Boolean,  // Similar structure as above for feedbacks.
-    val value: ArrayList<Feedback>
-)
-
-@Serializable
-data class Feedback(
+data class SleepingPillPkomFeedback(
     val author: String,
-    val created: String,
-    val id: String,
-    val talkid: String,
     val feedbacktype: String,
     val info: String
 )
 
 @Serializable
-data class TagsWithAuthorData(val privateData: Boolean, val value: ArrayList<Tag>)
- */
+data class SleepingPillFeedback(
+    val usefulSum: Int,
+    val count: Int,
+    val enjoySum: Int,
+    val commentList: List<String>,
+)
+
+@Serializable
+data class PrivateValue<T>(
+    val privateData: Boolean,
+    val value: T,
+)

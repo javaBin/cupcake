@@ -29,6 +29,7 @@ dependencies {
     implementation(libs.bundles.ktor.server)
     implementation(libs.bundles.ktor.client)
 
+    implementation(libs.cache4k)
     implementation(libs.kotlinx.coroutines.core)
 
     implementation(libs.logback.classic)
