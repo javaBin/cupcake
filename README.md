@@ -23,6 +23,8 @@ You will require env variables:
     SP_BASE_URL=https://sleepingpill.javazone.no
     SP_USER=<username>
     SP_PASSWORD=<password>
+    BRING_API_KEY=<key>
+    BRING_API_USER=<e-mail>
 
 ## Deploy
 
