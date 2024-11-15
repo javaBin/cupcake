@@ -1,5 +1,6 @@
 package no.java.cupcake.plugins
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -12,6 +13,8 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import no.java.cupcake.sleepingpill.SleepingPillService
+
+private val logger = KotlinLogging.logger {}
 
 fun Application.configureRouting(sleepingPillService: SleepingPillService) {
     install(StatusPages) {

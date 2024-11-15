@@ -25,6 +25,12 @@ You will require env variables:
     SP_PASSWORD=<password>
     BRING_API_KEY=<key>
     BRING_API_USER=<e-mail>
+    SLACK_CLIENT=<client ID>
+    SLACK_SECRET=<client secret>
+    SLACK_BOT_TOKEN=<app bot token>
+    SLACK_CHANNEL=<channel ID>
+    SLACK_CHANNEL_NAME=<channel name>
+    SLACK_CALLBACK=<callback URL>
 
 ## Deploy
 

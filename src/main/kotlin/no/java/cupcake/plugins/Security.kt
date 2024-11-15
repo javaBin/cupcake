@@ -1,70 +1,94 @@
 package no.java.cupcake.plugins
 
 import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
+import com.auth0.jwt.interfaces.Claim
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
-import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.OAuthAccessTokenResponse
 import io.ktor.server.auth.OAuthServerSettings
 import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.authentication
-import io.ktor.server.auth.jwt.JWTPrincipal
-import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.oauth
-import io.ktor.server.response.respondRedirect
+import io.ktor.server.auth.principal
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
+import io.ktor.server.response.respond
+import kotlinx.serialization.Serializable
+import no.java.cupcake.slack.SlackService
 
-fun Application.configureSecurity() {
-    authentication {
-        oauth("auth-oauth-google") {
-            urlProvider = { "http://localhost:8080/callback" }
-            providerLookup = {
-                OAuthServerSettings.OAuth2ServerSettings(
-                    name = "google",
-                    authorizeUrl = "https://accounts.google.com/o/oauth2/auth",
-                    accessTokenUrl = "https://accounts.google.com/o/oauth2/token",
-                    requestMethod = HttpMethod.Post,
-                    clientId = System.getenv("GOOGLE_CLIENT_ID"),
-                    clientSecret = System.getenv("GOOGLE_CLIENT_SECRET"),
-                    defaultScopes = listOf("https://www.googleapis.com/auth/userinfo.profile"),
-                )
-            }
+
+private const val slackAuth = "slack-oauth"
+
+@Serializable
+data class SlackUser(
+    val userId: String,
+    val email: String,
+    val name: String,
+    val avatar: String,
+    val member: Boolean
+)
+
+fun Application.configureSecurity(
+    provider: OAuthServerSettings.OAuth2ServerSettings,
+    callback: String,
+    slackService: SlackService,
+    channelName: String
+) {
+
+    install(Authentication) {
+        oauth(slackAuth) {
             client = HttpClient(CIO)
-        }
-    }
-    // Please read the jwt property from the config file if you are using EngineMain
-    val jwtAudience = "jwt-audience"
-    val jwtDomain = "https://jwt-provider-domain/"
-    val jwtRealm = "ktor sample app"
-    val jwtSecret = "secret"
-    authentication {
-        jwt {
-            realm = jwtRealm
-            verifier(
-                JWT
-                    .require(Algorithm.HMAC256(jwtSecret))
-                    .withAudience(jwtAudience)
-                    .withIssuer(jwtDomain)
-                    .build(),
-            )
-            validate { credential ->
-                if (credential.payload.audience.contains(jwtAudience)) JWTPrincipal(credential.payload) else null
+            providerLookup = { provider }
+            urlProvider = {
+                callback
             }
         }
     }
-    routing {
-        authenticate("auth-oauth-google") {
-            get("login") {
-                call.respondRedirect("/callback")
-            }
 
-            get("/callback") {
-                val principal: OAuthAccessTokenResponse.OAuth2? = call.authentication.principal()
-                // call.sessions.set(UserSession(principal?.accessToken.toString()))
-                call.respondRedirect("/hello")
+    fun Map<String, Claim>.str(key: String, missing: String) = this[key]?.asString() ?: missing
+
+    routing {
+        authenticate(slackAuth) {
+            get("/login") {
+                // Redirects for authentication
+            }
+            get("/slackCallback") {
+                when (val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()) {
+                    null -> call.respond(HttpStatusCode.Unauthorized, "Could not parse slack response")
+                    else -> {
+                        val idToken = principal.extraParameters["id_token"]
+
+                        idToken?.let {
+                            val claims: MutableMap<String, Claim> = JWT.decode(idToken).claims
+
+                            when (val userId = claims["https://slack.com/user_id"]?.asString()) {
+                                null -> call.respond(HttpStatusCode.Unauthorized, "No user found in slack response")
+                                else -> {
+
+                                    when (slackService.isMember(userId)) {
+                                        true -> call.respond(
+                                            SlackUser(
+                                                userId = userId,
+                                                email = claims.str("email", "Unknown E-Mail"),
+                                                name = claims.str("name", "Unknown Name"),
+                                                avatar = claims.str("picture", "Unknown Avatar"),
+                                                member = true
+                                            )
+                                        )
+
+                                        else -> call.respond(
+                                            HttpStatusCode.Unauthorized,
+                                            "User not in correct slack channel - please ask in #kodesmia for access to $channelName"
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

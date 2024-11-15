@@ -1,6 +1,7 @@
 package no.java.cupcake
 
 import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationEnvironment
 import no.java.cupcake.bring.BringService
 import no.java.cupcake.plugins.bringClient
 import no.java.cupcake.plugins.configureHTTP
@@ -8,7 +9,10 @@ import no.java.cupcake.plugins.configureMonitoring
 import no.java.cupcake.plugins.configureRouting
 import no.java.cupcake.plugins.configureSecurity
 import no.java.cupcake.plugins.configureSerialization
+import no.java.cupcake.plugins.slackBotClient
 import no.java.cupcake.plugins.sleepingPillClient
+import no.java.cupcake.slack.SlackService
+import no.java.cupcake.plugins.slackProvider
 import no.java.cupcake.sleepingpill.SleepingPillService
 
 fun main(args: Array<String>) {
@@ -16,16 +20,22 @@ fun main(args: Array<String>) {
         .main(args)
 }
 
-fun Application.module() {
-    val bringClient = bringClient()
-    val bringService = BringService(bringClient)
+fun ApplicationEnvironment.str(key: String) = this.config.property(key).getString()
 
-    val client = sleepingPillClient()
-    val sleepingPillService = SleepingPillService(client, bringService)
+fun Application.module() {
+    val bringService = BringService(bringClient())
+    val sleepingPillService = SleepingPillService(sleepingPillClient(), bringService)
+    val slackProvider = slackProvider(environment.str("slack.client"), environment.str("slack.secret"))
+    val slackService = SlackService(slackBotClient(), environment.str("slack.channel"))
 
     configureSerialization()
     configureMonitoring()
     configureHTTP()
-    configureSecurity()
+    configureSecurity(
+        provider = slackProvider,
+        callback = environment.str("slack.callback"),
+        slackService = slackService,
+        channelName = environment.str("slack.channel_name")
+    )
     configureRouting(sleepingPillService)
 }
