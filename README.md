@@ -31,6 +31,9 @@ You will require env variables:
     SLACK_CHANNEL=<channel ID>
     SLACK_CHANNEL_NAME=<channel name>
     SLACK_CALLBACK=<callback URL>
+    JWT_SECRET=<jwt secret>
+    JWT_ENABLED=true/false
+    JWT_REDIRECT=URL for redirect on successful login - optional - defaults to "/"
 
 ## Deploy
 
