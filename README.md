@@ -9,7 +9,7 @@ For frontend - see [frosting](https://github.com/javaBin/frosting)
 
 Always lots to do - but - before we can release this:
 
-* Require frontend to authenticate - currently [Security.kt](src/main/kotlin/no/java/cupcake/plugins/Security.kt) is just placeholder code.
+* Authentication/authorization - finish backend auth to provide JWT based on slack response (and configure a "no-auth-local-running" option)
 * Some tests would be nice :)
 
 ## Build
@@ -36,3 +36,58 @@ You will require env variables:
 
 docker build -t cupcake:latest .
 
+## Slack authorization
+
+This application requires a slack app that provides two functions:
+
+* OIDC login
+* A bot that can check channel membership
+
+This is currently provided via the [javaBinAccess](https://api.slack.com/apps/A0817M6EQF3/general) app.
+
+App manifest:
+
+```json
+{
+    "display_information": {
+        "name": "javaBinAccess",
+        "description": "Access bot for javaBin",
+        "background_color": "#2121cf"
+    },
+    "features": {
+        "bot_user": {
+            "display_name": "javaBinAccess",
+            "always_online": true
+        }
+    },
+    "oauth_config": {
+        "redirect_urls": [
+            <list of allowed callback URLs>
+        ],
+        "scopes": {
+            "user": [
+                "email",
+                "openid",
+                "profile"
+            ],
+            "bot": [
+                "channels:read",
+                "groups:read",
+                "users:read"
+            ]
+        }
+    },
+    "settings": {
+        "org_deploy_enabled": false,
+        "socket_mode_enabled": false,
+        "token_rotation_enabled": false
+    }
+}
+```
+
+To find the environment settings required:
+
+- Client ID and Client Secret from the slack app > Settings > Basic Information
+- Bot User OAuth Token token from the slack app > Features > OAuth & Permissions
+- Channel ID - right click channel - channel details - ID is at the end of the dialog
+- Channel Name - just the channel name with leading #
