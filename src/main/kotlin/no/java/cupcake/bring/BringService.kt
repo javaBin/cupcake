@@ -14,7 +14,7 @@ import kotlin.time.Duration.Companion.hours
 
 val logger = KotlinLogging.logger {}
 
-class BringService(private val client: HttpClient) {
+class BringService(private val client: HttpClient, private val postalCodeUrl: String) {
     private val cache = Cache.Builder<String, PostalCode>().expireAfterWrite(24.hours).build()
 
     init {
@@ -26,7 +26,7 @@ class BringService(private val client: HttpClient) {
 
         cache.invalidateAll()
 
-        val codes = client.get("https://api.bring.com/address/api/NO/postal-codes").body<PostalCodes>()
+        val codes = client.get(postalCodeUrl).body<PostalCodes>()
 
         codes.postalCodes.forEach { postalCode ->
             cache.put(postalCode.postalCode, postalCode)

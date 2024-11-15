@@ -4,7 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
-import io.ktor.server.http.content.staticResources
+import io.ktor.server.auth.authenticate
 import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.response.respond
@@ -16,34 +16,35 @@ import no.java.cupcake.sleepingpill.SleepingPillService
 
 private val logger = KotlinLogging.logger {}
 
-fun Application.configureRouting(sleepingPillService: SleepingPillService) {
+fun Application.configureRouting(sleepingPillService: SleepingPillService, securityOptional: Boolean) {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
         }
     }
+
     routing {
-        route("/api") {
-            route("/conferences") {
-                get {
-                    val conferences = sleepingPillService.conferences().sortedByDescending { it.name }
+        authenticate(jwtAuth, optional=securityOptional) {
+            route("/api") {
+                route("/conferences") {
+                    get {
+                        val conferences = sleepingPillService.conferences().sortedByDescending { it.name }
 
-                    call.respond(conferences)
-                }
+                        call.respond(conferences)
+                    }
 
-                route("/{id}") {
-                    get("/sessions") {
-                        val conferenceId = call.parameters["id"] ?: throw BadRequestException("Conference ID required")
+                    route("/{id}") {
+                        get("/sessions") {
+                            val conferenceId =
+                                call.parameters["id"] ?: throw BadRequestException("Conference ID required")
 
-                        val sessions = sleepingPillService.sessions(conferenceId)
+                            val sessions = sleepingPillService.sessions(conferenceId)
 
-                        call.respond(sessions)
+                            call.respond(sessions)
+                        }
                     }
                 }
             }
         }
-
-        // Static plugin. Try to access `/static/index.html`
-        staticResources("/static", "static")
     }
 }

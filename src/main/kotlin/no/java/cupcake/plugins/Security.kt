@@ -37,6 +37,15 @@ const val jwtAuth = "jwt-oauth"
 
 private val cookieLifetime = 8.hours.inWholeMilliseconds
 
+private fun Map<String, Claim>.str(key: String, missing: String) = this[key]?.asString() ?: missing
+
+private fun Map<String, Claim>.toSlackUser(userId: String, member: Boolean) = SlackUser(
+    userId = userId,
+    email = this.str("email", "Unknown E-Mail"),
+    name = this.str("name", "Unknown Name"),
+    avatar = this.str("picture", "Unknown Avatar"),
+    member = member
+)
 
 fun buildToken(env: ApplicationEnvironment, userInfo: SlackUser): String = JWT.create()
     .withAudience(env.str("jwt.audience"))
@@ -96,7 +105,7 @@ fun Application.configureSecurity(
         }
     }
 
-    fun Map<String, Claim>.str(key: String, missing: String) = this[key]?.asString() ?: missing
+
 
     routing {
         authenticate(slackAuth) {
@@ -118,13 +127,7 @@ fun Application.configureSecurity(
 
                                     when (slackService.isMember(userId)) {
                                         true -> {
-                                            val user = SlackUser(
-                                                userId = userId,
-                                                email = claims.str("email", "Unknown E-Mail"),
-                                                name = claims.str("name", "Unknown Name"),
-                                                avatar = claims.str("picture", "Unknown Avatar"),
-                                                member = true
-                                            )
+                                            val user = claims.toSlackUser(userId, true)
 
                                             val jwt = buildToken(environment, user)
 

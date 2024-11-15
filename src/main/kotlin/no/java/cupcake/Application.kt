@@ -21,12 +21,25 @@ fun main(args: Array<String>) {
 }
 
 fun ApplicationEnvironment.str(key: String) = this.config.property(key).getString()
+fun ApplicationEnvironment.bool(key: String) = this.config.property(key).getString() == "true"
 
 fun Application.module() {
-    val bringService = BringService(bringClient())
-    val sleepingPillService = SleepingPillService(sleepingPillClient(), bringService)
-    val slackProvider = slackProvider(environment.str("slack.client"), environment.str("slack.secret"))
-    val slackService = SlackService(slackBotClient(), environment.str("slack.channel"))
+    val bringService = BringService(client = bringClient(), postalCodeUrl = environment.str("bring.postalcodes_url"))
+
+    val sleepingPillService = SleepingPillService(client = sleepingPillClient(), bringService = bringService)
+
+    val slackProvider = slackProvider(
+        clientId = environment.str("slack.client"),
+        clientSecret = environment.str("slack.secret"),
+        authUrl = environment.str("slack.authorize_url"),
+        accessTokenUrl = environment.str("slack.accesstoken_url")
+    )
+
+    val slackService = SlackService(
+        botClient = slackBotClient(),
+        channel = environment.str("slack.channel"),
+        membersUrl = environment.str("slack.members_url")
+    )
 
     configureSerialization()
     configureMonitoring()
@@ -37,5 +50,8 @@ fun Application.module() {
         slackService = slackService,
         channelName = environment.str("slack.channel_name")
     )
-    configureRouting(sleepingPillService)
+    configureRouting(
+        sleepingPillService = sleepingPillService,
+        securityOptional = !environment.bool("jwt.enabled")
+    )
 }

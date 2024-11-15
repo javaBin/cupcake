@@ -7,9 +7,9 @@ import io.ktor.client.request.get
 
 private val logger = KotlinLogging.logger {}
 
-class SlackService(private val botClient: HttpClient, private val channel: String) {
+class SlackService(private val botClient: HttpClient, private val channel: String, private val membersUrl: String) {
     private suspend fun getChannelMembers() =
-        botClient.get("https://slack.com/api/conversations.members") {
+        botClient.get(membersUrl) {
             url {
                 parameters.append("channel", channel)
             }
