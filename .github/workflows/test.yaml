@@ -15,8 +15,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: ls the project
-        run: ls -lah
+      - name: Setup java 22
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '22'
+          cache: 'gradle'
+      - name: Build with Gradle
+        run: ./gradlew clean build   
       - name: Setup AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
