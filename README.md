@@ -9,8 +9,6 @@ For frontend - see [frosting](https://github.com/javaBin/frosting)
 
 Always lots to do - but - before we can release this:
 
-* Authentication/authorization - finish backend auth to provide JWT based on slack response (and configure a "
-  no-auth-local-running" option)
 * Some tests would be nice :)
 
 ## Build
