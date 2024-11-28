@@ -22,6 +22,8 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.RoutingContext
 import io.ktor.util.date.GMTDate
 import no.java.cupcake.slack.SlackService
 import no.java.cupcake.slack.SlackUser
@@ -32,8 +34,8 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
 
-private const val slackAuth = "slack-oauth"
-const val jwtAuth = "jwt-oauth"
+private const val SLACK_AUTH = "slack-oauth"
+const val JWT_AUTH = "jwt-oauth"
 
 private val cookieLifetime = 8.hours.inWholeMilliseconds
 
@@ -47,15 +49,11 @@ private fun Map<String, Claim>.toSlackUser(userId: String, member: Boolean) = Sl
     member = member
 )
 
-fun buildToken(env: ApplicationEnvironment, userInfo: SlackUser): String = JWT.create()
-    .withAudience(env.str("jwt.audience"))
-    .withIssuer(env.str("jwt.issuer"))
-    .withClaim("slack_id", userInfo.userId)
-    .withClaim("name", userInfo.name)
-    .withClaim("email", userInfo.email)
-    .withClaim("avatar", userInfo.avatar)
-    .withExpiresAt(Date(System.currentTimeMillis() + cookieLifetime))
-    .sign(Algorithm.HMAC256(env.str("jwt.secret")))
+fun buildToken(env: ApplicationEnvironment, userInfo: SlackUser): String =
+    JWT.create().withAudience(env.str("jwt.audience")).withIssuer(env.str("jwt.issuer"))
+        .withClaim("slack_id", userInfo.userId).withClaim("name", userInfo.name).withClaim("email", userInfo.email)
+        .withClaim("avatar", userInfo.avatar).withExpiresAt(Date(System.currentTimeMillis() + cookieLifetime))
+        .sign(Algorithm.HMAC256(env.str("jwt.secret")))
 
 private fun ZonedDateTime.cookieExpiry(seconds: Long) =
     GMTDate(this.plusSeconds(seconds).toEpochSecond().seconds.inWholeMilliseconds)
@@ -71,14 +69,12 @@ fun Application.configureSecurity(
 
     val redirect = environment.str("jwt.redirect")
 
-    fun jwtVerifier(): JWTVerifier = JWT
-        .require(Algorithm.HMAC256(environment.str("jwt.secret")))
-        .withAudience(environment.str("jwt.audience"))
-        .withIssuer(environment.str("jwt.issuer"))
-        .build()
+    fun jwtVerifier(): JWTVerifier =
+        JWT.require(Algorithm.HMAC256(environment.str("jwt.secret"))).withAudience(environment.str("jwt.audience"))
+            .withIssuer(environment.str("jwt.issuer")).build()
 
     install(Authentication) {
-        oauth(slackAuth) {
+        oauth(SLACK_AUTH) {
             client = HttpClient(CIO)
             providerLookup = { provider }
             urlProvider = {
@@ -86,7 +82,7 @@ fun Application.configureSecurity(
             }
         }
 
-        jwt(jwtAuth) {
+        jwt(JWT_AUTH) {
             realm = jwtRealm
 
             verifier(jwtVerifier())
@@ -105,47 +101,49 @@ fun Application.configureSecurity(
         }
     }
 
-
-
     routing {
-        authenticate(slackAuth) {
-            get("/login") {
-                // Redirects for authentication
-            }
-            get("/slackCallback") {
-                when (val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()) {
-                    null -> call.respond(HttpStatusCode.Unauthorized, "Could not parse slack response")
-                    else -> {
-                        val idToken = principal.extraParameters["id_token"]
+        configureAuthRouting(slackService = slackService, redirect = redirect, channelName = channelName)
+    }
+}
 
-                        idToken?.let {
-                            val claims: MutableMap<String, Claim> = JWT.decode(idToken).claims
+private fun Routing.configureAuthRouting(
+    slackService: SlackService,
+    redirect: String,
+    channelName: String
+) {
+    authenticate(SLACK_AUTH) {
+        get("/login") {
+            // Redirects for authentication
+        }
+        get("/slackCallback") {
+            when (val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()) {
+                null -> call.respond(HttpStatusCode.Unauthorized, "Could not parse slack response")
+                else -> {
+                    val idToken = principal.extraParameters["id_token"]
 
-                            when (val userId = claims["https://slack.com/user_id"]?.asString()) {
-                                null -> call.respond(HttpStatusCode.Unauthorized, "No user found in slack response")
-                                else -> {
+                    idToken?.let {
+                        val claims: MutableMap<String, Claim> = JWT.decode(idToken).claims
 
-                                    when (slackService.isMember(userId)) {
-                                        true -> {
-                                            val user = claims.toSlackUser(userId, true)
+                        when (val userId = claims["https://slack.com/user_id"]?.asString()) {
+                            null -> call.respond(HttpStatusCode.Unauthorized, "No user found in slack response")
+                            else -> {
+                                when (slackService.isMember(userId)) {
+                                    true -> {
+                                        val user = claims.toSlackUser(userId, true)
 
-                                            val jwt = buildToken(environment, user)
+                                        val jwt = buildToken(environment, user)
 
-                                            call.response.cookies.append(
-                                                name = "user_session",
-                                                value = jwt,
-                                                path = "/",
-                                                expires = ZonedDateTime.now().cookieExpiry(cookieLifetime),
-                                            )
-
-                                            call.respondRedirect(redirect)
-                                        }
-
-                                        else -> call.respond(
-                                            HttpStatusCode.Unauthorized,
-                                            "User not in correct slack channel - please ask in #kodesmia for access to $channelName"
+                                        call.response.cookies.append(
+                                            name = "user_session",
+                                            value = jwt,
+                                            path = "/",
+                                            expires = ZonedDateTime.now().cookieExpiry(cookieLifetime),
                                         )
+
+                                        call.respondRedirect(redirect)
                                     }
+
+                                    else -> missingChannelMembership(channelName)
                                 }
                             }
                         }
@@ -153,6 +151,12 @@ fun Application.configureSecurity(
                 }
             }
         }
-
     }
+}
+
+private suspend fun RoutingContext.missingChannelMembership(channelName: String) {
+    call.respond(
+        HttpStatusCode.Unauthorized,
+        "User not in correct slack channel - please ask in #kodesmia for access to $channelName"
+    )
 }

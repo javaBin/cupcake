@@ -24,7 +24,7 @@ fun Application.configureRouting(sleepingPillService: SleepingPillService, secur
     }
 
     routing {
-        authenticate(jwtAuth, optional=securityOptional) {
+        authenticate(JWT_AUTH, optional=securityOptional) {
             route("/api") {
                 route("/conferences") {
                     get {
