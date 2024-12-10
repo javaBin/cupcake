@@ -2,15 +2,15 @@
 cache4k-version = "0.13.0"
 detekt-version = "1.23.7"
 gradle-versions_filter-version = "0.1.16"
-kotlin_logging-version = "7.0.0"
+kotlin_logging-version = "7.0.3"
 kotlin-version = "2.1.0"
 kotlinter-version = "4.5.0"
 kotlinx_coroutines-version = "1.9.0"
 kotlinx_serialization-version = "1.7.3"
-ktor-version = "3.0.1"
+ktor-version = "3.0.2"
 logback-version = "1.5.12"
-prometheus-version = "1.14.1"
-serialization-version = "2.0.21"
+prometheus-version = "1.14.2"
+serialization-version = "2.1.0"
 
 [libraries]
 cache4k = { group = "io.github.reactivecircus.cache4k", name="cache4k", version.ref = "cache4k-version" }
