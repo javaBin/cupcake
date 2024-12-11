@@ -8,17 +8,24 @@ import io.ktor.client.request.get
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.Timer
 import kotlin.concurrent.timerTask
 import kotlin.time.Duration.Companion.hours
 
 val logger = KotlinLogging.logger {}
 
-class BringService(private val client: HttpClient, private val postalCodeUrl: String) {
+class BringService(private val client: HttpClient, private val postalCodeUrl: String, private val scheduler: Boolean = true) {
     private val cache = Cache.Builder<String, PostalCode>().expireAfterWrite(24.hours).build()
 
     init {
-        scheduleRefresh()
+        if (scheduler) {
+            scheduleRefresh()
+        } else {
+            runBlocking {
+                refresh()
+            }
+        }
     }
 
     private suspend fun refresh() {

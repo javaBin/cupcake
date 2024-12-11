@@ -1,0 +1,28 @@
+{
+  "navigation": {
+    "self": "https://api.bring.com/address/api/no/postal-codes?city=son&page=1",
+    "total_hits": 2
+  },
+  "postal_codes": [
+    {
+      "city": "Son",
+      "county": "Viken",
+      "latitude": "59.5237",
+      "longitude": "10.6862",
+      "municipality": "Vestby",
+      "municipalityId": "3019",
+      "po_box": false,
+      "postal_code": "1555"
+    },
+    {
+      "city": "Son",
+      "county": "Viken",
+      "latitude": "59.5237",
+      "longitude": "10.6862",
+      "municipality": "Vestby",
+      "municipalityId": "3019",
+      "po_box": true,
+      "postal_code": "1556"
+    }
+  ]
+}

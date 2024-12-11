@@ -10,11 +10,13 @@ private val logger = KotlinLogging.logger {}
 class SlackService(private val botClient: HttpClient, private val channel: String, private val membersUrl: String) {
     private suspend fun getChannelMembers() =
         botClient.get(membersUrl) {
+            logger.info { "Getting channel members for channel $channel" }
+
             url {
                 parameters.append("channel", channel)
             }
         }.body<SlackMembers>()
 
-    suspend fun isMember(id: String) = getChannelMembers().members?.contains(id) ?: false
+    suspend fun isMember(id: String) = getChannelMembers().members?.contains(id) == true
 }
 

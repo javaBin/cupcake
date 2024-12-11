@@ -1,0 +1,361 @@
+{
+  "sessions": [
+    {
+      "postedBy": "test@gmail.com",
+      "lastUpdated": "2024-10-26T10:43:43.959543",
+      "conferenceId": "ad82e461-9444-40a4-a9d5-cc4885f9107a",
+      "speakers": [
+        {
+          "name": "Test Testerson",
+          "id": "ed8ed012-3fad-4bfd-877a-76e96665a74f",
+          "data": {
+            "twitter": {
+              "privateData": false,
+              "value": ""
+            },
+            "bio": {
+              "privateData": false,
+              "value": "Hello I am me"
+            },
+            "zip-code": {
+              "privateData": true,
+              "value": "1555"
+            },
+            "residence": {
+              "privateData": true,
+              "value": "Norway"
+            }
+          },
+          "email": "test@gmail.com"
+        }
+      ],
+      "sessionUpdates": {
+        "hasUnpublishedChanges": false,
+        "speakerUpdates": [],
+        "oldValues": []
+      },
+      "talkUpdates": [
+        {
+          "updatedBy": "SUBMITIT",
+          "updatedAt": "2024-01-21T19:16:49.434135",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-01-29T10:34:01.543520",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-01-29T16:05:51.622293",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-01-30T14:11:53.525624",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-01-30T18:46:26.141215",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-02-06T17:27:40.444685",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-02-06T17:28:08.986779",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-02-06T18:40:30.500296",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-02-13T18:12:49.520552",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-11T15:39:02.793036",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-11T15:40:25.909553",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-11T15:49:46.859168",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-11T15:50:23.522605",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-11T15:50:23.583861",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-11T15:50:50.074284",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "SUBMITIT",
+          "updatedAt": "2024-06-11T15:52:23.368051",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-15T10:18:18.063568",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-15T10:19:19.576568",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-15T10:19:19.638104",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-16T10:34:18.935744",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-16T10:34:38.013737",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-16T10:36:04.746260",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-16T10:37:42.304628",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-16T11:11:23.511607",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-16T11:12:00.754727",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-16T11:23:54.398073",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-16T11:23:54.456747",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-16T19:29:38.401174",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-17T20:35:49.062494",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-18T18:42:59.607008",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-06-18T18:47:09.583816",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-09-15T15:37:37.454208",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        },
+        {
+          "updatedBy": "CAKE",
+          "updatedAt": "2024-10-26T10:43:43.966321",
+          "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
+        }
+      ],
+      "sessionId": "57f8dbb5-af4b-453f-b0c2-14067aae21b8",
+      "id": "57f8dbb5-af4b-453f-b0c2-14067aae21b8",
+      "data": {
+        "participation": {
+          "privateData": true,
+          "value": "Yes"
+        },
+        "intendedAudience": {
+          "privateData": false,
+          "value": "No-one"
+        },
+        "outline": {
+          "privateData": true,
+          "value": "My secret outline"
+        },
+        "suggestedKeywords": {
+          "privateData": true,
+          "value": ""
+        },
+        "length": {
+          "privateData": false,
+          "value": "60"
+        },
+        "format": {
+          "privateData": false,
+          "value": "presentation"
+        },
+        "infoToProgramCommittee": {
+          "privateData": true,
+          "value": "Test only as usual"
+        },
+        "equipment": {
+          "privateData": true,
+          "value": "nope"
+        },
+        "language": {
+          "privateData": false,
+          "value": "no"
+        },
+        "abstract": {
+          "privateData": false,
+          "value": "My test description"
+        },
+        "title": {
+          "privateData": false,
+          "value": "Test talk 2024"
+        },
+        "pkomfeedbacks": {
+          "privateData": true,
+          "value": [
+            {
+              "author": "Test PCOM 1",
+              "created": "20240129093401",
+              "id": "156a4f33-c8a9-4877-9245-6e192445c6b3",
+              "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8",
+              "feedbacktype": "TALK_RATING",
+              "info": "++"
+            },
+            {
+              "author": "Test PCOM 2",
+              "created": "20240129150551",
+              "id": "1a684e42-c7ff-44e1-bf1d-6cecf135c921",
+              "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8",
+              "feedbacktype": "TALK_RATING",
+              "info": "++"
+            },
+            {
+              "author": "Test PCOM 3",
+              "created": "20240130131153",
+              "id": "75839324-e6af-40ea-ba5d-120d48b1bac8",
+              "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8",
+              "feedbacktype": "COMMENT",
+              "info": "noe tynt"
+            },
+            {
+              "author": "Test PCOM 4",
+              "created": "20240130174626",
+              "id": "c4348626-6612-416a-bc8b-cce30e922e77",
+              "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8",
+              "feedbacktype": "TALK_RATING",
+              "info": "++"
+            },
+            {
+              "author": "Test PCOM 5",
+              "created": "20240213171249",
+              "id": "d8fa2fc3-35af-43fe-bfbc-7c45a3f42e9b",
+              "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8",
+              "feedbacktype": "TALK_RATING",
+              "info": "++"
+            },
+            {
+              "author": "SpeakerFromSystem",
+              "created": "20240611135023",
+              "id": "97864cef-76ba-4042-a4f7-f5afa970c11c",
+              "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8",
+              "feedbacktype": "CONTACT",
+              "info": "12345678"
+            },
+            {
+              "author": "SpeakerFromSystem",
+              "created": "20240615081919",
+              "id": "77bc5008-1c65-4e0c-b202-428089cc4715",
+              "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8",
+              "feedbacktype": "CONTACT",
+              "info": "87654321"
+            },
+            {
+              "author": "SpeakerFromSystem",
+              "created": "20240616092354",
+              "id": "5d927d2f-fa5f-4a6a-bcc5-a994f38958a8",
+              "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8",
+              "feedbacktype": "CONTACT",
+              "info": "12121212"
+            },
+            {
+              "author": "Test PCOM 6",
+              "created": "20241026084343",
+              "id": "0535ab40-d443-4445-86a0-29b944396fad",
+              "talkid": "57f8dbb5-af4b-453f-b0c2-14067aae21b8",
+              "feedbacktype": "TALK_RATING",
+              "info": "++"
+            }
+          ]
+        },
+        "tagswithauthor": {
+          "privateData": true,
+          "value": [
+            {
+              "author": "Test PCOM 7",
+              "tag": "nei"
+            },
+            {
+              "author": "Test PCOM 7",
+              "tag": "rejected"
+            }
+          ]
+        },
+        "tags": {
+          "privateData": true,
+          "value": []
+        },
+        "feedback": {
+          "privateData": true,
+          "value": {
+            "commentList": [
+              "great guy, touching and entertaining",
+              "moro"
+            ],
+            "usefulSum": 90,
+            "count": 20,
+            "enjoySum": 100
+          }
+        }
+      },
+      "status": "SUBMITTED"
+    }
+  ]
+}
