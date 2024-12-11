@@ -2,6 +2,7 @@
 cache4k-version = "0.13.0"
 detekt-version = "1.23.7"
 gradle-versions_filter-version = "0.1.16"
+kotest_version = "6.0.0.M1"
 kotlin_logging-version = "7.0.3"
 kotlin-version = "2.1.0"
 kotlinter-version = "4.5.0"
@@ -48,10 +49,14 @@ micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-p
 
 ktor-server-test-host = { module = "io.ktor:ktor-server-test-host-jvm", version.ref = "ktor-version" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-version" }
+kotest = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest-version" }
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest-version" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor-version" }
 
 [bundles]
 ktor-client = ["ktor-client-content-negotiation", "ktor-client-core", "ktor-client-logging", "ktor-client-cio", "ktor-client-call-id", "ktor-client-auth"]
 ktor-server = ["ktor-server-auth", "ktor-server-auth-jwt", "ktor-server-call-id", "ktor-server-call-logging", "ktor-server-content-negotiation", "ktor-server-core", "ktor-server-metrics-micrometer", "ktor-server-cio", "ktor-server-status-pages", "ktor-serialization", "kotlinx-serialization", "ktor-server-compression", "ktor-server-cors", "ktor-server-host-common"]
+test = ["ktor-server-test-host", "kotlin-test-junit", "kotest", "kotest-assertions", "ktor-client-mock"]
 
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt-version" }

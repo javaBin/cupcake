@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
     alias(libs.plugins.serialization)
+
+    jacoco
 }
 
 group = "no.java.cupcake"
@@ -41,8 +43,7 @@ dependencies {
     implementation(libs.kotlin.logging)
     implementation(libs.micrometer.registry.prometheus)
 
-    testImplementation(libs.ktor.server.test.host)
-    testImplementation(libs.kotlin.test.junit)
+    testImplementation(libs.bundles.test)
 }
 
 tasks.shadowJar {
@@ -51,4 +52,17 @@ tasks.shadowJar {
 
 tasks.jar {
     enabled = false
+}
+
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}
+
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
 }
