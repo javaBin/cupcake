@@ -1,4 +1,4 @@
-package no.java.cupcake.plugins
+package no.java.cupcake.clients
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -11,9 +11,7 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import kotlinx.serialization.json.Json
 
-fun Application.slackBotClient(): HttpClient {
-    val token = environment.config.property("slack.bot").getString()
-
+fun Application.slackBotClient(slackBotToken: String): HttpClient {
     return HttpClient(CIO) {
         install(Logging)
 
@@ -31,7 +29,7 @@ fun Application.slackBotClient(): HttpClient {
         install(Auth) {
             bearer {
                 loadTokens {
-                    BearerTokens(token, null)
+                    BearerTokens(slackBotToken, null)
                 }
             }
         }

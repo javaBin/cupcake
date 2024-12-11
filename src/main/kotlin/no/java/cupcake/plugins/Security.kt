@@ -8,7 +8,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
-import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.OAuthAccessTokenResponse
@@ -18,16 +17,16 @@ import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.oauth
 import io.ktor.server.auth.principal
-import io.ktor.server.routing.get
-import io.ktor.server.routing.routing
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.RoutingContext
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 import io.ktor.util.date.GMTDate
+import no.java.cupcake.config.JwtConfig
 import no.java.cupcake.slack.SlackService
 import no.java.cupcake.slack.SlackUser
-import no.java.cupcake.str
 import java.time.ZonedDateTime
 import java.util.Date
 import kotlin.time.Duration.Companion.hours
@@ -49,11 +48,16 @@ private fun Map<String, Claim>.toSlackUser(userId: String, member: Boolean) = Sl
     member = member
 )
 
-fun buildToken(env: ApplicationEnvironment, userInfo: SlackUser): String =
-    JWT.create().withAudience(env.str("jwt.audience")).withIssuer(env.str("jwt.issuer"))
+fun buildToken(
+    jwtAudience: String,
+    jwtSecret: String,
+    jwtIssuer: String,
+    userInfo: SlackUser
+): String =
+    JWT.create().withAudience(jwtAudience).withIssuer(jwtIssuer)
         .withClaim("slack_id", userInfo.userId).withClaim("name", userInfo.name).withClaim("email", userInfo.email)
         .withClaim("avatar", userInfo.avatar).withExpiresAt(Date(System.currentTimeMillis() + cookieLifetime))
-        .sign(Algorithm.HMAC256(env.str("jwt.secret")))
+        .sign(Algorithm.HMAC256(jwtSecret))
 
 private fun ZonedDateTime.cookieExpiry(seconds: Long) =
     GMTDate(this.plusSeconds(seconds).toEpochSecond().seconds.inWholeMilliseconds)
@@ -62,16 +66,12 @@ fun Application.configureSecurity(
     provider: OAuthServerSettings.OAuth2ServerSettings,
     callback: String,
     slackService: SlackService,
-    channelName: String
+    channelName: String,
+    jwtConfig: JwtConfig,
 ) {
-    val jwtRealm = environment.str("jwt.realm")
-    val jwtAudience = environment.str("jwt.audience")
-
-    val redirect = environment.str("jwt.redirect")
-
     fun jwtVerifier(): JWTVerifier =
-        JWT.require(Algorithm.HMAC256(environment.str("jwt.secret"))).withAudience(environment.str("jwt.audience"))
-            .withIssuer(environment.str("jwt.issuer")).build()
+        JWT.require(Algorithm.HMAC256(jwtConfig.secret)).withAudience(jwtConfig.audience).withIssuer(jwtConfig.issuer)
+            .build()
 
     install(Authentication) {
         oauth(SLACK_AUTH) {
@@ -83,12 +83,12 @@ fun Application.configureSecurity(
         }
 
         jwt(JWT_AUTH) {
-            realm = jwtRealm
+            realm = jwtConfig.realm
 
             verifier(jwtVerifier())
 
             validate { credential ->
-                if (credential.payload.audience.contains(jwtAudience)) {
+                if (credential.payload.audience.contains(jwtConfig.audience)) {
                     JWTPrincipal(credential.payload)
                 } else {
                     null
@@ -102,14 +102,18 @@ fun Application.configureSecurity(
     }
 
     routing {
-        configureAuthRouting(slackService = slackService, redirect = redirect, channelName = channelName)
+        configureAuthRouting(
+            slackService = slackService, redirect = jwtConfig.redirect, channelName = channelName,
+            jwtConfig = jwtConfig,
+        )
     }
 }
 
 private fun Routing.configureAuthRouting(
     slackService: SlackService,
     redirect: String,
-    channelName: String
+    channelName: String,
+    jwtConfig: JwtConfig,
 ) {
     authenticate(SLACK_AUTH) {
         get("/login") {
@@ -131,7 +135,12 @@ private fun Routing.configureAuthRouting(
                                     true -> {
                                         val user = claims.toSlackUser(userId, true)
 
-                                        val jwt = buildToken(environment, user)
+                                        val jwt = buildToken(
+                                            jwtAudience = jwtConfig.audience,
+                                            jwtSecret = jwtConfig.secret,
+                                            jwtIssuer = jwtConfig.issuer,
+                                            userInfo = user,
+                                        )
 
                                         call.response.cookies.append(
                                             name = "user_session",

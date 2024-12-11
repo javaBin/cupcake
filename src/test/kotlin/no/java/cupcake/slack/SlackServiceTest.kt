@@ -2,14 +2,7 @@ package no.java.cupcake.slack
 
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.respond
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
-import io.ktor.utils.io.ByteReadChannel
-import no.java.cupcake.buildClient
-import no.java.cupcake.loadFixture
+import no.java.cupcake.buildSlackService
 
 class SlackServiceTest : FunSpec({
     test("Channel member is in channel") {
@@ -29,14 +22,8 @@ class SlackServiceTest : FunSpec({
     }
 })
 
-private fun buildService(): SlackService = SlackService(
-    botClient = buildClient(MockEngine { request ->
-        respond(
-            content = ByteReadChannel(loadFixture("/slack_members.json")),
-            status = HttpStatusCode.OK,
-            headers = headersOf(HttpHeaders.ContentType, "application/json")
-        )
-    }),
+private fun buildService() = buildSlackService(
+    fixture = "/slack_members.json",
     channel = "TestChannel",
     membersUrl = "/test"
 )

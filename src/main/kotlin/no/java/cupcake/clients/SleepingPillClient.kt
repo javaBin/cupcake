@@ -1,4 +1,4 @@
-package no.java.cupcake.plugins
+package no.java.cupcake.clients
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -11,13 +11,9 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import kotlinx.serialization.json.Json
+import no.java.cupcake.config.SleepingPillConfig
 
-fun Application.sleepingPillClient(): HttpClient {
-    val username = environment.config.property("sleepingpill.username").getString()
-    val password = environment.config.property("sleepingpill.password").getString()
-
-    val rootUrl = environment.config.property("sleepingpill.base").getString()
-
+fun Application.sleepingPillClient(config: SleepingPillConfig): HttpClient {
     return HttpClient(CIO) {
         install(Logging)
 
@@ -37,15 +33,15 @@ fun Application.sleepingPillClient(): HttpClient {
                 sendWithoutRequest { true }
                 credentials {
                     BasicAuthCredentials(
-                        username = username,
-                        password = password,
+                        username = config.username,
+                        password = config.password,
                     )
                 }
             }
         }
 
         defaultRequest {
-            url(rootUrl)
+            url(config.rootUrl)
         }
     }
 }

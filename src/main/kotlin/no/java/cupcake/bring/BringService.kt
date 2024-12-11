@@ -15,7 +15,11 @@ import kotlin.time.Duration.Companion.hours
 
 val logger = KotlinLogging.logger {}
 
-class BringService(private val client: HttpClient, private val postalCodeUrl: String, private val scheduler: Boolean = true) {
+class BringService(
+    private val client: HttpClient,
+    private val postalCodeUrl: String,
+    scheduler: Boolean = true
+) {
     private val cache = Cache.Builder<String, PostalCode>().expireAfterWrite(24.hours).build()
 
     init {
@@ -46,8 +50,7 @@ class BringService(private val client: HttpClient, private val postalCodeUrl: St
         return cache.get(id)
     }
 
-    private fun scheduleRefresh()
-    {
+    private fun scheduleRefresh() {
         logger.info { "Scheduling postal code cache refresh" }
 
         Timer().scheduleAtFixedRate(

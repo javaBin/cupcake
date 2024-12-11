@@ -10,6 +10,7 @@ import io.ktor.http.headersOf
 import io.ktor.utils.io.ByteReadChannel
 import no.java.cupcake.bring.BringService
 import no.java.cupcake.buildClient
+import no.java.cupcake.buildSleepingPillService
 import no.java.cupcake.loadFixture
 import no.java.cupcake.randomString
 
@@ -64,23 +65,4 @@ class SleepingPillServiceTest : FunSpec({
     }
 })
 
-private fun buildService(fixture: String): SleepingPillService = SleepingPillService(
-    client = buildClient(MockEngine { request ->
-        respond(
-            content = ByteReadChannel(loadFixture(fixture)),
-            status = HttpStatusCode.OK,
-            headers = headersOf(HttpHeaders.ContentType, "application/json")
-        )
-    }),
-    bringService = BringService(
-        client = buildClient(MockEngine { request ->
-            respond(
-                content = ByteReadChannel(loadFixture("/postal_codes.json")),
-                status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, "application/json")
-            )
-        }),
-        postalCodeUrl = "/test",
-        scheduler = false
-    )
-)
+private fun buildService(fixture: String) = buildSleepingPillService(fixture)

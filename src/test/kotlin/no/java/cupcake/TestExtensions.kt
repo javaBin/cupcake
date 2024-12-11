@@ -2,13 +2,21 @@ package no.java.cupcake
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestData
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.testing.ApplicationTestBuilder
+import io.ktor.utils.io.ByteReadChannel
 import kotlinx.serialization.json.Json
+import no.java.cupcake.bring.BringService
 import no.java.cupcake.plugins.configureSerialization
+import no.java.cupcake.slack.SlackService
+import no.java.cupcake.sleepingpill.SleepingPillService
 import java.util.UUID
 
 
@@ -46,3 +54,42 @@ fun HttpRequestData.urlString() = url.toString()
 
 fun loadFixture(path: String): String =
     object {}.javaClass.getResource(path)!!.readText()
+
+fun buildMockEngine(fixture: String, block: (suspend (request: HttpRequestData) -> Unit)? = null): MockEngine {
+    return MockEngine { request ->
+        block?.invoke(request)
+
+        respond(
+            content = ByteReadChannel(loadFixture(fixture)),
+            status = HttpStatusCode.OK,
+            headers = headersOf(HttpHeaders.ContentType, "application/json")
+        )
+    }
+}
+
+fun buildSlackService(
+    fixture: String, channel: String, membersUrl: String,
+    block: (suspend (request: HttpRequestData) -> Unit)? = null
+): SlackService = SlackService(
+    botClient = buildClient(buildMockEngine(fixture, block)),
+    channel = channel,
+    membersUrl = membersUrl
+)
+
+fun buildSleepingPillService(
+    fixture: String,
+    block: (suspend (request: HttpRequestData) -> Unit)? = null
+): SleepingPillService = SleepingPillService(
+    client = buildClient(buildMockEngine(fixture, block)),
+    bringService = buildBringService(fixture = "/postal_codes.json", postalCodeUrl = "/test")
+)
+
+fun buildBringService(
+    fixture: String,
+    postalCodeUrl: String,
+    block: (suspend (request: HttpRequestData) -> Unit)? = null
+): BringService = BringService(
+    client = buildClient(buildMockEngine(fixture, block)),
+    postalCodeUrl = postalCodeUrl,
+    scheduler = false
+)
