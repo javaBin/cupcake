@@ -127,7 +127,7 @@ data class SleepingPillTag(
 data class SleepingPillPkomFeedback(
     val author: String,
     val feedbacktype: String,
-    val info: String
+    val info: String,
 )
 
 @Serializable

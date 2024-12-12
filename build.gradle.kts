@@ -1,8 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
-    // https://github.com/jeremymailen/kotlinter-gradle/issues/414
-    // alias(libs.plugins.kotlinter)
+    alias(libs.plugins.kotlinter)
     alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
     alias(libs.plugins.serialization)

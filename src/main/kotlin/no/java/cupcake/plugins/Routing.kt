@@ -16,7 +16,10 @@ import no.java.cupcake.sleepingpill.SleepingPillService
 
 private val logger = KotlinLogging.logger {}
 
-fun Application.configureRouting(sleepingPillService: SleepingPillService, securityOptional: Boolean) {
+fun Application.configureRouting(
+    sleepingPillService: SleepingPillService,
+    securityOptional: Boolean,
+) {
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
@@ -24,7 +27,7 @@ fun Application.configureRouting(sleepingPillService: SleepingPillService, secur
     }
 
     routing {
-        authenticate(JWT_AUTH, optional=securityOptional) {
+        authenticate(JWT_AUTH, optional = securityOptional) {
             route("/api") {
                 route("/conferences") {
                     get {

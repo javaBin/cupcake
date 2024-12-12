@@ -13,8 +13,8 @@ import io.ktor.server.application.Application
 import kotlinx.serialization.json.Json
 import no.java.cupcake.config.SleepingPillConfig
 
-fun Application.sleepingPillClient(config: SleepingPillConfig): HttpClient {
-    return HttpClient(CIO) {
+fun Application.sleepingPillClient(config: SleepingPillConfig): HttpClient =
+    HttpClient(CIO) {
         install(Logging)
 
         install(ContentNegotiation) {
@@ -44,4 +44,3 @@ fun Application.sleepingPillClient(config: SleepingPillConfig): HttpClient {
             url(config.rootUrl)
         }
     }
-}

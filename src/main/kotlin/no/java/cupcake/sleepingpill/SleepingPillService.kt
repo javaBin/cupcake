@@ -11,7 +11,7 @@ val rejectSlugs = listOf("javazone_2020", "javazone_2007")
 
 class SleepingPillService(
     private val client: HttpClient,
-    private val bringService: BringService
+    private val bringService: BringService,
 ) {
     suspend fun conferences() =
         client
@@ -51,7 +51,7 @@ class SleepingPillService(
                             postcode = speaker.data.zipCode?.value,
                             location = speaker.data.residence?.value,
                             city = code?.city,
-                            county = code?.county
+                            county = code?.county,
                         )
                     },
             )

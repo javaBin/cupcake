@@ -11,8 +11,8 @@ import io.ktor.server.application.Application
 import kotlinx.serialization.json.Json
 import no.java.cupcake.config.BringConfig
 
-fun Application.bringClient(bringConfig: BringConfig): HttpClient {
-    return HttpClient(CIO) {
+fun Application.bringClient(bringConfig: BringConfig): HttpClient =
+    HttpClient(CIO) {
         install(Logging)
 
         install(ContentNegotiation) {
@@ -31,4 +31,3 @@ fun Application.bringClient(bringConfig: BringConfig): HttpClient {
             header("X-Mybring-API-Key", bringConfig.apiKey)
         }
     }
-}

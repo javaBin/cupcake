@@ -11,8 +11,8 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import kotlinx.serialization.json.Json
 
-fun Application.slackBotClient(slackBotToken: String): HttpClient {
-    return HttpClient(CIO) {
+fun Application.slackBotClient(slackBotToken: String): HttpClient =
+    HttpClient(CIO) {
         install(Logging)
 
         install(ContentNegotiation) {
@@ -34,4 +34,3 @@ fun Application.slackBotClient(slackBotToken: String): HttpClient {
             }
         }
     }
-}

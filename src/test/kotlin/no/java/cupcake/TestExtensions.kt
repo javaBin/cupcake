@@ -19,11 +19,10 @@ import no.java.cupcake.slack.SlackService
 import no.java.cupcake.sleepingpill.SleepingPillService
 import java.util.UUID
 
-
 fun randomString() = UUID.randomUUID().toString()
 
-fun buildClient(engine: MockEngine): HttpClient {
-    return HttpClient(engine) {
+fun buildClient(engine: MockEngine): HttpClient =
+    HttpClient(engine) {
         install(ContentNegotiation) {
             json(
                 Json {
@@ -31,17 +30,17 @@ fun buildClient(engine: MockEngine): HttpClient {
                     ignoreUnknownKeys = true
                     isLenient = true
                     explicitNulls = false
-                }
+                },
             )
         }
     }
-}
 
-fun ApplicationTestBuilder.buildTestClient() = createClient {
-    this.install(ContentNegotiation) {
-        json()
+fun ApplicationTestBuilder.buildTestClient() =
+    createClient {
+        this.install(ContentNegotiation) {
+            json()
+        }
     }
-}
 
 fun ApplicationTestBuilder.serializedTestApplication(block: Application.() -> Unit) {
     application {
@@ -52,44 +51,50 @@ fun ApplicationTestBuilder.serializedTestApplication(block: Application.() -> Un
 
 fun HttpRequestData.urlString() = url.toString()
 
-fun loadFixture(path: String): String =
-    object {}.javaClass.getResource(path)!!.readText()
+fun loadFixture(path: String): String = object {}.javaClass.getResource(path)!!.readText()
 
-fun buildMockEngine(fixture: String, block: (suspend (request: HttpRequestData) -> Unit)? = null): MockEngine {
-    return MockEngine { request ->
+fun buildMockEngine(
+    fixture: String,
+    block: (suspend (request: HttpRequestData) -> Unit)? = null,
+): MockEngine =
+    MockEngine { request ->
         block?.invoke(request)
 
         respond(
             content = ByteReadChannel(loadFixture(fixture)),
             status = HttpStatusCode.OK,
-            headers = headersOf(HttpHeaders.ContentType, "application/json")
+            headers = headersOf(HttpHeaders.ContentType, "application/json"),
         )
     }
-}
 
 fun buildSlackService(
-    fixture: String, channel: String, membersUrl: String,
-    block: (suspend (request: HttpRequestData) -> Unit)? = null
-): SlackService = SlackService(
-    botClient = buildClient(buildMockEngine(fixture, block)),
-    channel = channel,
-    membersUrl = membersUrl
-)
+    fixture: String,
+    channel: String,
+    membersUrl: String,
+    block: (suspend (request: HttpRequestData) -> Unit)? = null,
+): SlackService =
+    SlackService(
+        botClient = buildClient(buildMockEngine(fixture, block)),
+        channel = channel,
+        membersUrl = membersUrl,
+    )
 
 fun buildSleepingPillService(
     fixture: String,
-    block: (suspend (request: HttpRequestData) -> Unit)? = null
-): SleepingPillService = SleepingPillService(
-    client = buildClient(buildMockEngine(fixture, block)),
-    bringService = buildBringService(fixture = "/postal_codes.json", postalCodeUrl = "/test")
-)
+    block: (suspend (request: HttpRequestData) -> Unit)? = null,
+): SleepingPillService =
+    SleepingPillService(
+        client = buildClient(buildMockEngine(fixture, block)),
+        bringService = buildBringService(fixture = "/postal_codes.json", postalCodeUrl = "/test"),
+    )
 
 fun buildBringService(
     fixture: String,
     postalCodeUrl: String,
-    block: (suspend (request: HttpRequestData) -> Unit)? = null
-): BringService = BringService(
-    client = buildClient(buildMockEngine(fixture, block)),
-    postalCodeUrl = postalCodeUrl,
-    scheduler = false
-)
+    block: (suspend (request: HttpRequestData) -> Unit)? = null,
+): BringService =
+    BringService(
+        client = buildClient(buildMockEngine(fixture, block)),
+        postalCodeUrl = postalCodeUrl,
+        scheduler = false,
+    )

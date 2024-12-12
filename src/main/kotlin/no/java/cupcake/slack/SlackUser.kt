@@ -8,5 +8,5 @@ data class SlackUser(
     val email: String,
     val name: String,
     val avatar: String,
-    val member: Boolean
+    val member: Boolean,
 )

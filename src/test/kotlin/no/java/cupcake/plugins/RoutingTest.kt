@@ -27,112 +27,119 @@ import no.java.cupcake.sleepingpill.Status
 import no.java.cupcake.sleepingpill.rejectSlugs
 import no.java.cupcake.urlString
 
-class RoutingTest : FunSpec({
-    test("Fetch conferences") {
-        testApplication {
-            buildTestApplication(buildService("/conferences.json"))
+class RoutingTest :
+    FunSpec({
+        test("Fetch conferences") {
+            testApplication {
+                buildTestApplication(buildService("/conferences.json"))
 
-            val client = buildTestClient()
+                val client = buildTestClient()
 
-            client.get("/api/conferences") {
-                accept(ContentType.Application.Json)
-            }.apply {
-                status shouldBe HttpStatusCode.OK
+                client
+                    .get("/api/conferences") {
+                        accept(ContentType.Application.Json)
+                    }.apply {
+                        status shouldBe HttpStatusCode.OK
 
-                val response = body<List<Conference>>()
+                        val response = body<List<Conference>>()
 
-                response.size shouldBe 17
+                        response.size shouldBe 17
 
-                val conference2024 = response.first { it.slug == "javazone_2024" }
+                        val conference2024 = response.first { it.slug == "javazone_2024" }
 
-                conference2024 shouldBe Conference(
-                    name = "Javazone 2024",
-                    slug = "javazone_2024",
-                    id = "ad82e461-9444-40a4-a9d5-cc4885f9107a"
+                        conference2024 shouldBe
+                            Conference(
+                                name = "Javazone 2024",
+                                slug = "javazone_2024",
+                                id = "ad82e461-9444-40a4-a9d5-cc4885f9107a",
+                            )
+
+                        rejectSlugs.forEach { slug ->
+                            response.filter { it.slug == slug } shouldBe emptyList()
+                        }
+                    }
+            }
+        }
+
+        test("Fetch sessions") {
+            testApplication {
+                val id = randomString()
+
+                buildTestApplication(
+                    buildService("/sessions.json") { request ->
+                        request.urlString() shouldContain id
+                    },
                 )
 
-                rejectSlugs.forEach { slug ->
-                    response.filter { it.slug == slug } shouldBe emptyList()
-                }
+                val client = buildTestClient()
+
+                client
+                    .get("/api/conferences/$id/sessions") {
+                        accept(ContentType.Application.Json)
+                    }.apply {
+                        status shouldBe HttpStatusCode.OK
+
+                        val response = body<List<Session>>()
+
+                        response.size shouldBe 1
+
+                        with(response.first()) {
+                            id shouldBe id
+                            title shouldBe "Test talk 2024"
+                            description shouldBe "My test description"
+                            status shouldBe Status.SUBMITTED
+                            format shouldBe Format.PRESENTATION
+                            language shouldBe Language.NORWEGIAN
+                            length shouldBe 60
+                            speakers shouldBe
+                                listOf(
+                                    Speaker(
+                                        name = "Test Testerson",
+                                        email = "test@gmail.com",
+                                        bio = "Hello I am me",
+                                        postcode = "1555",
+                                        location = "Norway",
+                                        city = "Son",
+                                        county = "Viken",
+                                    ),
+                                )
+                        }
+                    }
             }
         }
-    }
-
-    test("Fetch sessions") {
-        testApplication {
-            val id = randomString()
-
-            buildTestApplication(
-                buildService("/sessions.json") { request ->
-                    request.urlString() shouldContain id
-                }
-            )
-
-            val client = buildTestClient()
-
-            client.get("/api/conferences/$id/sessions") {
-                accept(ContentType.Application.Json)
-            }.apply {
-                status shouldBe HttpStatusCode.OK
-
-                val response = body<List<Session>>()
-
-                response.size shouldBe 1
-
-                with(response.first()) {
-                    id shouldBe id
-                    title shouldBe "Test talk 2024"
-                    description shouldBe "My test description"
-                    status shouldBe Status.SUBMITTED
-                    format shouldBe Format.PRESENTATION
-                    language shouldBe Language.NORWEGIAN
-                    length shouldBe 60
-                    speakers shouldBe listOf(
-                        Speaker(
-                            name = "Test Testerson",
-                            email = "test@gmail.com",
-                            bio = "Hello I am me",
-                            postcode = "1555",
-                            location = "Norway",
-                            city = "Son",
-                            county = "Viken"
-                        )
-                    )
-                }
-            }
-        }
-    }
-})
-
+    })
 
 private fun buildService(
     fixture: String,
-    block: (suspend (request: HttpRequestData) -> Unit)? = null
+    block: (suspend (request: HttpRequestData) -> Unit)? = null,
 ) = buildSleepingPillService(fixture, block)
 
 private fun ApplicationTestBuilder.buildTestApplication(service: SleepingPillService) {
     serializedTestApplication {
         configureSecurity(
-            provider = slackProvider(
-                clientId = randomString(),
-                clientSecret = randomString(),
-                authUrl = randomString(),
-                accessTokenUrl = randomString()
-            ),
+            provider =
+                slackProvider(
+                    clientId = randomString(),
+                    clientSecret = randomString(),
+                    authUrl = randomString(),
+                    accessTokenUrl = randomString(),
+                ),
             callback = randomString(),
-            slackService = buildSlackService(
-                fixture = "/slack_members.json",
-                channel = "TestChannel",
-                membersUrl = "/test"
-            ),
+            slackService =
+                buildSlackService(
+                    fixture = "/slack_members.json",
+                    channel = "TestChannel",
+                    membersUrl = "/test",
+                ),
             channelName = randomString(),
-            jwtConfig = JwtConfig(
-                realm = randomString(),
-                audience = randomString(),
-                secret = randomString(),
-                issuer = randomString(),
-                redirect = randomString(),
-            )
+            jwtConfig =
+                JwtConfig(
+                    realm = randomString(),
+                    audience = randomString(),
+                    secret = randomString(),
+                    issuer = randomString(),
+                    redirect = randomString(),
+                ),
         )
         configureRouting(sleepingPillService = service, securityOptional = true)
     }

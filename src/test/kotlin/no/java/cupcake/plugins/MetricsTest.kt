@@ -8,22 +8,23 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.testApplication
 
-class MetricsTest: FunSpec({
-    test("Metrics are provided") {
-        testApplication {
-            application {
-                configureMonitoring()
-            }
+class MetricsTest :
+    FunSpec({
+        test("Metrics are provided") {
+            testApplication {
+                application {
+                    configureMonitoring()
+                }
 
-            client.get("/metrics-micrometer").apply {
-                status shouldBe HttpStatusCode.OK
+                client.get("/metrics-micrometer").apply {
+                    status shouldBe HttpStatusCode.OK
 
-                val bodyText = bodyAsText()
+                    val bodyText = bodyAsText()
 
-                bodyText shouldContain "HELP"
-                bodyText shouldContain "TYPE"
-                bodyText shouldContain "jvm_"
+                    bodyText shouldContain "HELP"
+                    bodyText shouldContain "TYPE"
+                    bodyText shouldContain "jvm_"
+                }
             }
         }
-    }
-})
+    })

@@ -1,8 +1,8 @@
 package no.java.cupcake.bring
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.reactivecircus.cache4k.Cache
 import io.ktor.client.HttpClient
-import  io.github.reactivecircus.cache4k.Cache
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +18,7 @@ val logger = KotlinLogging.logger {}
 class BringService(
     private val client: HttpClient,
     private val postalCodeUrl: String,
-    scheduler: Boolean = true
+    scheduler: Boolean = true,
 ) {
     private val cache = Cache.Builder<String, PostalCode>().expireAfterWrite(24.hours).build()
 
@@ -64,7 +64,7 @@ class BringService(
                 }
             },
             0L,
-            1.hours.inWholeMilliseconds
+            1.hours.inWholeMilliseconds,
         )
 
         logger.info { "Scheduler setup complete" }

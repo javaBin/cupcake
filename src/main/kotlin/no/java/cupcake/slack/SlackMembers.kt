@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class SlackMembers(
     val ok: Boolean,
     val members: List<String>?,
-    val error: String?
+    val error: String?,
 )
