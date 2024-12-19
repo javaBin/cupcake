@@ -53,7 +53,6 @@ tasks.jar {
     enabled = false
 }
 
-
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
