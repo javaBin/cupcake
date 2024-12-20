@@ -3,7 +3,7 @@
 A minimal server providing a read-only version of [cake](https://github.com/javaBin/cake-redux) for javaBin regions to
 be able to find possible speakers for local talks.
 
-For frontend - see [frosting](https://github.com/javaBin/frosting)
+For frontend - see [frosting](./frontend)
 
 ## TODO
 
@@ -35,7 +35,7 @@ You will require env variables:
     JWT_REDIRECT=URL for redirect on successful login - optional - defaults to "/"
 
 Note - if using slack authorization locally (JWT_ENABLED=true) you will have to expose your
-localhost [frosting](https://github.com/javaBin/frosting) instance via something like [ngrok](https://ngrok.com/) (free
+localhost [frosting](./frontend) instance via something like [ngrok](https://ngrok.com/) (free
 version is more than good enough) and add your exposed callback URL to the slack app's accepted list of callback URLs.
 
 You must then access the site via the exposed URL.
@@ -45,8 +45,8 @@ Slack does **not** support localhost or http protocol.
 If you are not running with auth then localhost is fine.
 
 ## Deploy
-  
-docker build -t cupcake:latest .
+
+Assuming we will build a docker container - add to [backend action](./.github/workflows/backend.yaml) when decided.
 
 ## Slack authorization
 

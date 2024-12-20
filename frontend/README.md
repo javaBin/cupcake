@@ -1,6 +1,6 @@
 # Frosting
 
-A frontend for [cupcake](https://github.com/javaBin/cupcake)
+Frontend
 
 ## TODO
 
@@ -26,4 +26,4 @@ Nuxt application using npm
 
 ## Deploy
 
-docker build -t frosting:latest .
+Assuming we will build a docker container - add to [frontend action](../.github/workflows/frontend.yaml) when decided.
