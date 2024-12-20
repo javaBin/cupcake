@@ -14,10 +14,6 @@ version = "0.0.1"
 
 kotlin {
     jvmToolchain(22)
-
-    compilerOptions {
-        freeCompilerArgs = listOf("-Xconsistent-data-class-copy-visibility")
-    }
 }
 
 application {
