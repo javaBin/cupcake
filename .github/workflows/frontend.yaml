@@ -1,0 +1,21 @@
+name: Frosting Frontend
+
+on:
+  push:
+    paths:
+      - frontend/**
+
+jobs:
+  push:
+    name: "Build search frontend"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Insert docker build and push steps here - this actually builds the app inside docker
+
+      - name: Generate summary
+        run: |
+          echo "Tag: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

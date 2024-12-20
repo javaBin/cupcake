@@ -1,1 +1,3 @@
-rootProject.name = "no.java.cupcake"
+rootProject.name = "cupcake"
+
+include("backend")
