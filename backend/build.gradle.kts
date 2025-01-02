@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
     alias(libs.plugins.serialization)
-
+    alias(libs.plugins.dependency.analysis)
     jacoco
 }
 
@@ -34,11 +34,13 @@ dependencies {
     implementation(libs.cache4k)
     implementation(libs.kotlinx.coroutines.core)
 
-    implementation(libs.logback.classic)
     implementation(libs.kotlin.logging)
     implementation(libs.micrometer.registry.prometheus)
 
+    runtimeOnly(libs.logback.classic)
+
     testImplementation(libs.bundles.test)
+    testRuntimeOnly(libs.kotlin.test.junit)
 }
 
 tasks.shadowJar {

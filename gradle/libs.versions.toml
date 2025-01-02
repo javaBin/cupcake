@@ -1,5 +1,6 @@
 [versions]
 cache4k-version = "0.13.0"
+dependency_analysis_version = "2.6.1"
 detekt-version = "1.23.7"
 gradle-versions_filter-version = "0.1.16"
 kotest-version = "6.0.0.M1"
@@ -37,7 +38,6 @@ ktor-server-compression = { module = "io.ktor:ktor-server-compression-jvm", vers
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation-jvm", version.ref = "ktor-version" }
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor-version" }
 ktor-server-cors = { module = "io.ktor:ktor-server-cors-jvm", version.ref = "ktor-version" }
-ktor-server-host-common = { module = "io.ktor:ktor-server-host-common-jvm", version.ref = "ktor-version" }
 ktor-server-metrics-micrometer = { module = "io.ktor:ktor-server-metrics-micrometer-jvm", version.ref = "ktor-version" }
 ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages-jvm", version.ref = "ktor-version" }
 
@@ -55,10 +55,11 @@ ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor-ve
 
 [bundles]
 ktor-client = ["ktor-client-content-negotiation", "ktor-client-core", "ktor-client-logging", "ktor-client-cio", "ktor-client-call-id", "ktor-client-auth"]
-ktor-server = ["ktor-server-auth", "ktor-server-auth-jwt", "ktor-server-call-id", "ktor-server-call-logging", "ktor-server-content-negotiation", "ktor-server-core", "ktor-server-metrics-micrometer", "ktor-server-cio", "ktor-server-status-pages", "ktor-serialization", "kotlinx-serialization", "ktor-server-compression", "ktor-server-cors", "ktor-server-host-common"]
-test = ["ktor-server-test-host", "kotlin-test-junit", "kotest", "kotest-assertions", "ktor-client-mock"]
+ktor-server = ["ktor-server-auth", "ktor-server-auth-jwt", "ktor-server-call-id", "ktor-server-call-logging", "ktor-server-content-negotiation", "ktor-server-core", "ktor-server-metrics-micrometer", "ktor-server-cio", "ktor-server-status-pages", "ktor-serialization", "kotlinx-serialization", "ktor-server-compression", "ktor-server-cors"]
+test = ["ktor-server-test-host", "kotest", "kotest-assertions", "ktor-client-mock"]
 
 [plugins]
+dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency_analysis_version" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt-version" }
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "kotlinter-version" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
