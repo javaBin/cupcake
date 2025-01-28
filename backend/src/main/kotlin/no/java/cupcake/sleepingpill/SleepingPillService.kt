@@ -1,9 +1,20 @@
 package no.java.cupcake.sleepingpill
 
+import arrow.core.raise.Raise
+import arrow.core.raise.ensure
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.isSuccess
+import no.java.cupcake.api.ApiError
+import no.java.cupcake.api.ErrorResponse
+import no.java.cupcake.api.SleepingPillCallFailed
 import no.java.cupcake.bring.BringService
+
+private val logger = KotlinLogging.logger {}
 
 // 2020 - invalid data due to covid
 // 2007 - empty
@@ -13,9 +24,10 @@ class SleepingPillService(
     private val client: HttpClient,
     private val bringService: BringService,
 ) {
-    suspend fun conferences() =
+    suspend fun conferences(raise: Raise<ApiError>) =
         client
             .get("/data/conference")
+            .valid(raise)
             .body<SleepingPillConferences>()
             .conferences
             .filterNot { rejectSlugs.contains(it.slug) }
@@ -27,8 +39,15 @@ class SleepingPillService(
                 )
             }
 
-    suspend fun sessions(id: String) =
-        client.get("/data/conference/$id/session").body<SleepingPillSessions>().sessions.map {
+    suspend fun sessions(
+        id: ConferenceId,
+        raise: Raise<ApiError>,
+    ) = client
+        .get("/data/conference/${id.id}/session")
+        .valid(raise)
+        .body<SleepingPillSessions>()
+        .sessions
+        .map {
             Session(
                 id = it.id,
                 title = it.data.title.value,
@@ -56,4 +75,14 @@ class SleepingPillService(
                     },
             )
         }
+
+    private suspend fun HttpResponse.valid(raise: Raise<ApiError>): HttpResponse {
+        raise.ensure(this.status.isSuccess()) {
+            logger.warn { "Failed to fetch information from sleeping pill - ${this.status}" }
+
+            SleepingPillCallFailed(ErrorResponse(this.status, this.bodyAsText()))
+        }
+
+        return this
+    }
 }

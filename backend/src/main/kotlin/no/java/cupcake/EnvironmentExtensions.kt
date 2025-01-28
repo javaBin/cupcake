@@ -3,6 +3,7 @@ package no.java.cupcake
 import io.ktor.server.application.ApplicationEnvironment
 import no.java.cupcake.config.BringConfig
 import no.java.cupcake.config.JwtConfig
+import no.java.cupcake.config.SlackConfig
 import no.java.cupcake.config.SleepingPillConfig
 
 fun ApplicationEnvironment.bringConfig() =
@@ -25,4 +26,12 @@ fun ApplicationEnvironment.jwtConfig() =
         secret = str("jwt.secret"),
         issuer = str("jwt.issuer"),
         redirect = str("jwt.redirect"),
+    )
+
+fun ApplicationEnvironment.slackConfig() =
+    SlackConfig(
+        clientId = str("slack.client"),
+        clientSecret = str("slack.secret"),
+        authUrl = str("slack.authorize_url"),
+        accessTokenUrl = str("slack.accesstoken_url"),
     )

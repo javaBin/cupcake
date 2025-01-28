@@ -15,6 +15,7 @@ import no.java.cupcake.buildSlackService
 import no.java.cupcake.buildSleepingPillService
 import no.java.cupcake.buildTestClient
 import no.java.cupcake.config.JwtConfig
+import no.java.cupcake.config.SlackConfig
 import no.java.cupcake.randomString
 import no.java.cupcake.serializedTestApplication
 import no.java.cupcake.sleepingpill.Conference
@@ -119,10 +120,12 @@ private fun ApplicationTestBuilder.buildTestApplication(service: SleepingPillSer
         configureSecurity(
             provider =
                 slackProvider(
-                    clientId = randomString(),
-                    clientSecret = randomString(),
-                    authUrl = randomString(),
-                    accessTokenUrl = randomString(),
+                    SlackConfig(
+                        clientId = randomString(),
+                        clientSecret = randomString(),
+                        authUrl = randomString(),
+                        accessTokenUrl = randomString(),
+                    ),
                 ),
             callback = randomString(),
             slackService =

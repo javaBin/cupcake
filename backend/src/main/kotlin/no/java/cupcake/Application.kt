@@ -2,7 +2,6 @@ package no.java.cupcake
 
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationEnvironment
-import io.ktor.server.auth.OAuthServerSettings
 import io.ktor.server.cio.EngineMain
 import no.java.cupcake.bring.BringService
 import no.java.cupcake.clients.bringClient
@@ -52,13 +51,7 @@ private fun Application.slackService(): SlackService =
         membersUrl = environment.str("slack.members_url"),
     )
 
-private fun Application.slackProvider(): OAuthServerSettings.OAuth2ServerSettings =
-    slackProvider(
-        clientId = environment.str("slack.client"),
-        clientSecret = environment.str("slack.secret"),
-        authUrl = environment.str("slack.authorize_url"),
-        accessTokenUrl = environment.str("slack.accesstoken_url"),
-    )
+private fun Application.slackProvider() = slackProvider(environment.slackConfig())
 
 private fun Application.sleepingPillService(bringService: BringService): SleepingPillService =
     SleepingPillService(

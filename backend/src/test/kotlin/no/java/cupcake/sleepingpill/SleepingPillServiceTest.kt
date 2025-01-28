@@ -1,7 +1,9 @@
 package no.java.cupcake.sleepingpill
 
+import arrow.core.raise.either
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import no.java.cupcake.api.ConferenceIdRequired
 import no.java.cupcake.buildSleepingPillService
 import no.java.cupcake.randomString
 
@@ -10,11 +12,18 @@ class SleepingPillServiceTest :
         test("Can fetch conference list") {
             val service = buildService("/conferences.json")
 
-            val conferences = service.conferences()
+            val conferences =
+                either {
+                    service.conferences(raise = this)
+                }
 
-            conferences.size shouldBe 17
+            conferences.isRight() shouldBe true
 
-            val conference2024 = conferences.first { it.slug == "javazone_2024" }
+            val conferenceList = conferences.getOrNull()!!
+
+            conferenceList.size shouldBe 17
+
+            val conference2024 = conferenceList.first { it.slug == "javazone_2024" }
 
             conference2024 shouldBe
                 Conference(
@@ -24,18 +33,25 @@ class SleepingPillServiceTest :
                 )
 
             rejectSlugs.forEach { slug ->
-                conferences.filter { it.slug == slug } shouldBe emptyList()
+                conferenceList.filter { it.slug == slug } shouldBe emptyList()
             }
         }
 
         test("Can fetch session list") {
             val service = buildService("/sessions.json")
 
-            val sessions = service.sessions(randomString())
+            val sessions =
+                either {
+                    service.sessions(ConferenceId(randomString()).bind(), raise = this)
+                }
 
-            sessions.size shouldBe 1
+            sessions.isRight() shouldBe true
 
-            with(sessions.first()) {
+            val sessionList = sessions.getOrNull()!!
+
+            sessionList.size shouldBe 1
+
+            with(sessionList.first()) {
                 id shouldBe "57f8dbb5-af4b-453f-b0c2-14067aae21b8"
                 title shouldBe "Test talk 2024"
                 description shouldBe "My test description"
@@ -56,6 +72,18 @@ class SleepingPillServiceTest :
                         ),
                     )
             }
+        }
+
+        test("Gives correct error if conference id is missing") {
+            val service = buildService("/sessions.json")
+
+            val sessions =
+                either {
+                    service.sessions(ConferenceId(null).bind(), raise = this)
+                }
+
+            sessions.isRight() shouldBe false
+            sessions.swap().getOrNull()!! shouldBe ConferenceIdRequired
         }
     })
 

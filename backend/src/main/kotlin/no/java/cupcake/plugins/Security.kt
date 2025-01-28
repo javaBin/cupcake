@@ -1,5 +1,7 @@
 package no.java.cupcake.plugins
 
+import arrow.core.raise.either
+import arrow.core.raise.ensure
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.interfaces.Claim
@@ -18,12 +20,16 @@ import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.oauth
 import io.ktor.server.auth.principal
 import io.ktor.server.response.respond
-import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.Routing
-import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import io.ktor.util.date.GMTDate
+import no.java.cupcake.api.CallPrincipalMissing
+import no.java.cupcake.api.MissingChannelMembership
+import no.java.cupcake.api.TokenMissing
+import no.java.cupcake.api.TokenMissingUser
+import no.java.cupcake.api.redirect
+import no.java.cupcake.api.respond
 import no.java.cupcake.config.JwtConfig
 import no.java.cupcake.slack.SlackService
 import no.java.cupcake.slack.SlackUser
@@ -141,53 +147,52 @@ private fun Routing.configureAuthRouting(
             // Redirects for authentication
         }
         get("/slackCallback") {
-            when (val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()) {
-                null -> call.respond(HttpStatusCode.Unauthorized, "Could not parse slack response")
-                else -> {
-                    val idToken = principal.extraParameters["id_token"]
+            either {
+                val principal: OAuthAccessTokenResponse.OAuth2? = call.principal()
 
-                    idToken?.let {
-                        val claims: MutableMap<String, Claim> = JWT.decode(idToken).claims
-
-                        when (val userId = claims["https://slack.com/user_id"]?.asString()) {
-                            null -> call.respond(HttpStatusCode.Unauthorized, "No user found in slack response")
-                            else -> {
-                                when (slackService.isMember(userId)) {
-                                    true -> {
-                                        val user = claims.toSlackUser(userId, true)
-
-                                        val jwt =
-                                            buildToken(
-                                                jwtAudience = jwtConfig.audience,
-                                                jwtSecret = jwtConfig.secret,
-                                                jwtIssuer = jwtConfig.issuer,
-                                                userInfo = user,
-                                            )
-
-                                        call.response.cookies.append(
-                                            name = "user_session",
-                                            value = jwt,
-                                            path = "/",
-                                            expires = ZonedDateTime.now().cookieExpiry(cookieLifetime),
-                                        )
-
-                                        call.respondRedirect(redirect)
-                                    }
-
-                                    else -> missingChannelMembership(channelName)
-                                }
-                            }
-                        }
-                    }
+                ensure(principal != null) {
+                    CallPrincipalMissing
                 }
-            }
+
+                val idToken = principal.extraParameters["id_token"]
+
+                ensure(idToken != null) {
+                    TokenMissing
+                }
+
+                val claims: MutableMap<String, Claim> = JWT.decode(idToken).claims
+
+                val userId = claims["https://slack.com/user_id"]?.asString()
+
+                ensure(userId != null) {
+                    TokenMissingUser
+                }
+
+                val isMember = slackService.isMember(id = userId, raise = this)
+
+                ensure(isMember) {
+                    MissingChannelMembership(channelName)
+                }
+
+                val user = claims.toSlackUser(userId, true)
+
+                val jwt =
+                    buildToken(
+                        jwtAudience = jwtConfig.audience,
+                        jwtSecret = jwtConfig.secret,
+                        jwtIssuer = jwtConfig.issuer,
+                        userInfo = user,
+                    )
+
+                call.response.cookies.append(
+                    name = "user_session",
+                    value = jwt,
+                    path = "/",
+                    expires = ZonedDateTime.now().cookieExpiry(cookieLifetime),
+                )
+
+                redirect
+            }.redirect(this)
         }
     }
-}
-
-private suspend fun RoutingContext.missingChannelMembership(channelName: String) {
-    call.respond(
-        HttpStatusCode.Unauthorized,
-        "User not in correct slack channel - please ask in #kodesmia for access to $channelName",
-    )
 }

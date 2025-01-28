@@ -14,6 +14,10 @@ version = "0.0.1"
 
 kotlin {
     jvmToolchain(22)
+
+    compilerOptions {
+        freeCompilerArgs = listOf("-Xconsistent-data-class-copy-visibility")
+    }
 }
 
 application {
@@ -31,6 +35,7 @@ dependencies {
     implementation(libs.bundles.ktor.server)
     implementation(libs.bundles.ktor.client)
 
+    implementation(libs.arrow.core)
     implementation(libs.cache4k)
     implementation(libs.kotlinx.coroutines.core)
 
