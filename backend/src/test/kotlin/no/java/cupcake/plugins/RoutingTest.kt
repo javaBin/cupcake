@@ -3,14 +3,18 @@ package no.java.cupcake.plugins
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.accept
 import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
+import no.java.cupcake.buildClient
+import no.java.cupcake.buildErrorMockEngine
 import no.java.cupcake.buildSlackService
 import no.java.cupcake.buildSleepingPillService
 import no.java.cupcake.buildTestClient
@@ -108,12 +112,45 @@ class RoutingTest :
                     }
             }
         }
+
+        test("Fetch sessions - sleeping pill error") {
+            testApplication {
+                val id = randomString()
+
+                buildTestApplication(
+                    buildService(
+                        "/sessions.json",
+                        client =
+                            buildClient(
+                                buildErrorMockEngine(HttpStatusCode.InternalServerError, "SleepingPill is asleep"),
+                            ),
+                    ),
+                )
+
+                val client = buildTestClient()
+
+                client
+                    .get("/api/conferences/$id/sessions") {
+                        accept(ContentType.Application.Json)
+                    }.apply {
+                        status shouldBe HttpStatusCode.InternalServerError
+
+                        val response = bodyAsText()
+
+                        response shouldContain "SleepingPill is asleep"
+                        response shouldContain "500"
+                        response shouldContain "Internal Server Error"
+                        response shouldContain "call to SleepingPill failed"
+                    }
+            }
+        }
     })
 
 private fun buildService(
     fixture: String,
+    client: HttpClient? = null,
     block: (suspend (request: HttpRequestData) -> Unit)? = null,
-) = buildSleepingPillService(fixture, block)
+) = buildSleepingPillService(fixture = fixture, client = client, block = block)
 
 private fun ApplicationTestBuilder.buildTestApplication(service: SleepingPillService) {
     serializedTestApplication {

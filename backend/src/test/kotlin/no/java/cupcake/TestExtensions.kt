@@ -67,6 +67,18 @@ fun buildMockEngine(
         )
     }
 
+fun buildErrorMockEngine(
+    httpStatusCode: HttpStatusCode,
+    message: String,
+): MockEngine =
+    MockEngine { request ->
+        respond(
+            content = ByteReadChannel(message),
+            status = httpStatusCode,
+            headers = headersOf(HttpHeaders.ContentType, "text/plain"),
+        )
+    }
+
 fun buildSlackService(
     fixture: String,
     channel: String,
@@ -81,20 +93,23 @@ fun buildSlackService(
 
 fun buildSleepingPillService(
     fixture: String,
+    client: HttpClient? = null,
+    bringService: BringService? = null,
     block: (suspend (request: HttpRequestData) -> Unit)? = null,
 ): SleepingPillService =
     SleepingPillService(
-        client = buildClient(buildMockEngine(fixture, block)),
-        bringService = buildBringService(fixture = "/postal_codes.json", postalCodeUrl = "/test"),
+        client = client ?: buildClient(buildMockEngine(fixture, block)),
+        bringService = bringService ?: buildBringService(fixture = "/postal_codes.json", postalCodeUrl = "/test"),
     )
 
 fun buildBringService(
     fixture: String,
     postalCodeUrl: String,
+    client: HttpClient? = null,
     block: (suspend (request: HttpRequestData) -> Unit)? = null,
 ): BringService =
     BringService(
-        client = buildClient(buildMockEngine(fixture, block)),
+        client = client ?: buildClient(buildMockEngine(fixture, block)),
         postalCodeUrl = postalCodeUrl,
         scheduler = false,
     )
