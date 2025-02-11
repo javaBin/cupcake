@@ -48,6 +48,47 @@ If you are not running with auth then localhost is fine.
 
 Assuming we will build a docker container - add to [backend action](./.github/workflows/backend.yaml) when decided.
 
+Currently it is setup for the frontend to proxy the backend - anything on `/api/*`, as well as `/login` and `/slackCallback` 
+
+For example - let's say we setup:
+
+    https://cupcake_backend.java.no -> backend
+    https://cupcake.java.no -> frontend
+
+We need to set the host in the frontend for non development builds to `https://cupcake_backend.java.no` in the [nuxt.config.js](./frontend/nuxt.config.js) file.
+
+App configuration for the backend is done via the environment.
+
+### JWT
+
+    JWT_SECRET - set some random long string here
+    JWT_ENABLED - true
+
+### Sleepingpill
+
+We use the same user and password for dev and deploy here but it must be set in the environment.
+
+    SP_USER
+    SP_PASSWORD
+
+### Bring
+
+We use the same user and password for dev and deploy here but it must be set in the environment.
+
+    BRING_API_USER
+    BRING_API_KEY
+
+### Slack
+
+This provides login and access checking.
+
+We can use the same slack client for dev and deploy but we have to set the correct callback URL both in the environment AND in the slack app config on https://api.slack.com
+
+    SLACK_CLIENT 
+    SLACK_SECRET
+    SLACK_BOT_TOKEN
+    SLACK_CALLBACK - must be https - using the example above it would be https://cupcake.java.no/slackCallback
+
 ## Slack authorization
 
 This application requires a slack app that provides two functions:
