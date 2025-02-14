@@ -5,12 +5,6 @@ be able to find possible speakers for local talks.
 
 For frontend - see [frosting](./frontend)
 
-## TODO
-
-Always lots to do - but - before we can release this:
-
-* Some tests would be nice :)
-
 ## Build
 
 Gradle application using ktor.
@@ -52,10 +46,10 @@ Currently it is setup for the frontend to proxy the backend - anything on `/api/
 
 For example - let's say we setup:
 
-    https://cupcake_backend.java.no -> backend
-    https://cupcake.java.no -> frontend
+    https://cupcake_backend.javazone.no -> backend
+    https://cupcake.javazone.no -> frontend
 
-We need to set the host in the frontend for non development builds to `https://cupcake_backend.java.no` in the [nuxt.config.js](./frontend/nuxt.config.js) file.
+We need to set the host in the frontend for non development builds to `https://cupcake_backend.javazone.no` in the [nuxt.config.js](./frontend/nuxt.config.js) file.
 
 App configuration for the backend is done via the environment.
 
@@ -87,7 +81,7 @@ We can use the same slack client for dev and deploy but we have to set the corre
     SLACK_CLIENT 
     SLACK_SECRET
     SLACK_BOT_TOKEN
-    SLACK_CALLBACK - must be https - using the example above it would be https://cupcake.java.no/slackCallback
+    SLACK_CALLBACK - must be https - using the example above it would be https://cupcake.javazone.no/slackCallback
 
 ## Slack authorization
 
