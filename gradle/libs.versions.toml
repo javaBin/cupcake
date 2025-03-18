@@ -1,18 +1,18 @@
 [versions]
 arrow_version = "2.0.1"
 cache4k-version = "0.14.0"
-dependency_analysis_version = "2.10.1"
+dependency_analysis_version = "2.12.0"
 detekt-version = "1.23.8"
 gradle-versions_filter-version = "0.1.16"
 kotest-version = "6.0.0.M1"
-kotlin_logging-version = "7.0.4"
+kotlin_logging-version = "7.0.5"
 kotlin-version = "2.1.10"
 kotlinter-version = "5.0.1"
 kotlinx_coroutines-version = "1.10.1"
 kotlinx_serialization-version = "1.8.0"
 ktor-version = "3.1.1"
-logback-version = "1.5.16"
-prometheus-version = "1.14.4"
+logback-version = "1.5.17"
+prometheus-version = "1.14.5"
 serialization-version = "2.1.10"
 
 [libraries]
