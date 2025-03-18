@@ -1,25 +1,29 @@
 const routeRulesProxy = () => {
-    let host = 'https://cupcake-backend.java.no' // TBD
+    let proxy_prefix = 'https://cupcake-backend.java.no'
 
     if (process.env.NODE_ENV === 'development') {
-        host = 'http://127.0.0.1:8080'
+        proxy_prefix = 'http://127.0.0.1:8080'
+    }
+
+    if ('CUPCAKE_BACKEND' in process.env && process.env.CUPCAKE_BACKEND !== undefined) {
+        proxy_prefix = process.env.CUPCAKE_BACKEND
     }
 
     return {
         '/api/**': {
             proxy: {
-                to: `${host}/api/**`
+                to: `${proxy_prefix}/api/**`
             }
         },
         '/login': {
             proxy: {
-                to: `${host}/login`,
+                to: `${proxy_prefix}/login`,
                 fetchOptions: {redirect: 'manual'}
             }
         },
         '/slackCallback': {
             proxy: {
-                to: `${host}/slackCallback`,
+                to: `${proxy_prefix}/slackCallback`,
                 fetchOptions: {redirect: 'manual'}
             }
         }
