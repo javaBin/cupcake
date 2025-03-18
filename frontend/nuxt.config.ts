@@ -30,6 +30,14 @@ const routeRulesProxy = () => {
     }
 }
 
+
+let frontend_host = 'localhost'
+
+if ('CUPCAKE_FRONTEND' in process.env && process.env.CUPCAKE_FRONTEND !== undefined) {
+    frontend_host = process.env.CUPCAKE_FRONTEND
+}
+
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
@@ -41,6 +49,14 @@ export default defineNuxtConfig({
     devtools: {enabled: true},
     modules: ['vuetify-nuxt-module'],
     routeRules: routeRulesProxy(),
+    vite: {
+      server: {
+          allowedHosts: [
+              'maximum-whale-singularly.ngrok-free.app',
+              frontend_host
+          ]
+      }
+    },
     vuetify: {
         vuetifyOptions: {
             theme: {
