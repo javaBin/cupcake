@@ -2,12 +2,12 @@ name: Cupcake Backend
 
 on:
   push:
-    paths:
-      - backend/**
+    tags:
+      - v*
 
 jobs:
   push:
-    name: "Build Cupcake backend"
+    name: "Build Cupcake backend - release"
     runs-on: ubuntu-latest
 
     steps:
@@ -25,6 +25,7 @@ jobs:
 
       - name: Build
         run: ./gradlew :backend:clean :backend:build
+
 
       - name: Generate summary
         run: |
