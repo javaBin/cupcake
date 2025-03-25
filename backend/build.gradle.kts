@@ -11,7 +11,6 @@ plugins {
 }
 
 group = "no.java.cupcake"
-version = "0.0.1"
 
 kotlin {
     jvmToolchain(22)
