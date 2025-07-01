@@ -6,7 +6,6 @@ Frontend
 
 Always lots to do - but - before we can release this:
 
-- Require authentication - the backend needs to implement authentication/authorization.
 - Some tests would be nice :)
 
 ## Build

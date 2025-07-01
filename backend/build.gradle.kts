@@ -49,6 +49,7 @@ dependencies {
 }
 
 tasks.shadowJar {
+    dependsOn(tasks.startScripts)
     archiveFileName.set("cupcake.jar")
 }
 
@@ -66,4 +67,12 @@ tasks.test {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+}
+
+tasks.named("distZip") {
+    dependsOn(tasks.shadowJar)
+}
+
+tasks.named("distTar") {
+    dependsOn(tasks.shadowJar)
 }

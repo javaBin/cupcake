@@ -38,20 +38,33 @@ Slack does **not** support localhost or http protocol.
 
 If you are not running with auth then localhost is fine.
 
+## Local running with docker compose
+
+You will need to provide the same environment variables as above in a file called `local.env` in the root directory.
+
+Note - this file is also useful when running from Idea with the envfile plugin.
+
+This file MUST NOT be committed to git (it is in .gitignore).
+
 ## Deploy
 
 Assuming we will build a docker container - add to [backend action](./.github/workflows/backend.yaml) when decided.
 
-Currently it is setup for the frontend to proxy the backend - anything on `/api/*`, as well as `/login` and `/slackCallback` 
+Currently it is setup for the frontend to proxy the backend - anything on `/api/*`, as well as `/login` and
+`/slackCallback`
 
 For example - let's say we setup:
 
     https://cupcake_backend.javazone.no -> backend
     https://cupcake.javazone.no -> frontend
 
-We need to set the host in the frontend for non development builds to `https://cupcake_backend.javazone.no` in the [nuxt.config.js](./frontend/nuxt.config.js) file.
+We would then need to set the host in the frontend for non development builds to `https://cupcake_backend.javazone.no` in
+the [proxy](./frontend/server/middleware/proxy.ts) file - but this is set using the CUPCAKE_BACKEND env var.
 
-App configuration for the backend is done via the environment.
+All app configuration for the backend is done via the environment.
+
+If deploying with docker - you can place both on the same docker network and use the service name for the env var - see
+[docker-compose.yml](./docker-compose.yml) for an example.
 
 ### JWT
 
@@ -76,7 +89,8 @@ We use the same user and password for dev and deploy here but it must be set in 
 
 This provides login and access checking.
 
-We can use the same slack client for dev and deploy but we have to set the correct callback URL both in the environment AND in the slack app config on https://api.slack.com
+We can use the same slack client for dev and deploy but we have to set the correct callback URL both in the environment
+AND in the slack app config on https://api.slack.com
 
     SLACK_CLIENT 
     SLACK_SECRET
