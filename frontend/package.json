@@ -7,15 +7,27 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
-    "nuxt": "3.15.4",
-    "vue": "latest",
-    "vue-router": "latest",
-    "vuetify-nuxt-module": "^0.18.4"
+    "@nuxt/eslint": "^1.4.1",
+    "@nuxt/icon": "^1.15.0",
+    "eslint": "^9.30.0",
+    "http-proxy-middleware": "^3.0.5",
+    "nuxt": "^3.17.5",
+    "vue": "^3.5.17",
+    "vue-router": "^4.5.1",
+    "vuetify-nuxt-module": "^0.18.7"
   },
   "devDependencies": {
-    "@iconify/vue": "^4.3.0"
+    "@iconify/json": "^2.2.354",
+    "eslint-plugin-prettier": "^5.5.1",
+    "prettier": "^3.6.2",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "prettier-plugin-tailwindcss": "^0.6.13",
+    "vue-tsc": "^2.2.10"
   }
 }

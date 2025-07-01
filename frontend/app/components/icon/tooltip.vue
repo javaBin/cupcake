@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import {Icon} from "@iconify/vue";
+  import { Icon } from '@iconify/vue'
 
-const tooltip = defineProps<{
-  value: string,
-  select: string,
-  description: string,
-  icon: string,
-  full?: boolean
-}>()
+  const tooltip = defineProps<{
+    value: string
+    select: string
+    description: string
+    name: string
+    full?: boolean
+  }>()
 </script>
 
 <template>
-  <div class="d-inline" v-if="tooltip.value === tooltip.select">
+  <div v-if="tooltip.value === tooltip.select" class="d-inline">
     <v-tooltip :text="tooltip.description">
-      <template v-slot:activator="{ props }">
-        <Icon v-bind="props" :icon="tooltip.icon"/>
+      <template #activator="{ props }">
+        <Icon v-bind="props" :icon="tooltip.name" />
       </template>
     </v-tooltip>
     <span v-if="tooltip.full" class="mx-2">{{ tooltip.description }}</span>

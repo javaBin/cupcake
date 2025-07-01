@@ -1,5 +1,5 @@
 declare interface Conference {
-    id: string;
-    name: string;
-    slug: string;
+  id: string
+  name: string
+  slug: string
 }

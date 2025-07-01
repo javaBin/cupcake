@@ -1,27 +1,27 @@
 export const useConferences = () => {
-    const conferenceLink = (conference: Conference): string => `/conference/${conference.id}`
+  const conferenceLink = (conference: Conference): string => `/conference/${conference.id}`
 
-    const findConference = (id: string, conferences?: Conference[]): Conference | undefined => {
-        if (conferences === undefined) {
-            return undefined;
-        }
-
-        return conferences.find((conference) => {
-            return conference.id === id
-        })
+  const findConference = (id: string, conferences?: Conference[]): Conference | undefined => {
+    if (conferences === undefined) {
+      return undefined
     }
 
-    const conferenceTitle = (conference?: Conference) => {
-        if (conference !== undefined) {
-            return conference.name;
-        }
+    return conferences.find((conference) => {
+      return conference.id === id
+    })
+  }
 
-        return "Javazone";
+  const conferenceTitle = (conference?: Conference) => {
+    if (conference !== undefined) {
+      return conference.name
     }
 
-    return {
-        conferenceLink,
-        conferenceTitle,
-        findConference
-    }
+    return 'Javazone'
+  }
+
+  return {
+    conferenceLink,
+    conferenceTitle,
+    findConference,
+  }
 }
