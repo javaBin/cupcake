@@ -39,10 +39,8 @@ jobs:
         if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
 
       - name: Create staging
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && ${{ secrets.DOCKERHUB_USERNAME != '' }}
         run: docker buildx imagetools create -t ${{ secrets.DOCKERHUB_USERNAME }}/frosting:staging ${{ secrets.DOCKERHUB_USERNAME }}/frosting:latest
-        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
-
 
       - name: Generate summary
         run: |
