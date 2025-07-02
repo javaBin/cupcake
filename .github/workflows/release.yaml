@@ -1,0 +1,43 @@
+name: Cupcake and Frosting release
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  push:
+    name: "Build Cupcake backend - release"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Login to DockerHub Registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
+
+      - name: Get current backend
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/cupcake:staging
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
+
+      - name: Get current frontend
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/frosting:staging
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
+
+      - name: Tag release backend
+        run: docker tag ${{ secrets.DOCKERHUB_USERNAME }}/cupcake:staging ${{ secrets.DOCKERHUB_USERNAME }}/cupcake:release
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
+
+      - name: Tag release frontend
+        run: docker tag ${{ secrets.DOCKERHUB_USERNAME }}/frosting:staging ${{ secrets.DOCKERHUB_USERNAME }}/frosting:release
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
+
+      - name: Push release backend
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/cupcake:release
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
+
+      - name: Push release frontend
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/frosting:release
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
