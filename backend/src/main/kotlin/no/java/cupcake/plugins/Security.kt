@@ -29,7 +29,6 @@ import no.java.cupcake.api.MissingChannelMembership
 import no.java.cupcake.api.TokenMissing
 import no.java.cupcake.api.TokenMissingUser
 import no.java.cupcake.api.redirect
-import no.java.cupcake.api.respond
 import no.java.cupcake.config.JwtConfig
 import no.java.cupcake.slack.SlackService
 import no.java.cupcake.slack.SlackUser

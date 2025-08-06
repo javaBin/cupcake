@@ -7,11 +7,10 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.Application
 import kotlinx.serialization.json.Json
 import no.java.cupcake.config.BringConfig
 
-fun Application.bringClient(bringConfig: BringConfig): HttpClient =
+fun bringClient(bringConfig: BringConfig): HttpClient =
     HttpClient(CIO) {
         install(Logging)
 

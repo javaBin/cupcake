@@ -8,10 +8,9 @@ import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.Application
 import kotlinx.serialization.json.Json
 
-fun Application.slackBotClient(slackBotToken: String): HttpClient =
+fun slackBotClient(slackBotToken: String): HttpClient =
     HttpClient(CIO) {
         install(Logging)
 
