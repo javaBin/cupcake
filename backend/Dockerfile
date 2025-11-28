@@ -1,7 +1,10 @@
-FROM eclipse-temurin:22 AS build
+# syntax=docker/dockerfile:1.20
+
+FROM --platform=$BUILDPLATFORM eclipse-temurin:22 AS build
 
 WORKDIR /build
 COPY . .
+
 RUN ./gradlew clean build
 
 FROM eclipse-temurin:22-jre AS deploy

@@ -1,11 +1,14 @@
-FROM node:22-alpine AS build
+# syntax=docker/dockerfile:1.20
+
+FROM --platform=$BUILDPLATFORM node:24-alpine AS build
 
 WORKDIR /app
 COPY . .
-RUN npm install
+
+RUN npm ci
 RUN npm run build
 
-FROM node:22-alpine AS deploy
+FROM node:24-alpine AS deploy
 
 WORKDIR /app
 COPY --from=build /app/.output/ /app
