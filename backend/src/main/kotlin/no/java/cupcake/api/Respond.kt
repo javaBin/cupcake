@@ -11,12 +11,16 @@ suspend inline fun <reified A : Any> Either<ApiError, A>.performResponse(
     status: HttpStatusCode = HttpStatusCode.OK,
     redirect: Boolean = false,
 ) = when (this) {
-    is Either.Left -> context.respond(value)
-    is Either.Right ->
+    is Either.Left -> {
+        context.respond(value)
+    }
+
+    is Either.Right -> {
         when (redirect) {
             false -> context.call.respond(status, value)
             true -> context.call.respondRedirect(value.toString())
         }
+    }
 }
 
 suspend inline fun <reified A : Any> Either<ApiError, A>.respond(
