@@ -1,16 +1,28 @@
 # syntax=docker/dockerfile:1.20
 
-FROM --platform=$BUILDPLATFORM node:24-alpine AS build
+FROM --platform=$BUILDPLATFORM node:24-bookworm-slim AS build
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 WORKDIR /app
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+RUN pnpm install --frozen-lockfile
+
 COPY . .
 
-RUN npm ci
-RUN npm run build
+RUN pnpm run build
 
-FROM node:24-alpine AS deploy
+FROM node:24-bookworm-slim AS deploy
+
+ENV NODE_ENV=production
 
 WORKDIR /app
-COPY --from=build /app/.output/ /app
+
+COPY --from=build /app/.output ./
+
 CMD ["node", "/app/server/index.mjs"]
 
