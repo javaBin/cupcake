@@ -10,24 +10,32 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "prettier": "prettier --write ."
+    "format": "prettier --write ."
   },
   "dependencies": {
-    "@nuxt/eslint": "^1.11.0",
-    "@nuxt/icon": "^2.1.0",
-    "eslint": "^9.39.1",
+    "@artmizu/nuxt-prometheus": "2.7.0",
+    "@iconify/json": "^2.2.418",
+    "@nuxt/eslint": "1.12.1",
+    "@nuxt/icon": "^2.1.1",
+    "@nuxt/ui": "4.2.1",
+    "eslint": "9.39.2",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-prettier": "5.5.4",
     "http-proxy-middleware": "^3.0.5",
-    "nuxt": "^4.2.1",
-    "vue": "^3.5.25",
-    "vue-router": "^4.6.3",
-    "vuetify-nuxt-module": "^0.18.8"
+    "nuxt": "4.2.2",
+    "prettier": "3.7.4",
+    "typescript": "5.9.3",
+    "vue": "3.5.25",
+    "vue-router": "4.6.4"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.411",
-    "eslint-plugin-prettier": "^5.5.4",
-    "prettier": "^3.7.1",
-    "prettier-plugin-organize-imports": "^4.3.0",
-    "prettier-plugin-tailwindcss": "^0.7.1",
-    "vue-tsc": "^3.1.5"
-  }
+    "debug": "4.4.3",
+    "husky": "9.1.7",
+    "lint-staged": "16.2.7",
+    "tailwindcss": "4.1.18"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": "pnpm lint:fix"
+  },
+  "packageManager": "pnpm@10.25.0"
 }

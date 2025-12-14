@@ -1,7 +1,11 @@
 export const useConferences = () => {
-  const conferenceLink = (conference: Conference): string => `/conference/${conference.id}`
+  const conferenceLink = (conference: Conference): string =>
+    `/conference/${conference.id}`
 
-  const findConference = (id: string, conferences?: Conference[]): Conference | undefined => {
+  const findConference = (
+    id: string,
+    conferences?: Conference[],
+  ): Conference | undefined => {
     if (conferences === undefined) {
       return undefined
     }
@@ -16,7 +20,7 @@ export const useConferences = () => {
       return conference.name
     }
 
-    return 'Javazone'
+    return "Javazone"
   }
 
   return {

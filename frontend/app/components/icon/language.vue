@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  const props = defineProps<{
-    language: string
-    full?: boolean
-  }>()
+const props = defineProps<{
+  language: string
+  full?: boolean
+}>()
 </script>
 
 <template>

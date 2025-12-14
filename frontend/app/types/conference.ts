@@ -1,4 +1,4 @@
-declare interface Conference {
+export interface Conference {
   id: string
   name: string
   slug: string

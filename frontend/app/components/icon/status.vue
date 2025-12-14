@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  const props = defineProps<{
-    status: string
-    full?: boolean
-  }>()
+const props = defineProps<{
+  status: string
+  full?: boolean
+}>()
 </script>
 
 <template>

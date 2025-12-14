@@ -1,102 +1,67 @@
 <script setup lang="ts">
-  const route = useRoute()
+import type { Conference } from "@/types/conference"
+import type { Session } from "@/types/session"
 
-  const { findConference, conferenceTitle, conferenceLink } = useConferences()
-  const { findSession, duration } = useSessions()
+const route = useRoute()
 
-  const user = useCookie('user_session', {
-    readonly: true,
-  })
+const { findConference, conferenceTitle, conferenceLink } = useConferences()
+const { findSession, duration } = useSessions()
 
-  const opts: UseFetchOptions = {}
+const conferenceId = String(route.params.conferenceId)
+const sessionId = String(route.params.sessionId)
 
-  if (user.value !== undefined) {
-    opts['headers'] = {
-      authorization: `Bearer ${user.value}`,
-    }
-  }
+const { conferencesFetch, sessionsFetch, pending } =
+  useConferenceSessionsData(conferenceId)
 
-  const { data: conferences, status: conferenceStatus } = await useFetch<Conference[]>(
-    `/api/conferences`,
-    opts
-  )
+const conference = computed<Conference | undefined>(() => {
+  if (conferencesFetch.status.value !== "success") return undefined
+  return findConference(conferenceId, conferencesFetch.data.value)
+})
 
-  const { data: sessions, status } = await useLazyFetch<Session[]>(
-    `/api/conferences/${route.params.conferenceId}/sessions`,
-    opts
-  )
+const session = computed<Session | undefined>(() => {
+  if (sessionsFetch.status.value !== "success") return undefined
+  return findSession(sessionId, sessionsFetch.data.value)
+})
 
-  const conference = computed(() => {
-    if (conferenceStatus.value === 'success') {
-      return findConference(route.params.conferenceId, conferences.value)
-    }
-
-    return undefined
-  })
-
-  const session = computed(() => {
-    if (status.value === 'success') {
-      const session = findSession(route.params.sessionId, sessions.value)
-
-      return session
-    }
-
-    return undefined
-  })
-
-  const sessionLength = computed(() => {
-    return duration(session.value)
-  })
+const sessionLength = computed(() => duration(session.value))
 </script>
 
 <template>
-  <v-container>
-    <h1 v-if="conference">
-      <NuxtLink :to="conferenceLink(conference)">{{ conferenceTitle(conference) }}</NuxtLink>
-    </h1>
+  <div class="mx-2 space-y-4">
+    <div v-if="conference" class="text-xl font-semibold">
+      <NuxtLink :to="conferenceLink(conference)" class="hover:underline">
+        {{ conferenceTitle(conference) }}
+      </NuxtLink>
+    </div>
 
-    <div v-if="session">
-      <h2 class="my-2">
-        {{ session.title }}
-        <span v-if="sessionLength">({{ sessionLength }})</span>
-      </h2>
+    <div v-if="session" class="space-y-4">
+      <UCard>
+        <template #header>
+          <div class="space-y-2">
+            <div class="text-2xl font-semibold leading-snug break-words">
+              {{ session.title }}
+            </div>
 
-      <div>
-        <IconFormat :format="session.format" full />
-        <IconStatus :status="session.status" full />
-        <IconLanguage :language="session.language" full />
-      </div>
+            <SessionsMeta :session="session" :length-text="sessionLength" />
+          </div>
+        </template>
 
-      <div class="my-2">
-        {{ session.abstract }}
-      </div>
+        <div class="whitespace-pre-wrap break-words">
+          {{ session.abstract }}
+        </div>
+      </UCard>
 
-      <h2>Speakers</h2>
+      <div class="text-xl font-semibold">Speakers</div>
 
-      <div class="d-flex ga-3 my-2 flex-wrap justify-center">
-        <v-card v-for="(speaker, idx) in session.speakers" :key="idx" class="w-25">
-          <v-card-title>{{ speaker.name }}</v-card-title>
-
-          <v-card-text v-if="speaker.bio">{{ speaker.bio }}</v-card-text>
-
-          <v-card-actions>
-            <v-list density="compact" lines="two">
-              <v-list-item v-if="speaker.email" title="E-mail" :subtitle="speaker.email" />
-              <v-list-item v-if="speaker.postcode" title="Postcode" :subtitle="speaker.postcode" />
-              <v-list-item v-if="speaker.location" title="Location" :subtitle="speaker.location" />
-              <v-list-item v-if="speaker.city" title="City" :subtitle="speaker.city" />
-              <v-list-item v-if="speaker.county" title="County" :subtitle="speaker.county" />
-            </v-list>
-          </v-card-actions>
-        </v-card>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <SessionsSpeaker
+          v-for="(speaker, idx) in session.speakers"
+          :key="idx"
+          :speaker="speaker"
+        />
       </div>
     </div>
 
-    <v-progress-circular
-      v-if="status === 'pending' || conferenceStatus === 'pending'"
-      color="primary"
-      indeterminate
-      class="ma-16"
-    />
-  </v-container>
+    <UProgress v-if="pending" indeterminate class="w-full" />
+  </div>
 </template>
