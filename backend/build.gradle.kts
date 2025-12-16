@@ -16,7 +16,7 @@ kotlin {
     jvmToolchain(22)
 
     compilerOptions {
-        freeCompilerArgs = listOf("-Xconsistent-data-class-copy-visibility")
+        freeCompilerArgs = listOf("-Xconsistent-data-class-copy-visibility", "-Xcontext-parameters")
     }
 }
 
@@ -37,6 +37,7 @@ dependencies {
 
     implementation(libs.arrow.core)
     implementation(libs.cache4k)
+    implementation(libs.caffeine)
     implementation(libs.kotlinx.coroutines.core)
 
     implementation(libs.kotlin.logging)

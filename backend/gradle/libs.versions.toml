@@ -1,6 +1,7 @@
 [versions]
 arrow = "2.2.0"
 cache4k = "0.14.0"
+caffeine = "3.2.3"
 dependency_analysis = "3.5.1"
 detekt = "1.23.8"
 gradle_versions_filter = "0.1.16"
@@ -20,6 +21,7 @@ release = "3.1.0"
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
 
 cache4k = { group = "io.github.reactivecircus.cache4k", name="cache4k", version.ref = "cache4k" }
+caffeine = { group = "com.github.ben-manes.caffeine", name="caffeine", version.ref = "caffeine" }
 
 kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "kotlin_logging" }
 

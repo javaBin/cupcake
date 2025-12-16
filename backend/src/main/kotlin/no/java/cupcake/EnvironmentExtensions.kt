@@ -17,6 +17,7 @@ fun ApplicationEnvironment.sleepingPillConfig() =
         username = str("sleepingpill.username"),
         password = str("sleepingpill.password"),
         rootUrl = str("sleepingpill.base"),
+        cacheTtlSeconds = long("sleepingpill.cache_ttl_seconds"),
     )
 
 fun ApplicationEnvironment.jwtConfig() =

@@ -24,6 +24,12 @@ fun ApplicationEnvironment.str(key: String) = this.config.property(key).getStrin
 
 fun ApplicationEnvironment.bool(key: String) = this.config.property(key).getString() == "true"
 
+fun ApplicationEnvironment.long(key: String) =
+    this.config
+        .property(key)
+        .getString()
+        .toLong()
+
 fun Application.module() {
     configureSerialization()
     configureMonitoring()
@@ -53,11 +59,15 @@ private fun Application.slackService(): SlackService =
 
 private fun Application.slackProvider() = slackProvider(environment.slackConfig())
 
-private fun Application.sleepingPillService(bringService: BringService): SleepingPillService =
-    SleepingPillService(
-        client = sleepingPillClient(environment.sleepingPillConfig()),
+private fun Application.sleepingPillService(bringService: BringService): SleepingPillService {
+    val config = environment.sleepingPillConfig()
+
+    return SleepingPillService(
+        client = sleepingPillClient(config),
         bringService = bringService,
+        cacheTimeoutSeconds = config.cacheTtlSeconds,
     )
+}
 
 private fun Application.bringService(): BringService =
     BringService(

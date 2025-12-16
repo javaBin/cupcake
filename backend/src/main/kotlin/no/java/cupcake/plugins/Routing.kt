@@ -30,8 +30,8 @@ fun Application.configureRouting(
                 route("/conferences") {
                     get {
                         either {
-                            sleepingPillService.conferences(raise = this).sortedByDescending { it.name }
-                        }.respond(this)
+                            sleepingPillService.conferences().sortedByDescending { it.name }
+                        }.respond()
                     }
 
                     route("/{id}") {
@@ -39,9 +39,8 @@ fun Application.configureRouting(
                             either {
                                 sleepingPillService.sessions(
                                     id = ConferenceId(call.parameters["id"]).bind(),
-                                    raise = this,
                                 )
-                            }.respond(this)
+                            }.respond()
                         }
                     }
                 }

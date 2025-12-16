@@ -191,7 +191,7 @@ private fun Routing.configureAuthRouting(
                 )
 
                 redirect
-            }.redirect(this)
+            }.redirect()
         }
     }
 }
