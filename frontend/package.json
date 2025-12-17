@@ -14,10 +14,10 @@
   },
   "dependencies": {
     "@artmizu/nuxt-prometheus": "2.7.0",
-    "@iconify/json": "^2.2.418",
+    "@iconify/json": "^2.2.419",
     "@nuxt/eslint": "1.12.1",
     "@nuxt/icon": "^2.1.1",
-    "@nuxt/ui": "4.2.1",
+    "@nuxt/ui": "4.3.0",
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.4",
