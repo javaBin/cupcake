@@ -12,18 +12,8 @@ importers:
         specifier: 2.7.0
         version: 2.7.0
       '@iconify/json':
-<<<<<<< HEAD
-        specifier: ^2.2.418
-        version: 2.2.418
-||||||| parent of b707d83 (Bump nuxt/ui)
-      "@iconify/json":
-        specifier: ^2.2.418
-        version: 2.2.418
-      "@nuxt/eslint":
-=======
         specifier: ^2.2.419
         version: 2.2.419
->>>>>>> b707d83 (Bump nuxt/ui)
       '@nuxt/eslint':
         specifier: 1.12.1
         version: 1.12.1(@typescript-eslint/utils@8.49.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(@vue/compiler-sfc@3.5.25)(eslint@9.39.2(jiti@2.6.1))(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))
@@ -31,17 +21,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1(magicast@0.5.1)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3))
       '@nuxt/ui':
-<<<<<<< HEAD
-        specifier: 4.2.1
-        version: 4.2.1(@babel/parser@7.28.5)(change-case@5.4.4)(db0@0.3.4)(embla-carousel@8.6.0)(ioredis@5.8.2)(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))
-||||||| parent of b707d83 (Bump nuxt/ui)
-      "@nuxt/ui":
-        specifier: 4.2.1
-        version: 4.2.1(@babel/parser@7.28.5)(change-case@5.4.4)(db0@0.3.4)(embla-carousel@8.6.0)(ioredis@5.8.2)(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))
-=======
         specifier: 4.3.0
         version: 4.3.0(@babel/parser@7.28.5)(@floating-ui/dom@1.7.4)(@tiptap/extension-drag-handle@3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))(@tiptap/extension-collaboration@3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))(@tiptap/pm@3.13.0)(@tiptap/y-tiptap@3.0.1(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(y-protocols@1.0.7(yjs@13.6.28))(yjs@13.6.28))(yjs@13.6.28))(@tiptap/extension-node-range@3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))(@tiptap/pm@3.13.0))(@tiptap/pm@3.13.0)(@tiptap/y-tiptap@3.0.1(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(y-protocols@1.0.7(yjs@13.6.28))(yjs@13.6.28)))(@tiptap/extensions@3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))(@tiptap/pm@3.13.0))(change-case@5.4.4)(db0@0.3.4)(embla-carousel@8.6.0)(ioredis@5.8.2)(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))
->>>>>>> b707d83 (Bump nuxt/ui)
       eslint:
         specifier: 9.39.2
         version: 9.39.2(jiti@2.6.1)
@@ -676,19 +657,8 @@ packages:
   '@iconify/collections@1.0.629':
     resolution: {integrity: sha512-1iT8HyMKpOvml6jxZDaW2dkdgzls4Ik7I/tn79hHqbPGWkNpIQsJSB3Dto+vAyboXLtsRvIKIwtSvfgrHR0HRw==}
 
-<<<<<<< HEAD
-  '@iconify/json@2.2.418':
-    resolution: {integrity: sha512-vSIFcv+o9nvMY8qq4UdjtudA2/7h7hL1UIKurdUgvz/2lwT4aHJ7A7vCDtCi35JoL9UXaRChy6aaoVoPQc7i5g==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@iconify/json@2.2.418":
-    resolution:
-      {
-        integrity: sha512-vSIFcv+o9nvMY8qq4UdjtudA2/7h7hL1UIKurdUgvz/2lwT4aHJ7A7vCDtCi35JoL9UXaRChy6aaoVoPQc7i5g==,
-      }
-=======
   '@iconify/json@2.2.419':
     resolution: {integrity: sha512-50GipvrxOs/b03MP0GxCTn65o4S/DDEXbf03oXbglp0m552TcT8yAidLl7kyQ1fiI+rx3LbvZ6hNSU3CrXZnIQ==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -701,19 +671,8 @@ packages:
     peerDependencies:
       vue: '>=3'
 
-<<<<<<< HEAD
-  '@internationalized/date@3.10.0':
-    resolution: {integrity: sha512-oxDR/NTEJ1k+UFVQElaNIk65E/Z83HK1z1WI3lQyhTtnNg4R5oVXaPzK3jcpKG8UHKDVuDQHzn+wsxSz8RP3aw==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@internationalized/date@3.10.0":
-    resolution:
-      {
-        integrity: sha512-oxDR/NTEJ1k+UFVQElaNIk65E/Z83HK1z1WI3lQyhTtnNg4R5oVXaPzK3jcpKG8UHKDVuDQHzn+wsxSz8RP3aw==,
-      }
-=======
   '@internationalized/date@3.10.1':
     resolution: {integrity: sha512-oJrXtQiAXLvT9clCf1K4kxp3eKsQhIaZqxEyowkBcsvZDdZkbWrVmnGknxs5flTD0VGsxrxKgBCZty1EzoiMzA==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   '@internationalized/number@3.6.5':
     resolution: {integrity: sha512-6hY4Kl4HPBvtfS62asS/R22JzNNy8vi/Ssev7x6EobfCp+9QIB2hKvI2EtbdJ0VSQacxVNtqhE/NmF/NZ0gm6g==}
@@ -871,19 +830,8 @@ packages:
     engines: {node: '>=18.12.0'}
     hasBin: true
 
-<<<<<<< HEAD
-  '@nuxt/ui@4.2.1':
-    resolution: {integrity: sha512-H5/0w1ktRDGk4ORKmGegqhNsR8DZEc+3Bb9a8aHsQVzDkGKqEJLh2iUJtalKs4QdUGkocDXaQy/xRudajOD4kg==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@nuxt/ui@4.2.1":
-    resolution:
-      {
-        integrity: sha512-H5/0w1ktRDGk4ORKmGegqhNsR8DZEc+3Bb9a8aHsQVzDkGKqEJLh2iUJtalKs4QdUGkocDXaQy/xRudajOD4kg==,
-      }
-=======
   '@nuxt/ui@4.3.0':
     resolution: {integrity: sha512-zhOIba3roiqNwV/hXXkKBlv9RA01/Gd2Okydpgps2zM4KGx6RM+ED5JGUOSd41bmTeBRO7v7Lg4w3Vyj9hQPiA==}
->>>>>>> b707d83 (Bump nuxt/ui)
     hasBin: true
     peerDependencies:
       '@inertiajs/vue3': ^2.0.7
@@ -1318,47 +1266,15 @@ packages:
   '@poppinss/exception@1.2.2':
     resolution: {integrity: sha512-m7bpKCD4QMlFCjA/nKTs23fuvoVFoA83brRKmObCUNmi/9tVu8Ve3w4YQAnJu4q3Tjf5fr685HYIC/IA2zHRSg==}
 
-<<<<<<< HEAD
-  '@rolldown/pluginutils@1.0.0-beta.50':
-    resolution: {integrity: sha512-5e76wQiQVeL1ICOZVUg4LSOVYg9jyhGCin+icYozhsUzM+fHE7kddi1bdiE0jwVqTfkjba3jUFbEkoC9WkdvyA==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@rolldown/pluginutils@1.0.0-beta.50":
-    resolution:
-      {
-        integrity: sha512-5e76wQiQVeL1ICOZVUg4LSOVYg9jyhGCin+icYozhsUzM+fHE7kddi1bdiE0jwVqTfkjba3jUFbEkoC9WkdvyA==,
-      }
-=======
   '@remirror/core-constants@3.0.0':
     resolution: {integrity: sha512-42aWfPrimMfDKDi4YegyS7x+/0tlzaqwPQCULLanv3DMIlu96KTJR0fM5isWX2UViOqlGnX6YFgqWepcX+XMNg==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
-<<<<<<< HEAD
-  '@rolldown/pluginutils@1.0.0-beta.54':
-    resolution: {integrity: sha512-AHgcZ+w7RIRZ65ihSQL8YuoKcpD9Scew4sEeP1BBUT9QdTo6KjwHrZZXjID6nL10fhKessCH6OPany2QKwAwTQ==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@rolldown/pluginutils@1.0.0-beta.54":
-    resolution:
-      {
-        integrity: sha512-AHgcZ+w7RIRZ65ihSQL8YuoKcpD9Scew4sEeP1BBUT9QdTo6KjwHrZZXjID6nL10fhKessCH6OPany2QKwAwTQ==,
-      }
-=======
   '@rolldown/pluginutils@1.0.0-beta.50':
     resolution: {integrity: sha512-5e76wQiQVeL1ICOZVUg4LSOVYg9jyhGCin+icYozhsUzM+fHE7kddi1bdiE0jwVqTfkjba3jUFbEkoC9WkdvyA==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@rollup/plugin-alias@5.1.1":
-    resolution:
-      {
-        integrity: sha512-PR9zDb+rOzkRb2VD+EuKB7UC41vU5DIwZ5qqCpk0KJudcWAyi8rvYOhS7+L5aZCspw1stTViLgN5v6FF1p5cgQ==,
-      }
-    engines: { node: ">=14.0.0" }
-=======
   '@rolldown/pluginutils@1.0.0-beta.54':
     resolution: {integrity: sha512-AHgcZ+w7RIRZ65ihSQL8YuoKcpD9Scew4sEeP1BBUT9QdTo6KjwHrZZXjID6nL10fhKessCH6OPany2QKwAwTQ==}
 
->>>>>>> b707d83 (Bump nuxt/ui)
   '@rollup/plugin-alias@5.1.1':
     resolution: {integrity: sha512-PR9zDb+rOzkRb2VD+EuKB7UC41vU5DIwZ5qqCpk0KJudcWAyi8rvYOhS7+L5aZCspw1stTViLgN5v6FF1p5cgQ==}
     engines: {node: '>=14.0.0'}
@@ -1556,19 +1472,8 @@ packages:
   '@speed-highlight/core@1.2.12':
     resolution: {integrity: sha512-uilwrK0Ygyri5dToHYdZSjcvpS2ZwX0w5aSt3GCEN9hrjxWCoeV4Z2DTXuxjwbntaLQIEEAlCeNQss5SoHvAEA==}
 
-<<<<<<< HEAD
-  '@standard-schema/spec@1.0.0':
-    resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@standard-schema/spec@1.0.0":
-    resolution:
-      {
-        integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==,
-      }
-=======
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   '@stylistic/eslint-plugin@5.6.1':
     resolution: {integrity: sha512-JCs+MqoXfXrRPGbGmho/zGS/jMcn3ieKl/A8YImqib76C8kjgZwq5uUFzc30lJkMvcchuRn6/v8IApLxli3Jyw==}
@@ -1690,95 +1595,32 @@ packages:
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
 
-<<<<<<< HEAD
-  '@tybys/wasm-util@0.10.1':
-    resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@tybys/wasm-util@0.10.1":
-    resolution:
-      {
-        integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==,
-      }
-=======
   '@tiptap/core@3.13.0':
     resolution: {integrity: sha512-iUelgiTMgPVMpY5ZqASUpk8mC8HuR9FWKaDzK27w9oWip9tuB54Z8mePTxNcQaSPb6ErzEaC8x8egrRt7OsdGQ==}
     peerDependencies:
       '@tiptap/pm': ^3.13.0
->>>>>>> b707d83 (Bump nuxt/ui)
 
-<<<<<<< HEAD
-  '@types/estree@1.0.8':
-    resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@types/estree@1.0.8":
-    resolution:
-      {
-        integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==,
-      }
-=======
   '@tiptap/extension-blockquote@3.13.0':
     resolution: {integrity: sha512-K1z/PAIIwEmiWbzrP//4cC7iG1TZknDlF1yb42G7qkx2S2X4P0NiqX7sKOej3yqrPjKjGwPujLMSuDnCF87QkQ==}
     peerDependencies:
       '@tiptap/core': ^3.13.0
->>>>>>> b707d83 (Bump nuxt/ui)
 
-<<<<<<< HEAD
-  '@types/http-proxy@1.17.17':
-    resolution: {integrity: sha512-ED6LB+Z1AVylNTu7hdzuBqOgMnvG/ld6wGCG8wFnAzKX5uyW2K3WD52v0gnLCTK/VLpXtKckgWuyScYK6cSPaw==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@types/http-proxy@1.17.17":
-    resolution:
-      {
-        integrity: sha512-ED6LB+Z1AVylNTu7hdzuBqOgMnvG/ld6wGCG8wFnAzKX5uyW2K3WD52v0gnLCTK/VLpXtKckgWuyScYK6cSPaw==,
-      }
-=======
   '@tiptap/extension-bold@3.13.0':
     resolution: {integrity: sha512-VYiDN9EEwR6ShaDLclG8mphkb/wlIzqfk7hxaKboq1G+NSDj8PcaSI9hldKKtTCLeaSNu6UR5nkdu/YHdzYWTw==}
     peerDependencies:
       '@tiptap/core': ^3.13.0
->>>>>>> b707d83 (Bump nuxt/ui)
 
-<<<<<<< HEAD
-  '@types/json-schema@7.0.15':
-    resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@types/json-schema@7.0.15":
-    resolution:
-      {
-        integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==,
-      }
-=======
   '@tiptap/extension-bubble-menu@3.13.0':
     resolution: {integrity: sha512-qZ3j2DBsqP9DjG2UlExQ+tHMRhAnWlCKNreKddKocb/nAFrPdBCtvkqIEu+68zPlbLD4ukpoyjUklRJg+NipFg==}
     peerDependencies:
       '@tiptap/core': ^3.13.0
       '@tiptap/pm': ^3.13.0
->>>>>>> b707d83 (Bump nuxt/ui)
 
-<<<<<<< HEAD
-  '@types/node@25.0.1':
-    resolution: {integrity: sha512-czWPzKIAXucn9PtsttxmumiQ9N0ok9FrBwgRWrwmVLlp86BrMExzvXRLFYRJ+Ex3g6yqj+KuaxfX1JTgV2lpfg==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@types/node@25.0.1":
-    resolution:
-      {
-        integrity: sha512-czWPzKIAXucn9PtsttxmumiQ9N0ok9FrBwgRWrwmVLlp86BrMExzvXRLFYRJ+Ex3g6yqj+KuaxfX1JTgV2lpfg==,
-      }
-=======
   '@tiptap/extension-bullet-list@3.13.0':
     resolution: {integrity: sha512-fFQmmEUoPzRGiQJ/KKutG35ZX21GE+1UCDo8Q6PoWH7Al9lex47nvyeU1BiDYOhcTKgIaJRtEH5lInsOsRJcSA==}
     peerDependencies:
       '@tiptap/extension-list': ^3.13.0
->>>>>>> b707d83 (Bump nuxt/ui)
 
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@types/parse-path@7.1.0":
-    resolution:
-      {
-        integrity: sha512-EULJ8LApcVEPbrfND0cRQqutIOdiIgJ1Mgrhpy755r14xMohPTEpkV/k28SJvuOs9bHRFW8x+KeDAEPiGQPB9Q==,
-      }
-=======
   '@tiptap/extension-code-block@3.13.0':
     resolution: {integrity: sha512-kIwfQ4iqootsWg9e74iYJK54/YMIj6ahUxEltjZRML5z/h4gTDcQt2eTpnEC8yjDjHeUVOR94zH9auCySyk9CQ==}
     peerDependencies:
@@ -1994,7 +1836,6 @@ packages:
   '@types/node@25.0.1':
     resolution: {integrity: sha512-czWPzKIAXucn9PtsttxmumiQ9N0ok9FrBwgRWrwmVLlp86BrMExzvXRLFYRJ+Ex3g6yqj+KuaxfX1JTgV2lpfg==}
 
->>>>>>> b707d83 (Bump nuxt/ui)
   '@types/parse-path@7.1.0':
     resolution: {integrity: sha512-EULJ8LApcVEPbrfND0cRQqutIOdiIgJ1Mgrhpy755r14xMohPTEpkV/k28SJvuOs9bHRFW8x+KeDAEPiGQPB9Q==}
     deprecated: This is a stub types definition. parse-path provides its own type definitions, so you do not need this installed.
@@ -2274,35 +2115,13 @@ packages:
   '@vueuse/core@12.8.2':
     resolution: {integrity: sha512-HbvCmZdzAu3VGi/pWYm5Ut+Kd9mn1ZHnn4L5G8kOQTPs/IwIAmJoBrmYk2ckLArgMXZj0AW3n5CAejLUO+PhdQ==}
 
-<<<<<<< HEAD
-  '@vueuse/core@13.9.0':
-    resolution: {integrity: sha512-ts3regBQyURfCE2BcytLqzm8+MmLlo5Ln/KLoxDVcsZ2gzIwVNnQpQOL/UKV8alUqjSZOlpFZcRNsLRqj+OzyA==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@vueuse/core@13.9.0":
-    resolution:
-      {
-        integrity: sha512-ts3regBQyURfCE2BcytLqzm8+MmLlo5Ln/KLoxDVcsZ2gzIwVNnQpQOL/UKV8alUqjSZOlpFZcRNsLRqj+OzyA==,
-      }
-=======
   '@vueuse/core@14.1.0':
     resolution: {integrity: sha512-rgBinKs07hAYyPF834mDTigH7BtPqvZ3Pryuzt1SD/lg5wEcWqvwzXXYGEDb2/cP0Sj5zSvHl3WkmMELr5kfWw==}
->>>>>>> b707d83 (Bump nuxt/ui)
     peerDependencies:
       vue: ^3.5.0
 
-<<<<<<< HEAD
-  '@vueuse/integrations@13.9.0':
-    resolution: {integrity: sha512-SDobKBbPIOe0cVL7QxMzGkuUGHvWTdihi9zOrrWaWUgFKe15cwEcwfWmgrcNzjT6kHnNmWuTajPHoIzUjYNYYQ==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@vueuse/integrations@13.9.0":
-    resolution:
-      {
-        integrity: sha512-SDobKBbPIOe0cVL7QxMzGkuUGHvWTdihi9zOrrWaWUgFKe15cwEcwfWmgrcNzjT6kHnNmWuTajPHoIzUjYNYYQ==,
-      }
-=======
   '@vueuse/integrations@14.1.0':
     resolution: {integrity: sha512-eNQPdisnO9SvdydTIXnTE7c29yOsJBD/xkwEyQLdhDC/LKbqrFpXHb3uS//7NcIrQO3fWVuvMGp8dbK6mNEMCA==}
->>>>>>> b707d83 (Bump nuxt/ui)
     peerDependencies:
       async-validator: ^4
       axios: ^1
@@ -2349,19 +2168,8 @@ packages:
   '@vueuse/metadata@12.8.2':
     resolution: {integrity: sha512-rAyLGEuoBJ/Il5AmFHiziCPdQzRt88VxR+Y/A/QhJ1EWtWqPBBAxTAFaSkviwEuOEZNtW8pvkPgoCZQ+HxqW1A==}
 
-<<<<<<< HEAD
-  '@vueuse/metadata@13.9.0':
-    resolution: {integrity: sha512-1AFRvuiGphfF7yWixZa0KwjYH8ulyjDCC0aFgrGRz8+P4kvDFSdXLVfTk5xAN9wEuD1J6z4/myMoYbnHoX07zg==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@vueuse/metadata@13.9.0":
-    resolution:
-      {
-        integrity: sha512-1AFRvuiGphfF7yWixZa0KwjYH8ulyjDCC0aFgrGRz8+P4kvDFSdXLVfTk5xAN9wEuD1J6z4/myMoYbnHoX07zg==,
-      }
-=======
   '@vueuse/metadata@14.1.0':
     resolution: {integrity: sha512-7hK4g015rWn2PhKcZ99NyT+ZD9sbwm7SGvp7k+k+rKGWnLjS/oQozoIZzWfCewSUeBmnJkIb+CNr7Zc/EyRnnA==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   '@vueuse/shared@10.11.1':
     resolution: {integrity: sha512-LHpC8711VFZlDaYUXEBbFBCQ7GS3dVU9mjOhhMhXP6txTV4EhYQg/KGnQuvt/sPAtoUKq7VVUnL6mVtFoL42sA==}
@@ -2369,19 +2177,8 @@ packages:
   '@vueuse/shared@12.8.2':
     resolution: {integrity: sha512-dznP38YzxZoNloI0qpEfpkms8knDtaoQ6Y/sfS0L7Yki4zh40LFHEhur0odJC6xTHG5dxWVPiUWBXn+wCG2s5w==}
 
-<<<<<<< HEAD
-  '@vueuse/shared@13.9.0':
-    resolution: {integrity: sha512-e89uuTLMh0U5cZ9iDpEI2senqPGfbPRTHM/0AaQkcxnpqjkZqDYP8rpfm7edOz8s+pOCOROEy1PIveSW8+fL5g==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@vueuse/shared@13.9.0":
-    resolution:
-      {
-        integrity: sha512-e89uuTLMh0U5cZ9iDpEI2senqPGfbPRTHM/0AaQkcxnpqjkZqDYP8rpfm7edOz8s+pOCOROEy1PIveSW8+fL5g==,
-      }
-=======
   '@vueuse/shared@14.1.0':
     resolution: {integrity: sha512-EcKxtYvn6gx1F8z9J5/rsg3+lTQnvOruQd8fUecW99DCK04BkWD7z5KQ/wTAx+DazyoEE9dJt/zV8OIEQbM6kw==}
->>>>>>> b707d83 (Bump nuxt/ui)
     peerDependencies:
       vue: ^3.5.0
 
@@ -2726,18 +2523,9 @@ packages:
   crc32-stream@6.0.0:
     resolution: {integrity: sha512-piICUB6ei4IlTv1+653yq5+KoqfBYmj9bw6LqXoOneTMDXk5nM1qt12mFW1caG3LlJXEKW1Bp0WggEmIfQB34g==}
     engines: {node: '>= 14'}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-piICUB6ei4IlTv1+653yq5+KoqfBYmj9bw6LqXoOneTMDXk5nM1qt12mFW1caG3LlJXEKW1Bp0WggEmIfQB34g==,
-      }
-    engines: { node: ">= 14" }
-=======
 
   crelt@1.0.6:
     resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   croner@9.1.0:
     resolution: {integrity: sha512-p9nwwR4qyT5W996vBZhdvBCnMhicY5ytZkR4D1Xj0wuTDEiMnjwR57Q3RXYY/s0EpX6Ay3vgIcfaR+ewGHsi+g==}
@@ -3609,18 +3397,9 @@ packages:
   isexe@3.1.1:
     resolution: {integrity: sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==}
     engines: {node: '>=16'}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==,
-      }
-    engines: { node: ">=16" }
-=======
 
   isomorphic.js@0.2.5:
     resolution: {integrity: sha512-PIeMbHqMt4DnUP3MA/Flc0HElYjMXArsw1qwJZcm9sqR8mq3l8NYizFMty0pWwE/tzIGH3EKK5+jes5mAr85yw==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
@@ -3697,20 +3476,11 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==,
-      }
-    engines: { node: ">= 0.8.0" }
-=======
 
   lib0@0.2.115:
     resolution: {integrity: sha512-noaW4yNp6hCjOgDnWWxW0vGXE3kZQI5Kqiwz+jIWXavI9J9WyfJ9zjsbQlQlgjIbHBrvlA/x3TSIXBUJj+0L6g==}
     engines: {node: '>=16'}
     hasBin: true
->>>>>>> b707d83 (Bump nuxt/ui)
 
   lightningcss-android-arm64@1.30.2:
     resolution: {integrity: sha512-BH9sEdOCahSgmkVhBLeU7Hc9DWeZ1Eb6wNS6Da8igvUwAe0sqROHddIlvU06q3WyXVEOYDZ6ykBZQnjTbmo4+A==}
@@ -3785,21 +3555,12 @@ packages:
   lilconfig@3.1.3:
     resolution: {integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==}
     engines: {node: '>=14'}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-/vlFKAoH5Cgt3Ie+JLhRbwOsCQePABiU3tJ1egGvyQ+33R/vcwM2Zl2QR/LzjsBeItPt3oSVXapn+m4nQDvpzw==,
-      }
-    engines: { node: ">=14" }
-=======
 
   linkify-it@5.0.0:
     resolution: {integrity: sha512-5aHCbzQRADcdP+ATqnDuhhJ/MRIqDkZX5pyjFHRRysS8vZ5AbqGEoFIb6pYHPZ+L/OC2Lc+xT8uHVVR5CAK/wQ==}
 
   linkifyjs@4.3.2:
     resolution: {integrity: sha512-NT1CJtq3hHIreOianA8aSXn6Cw0JzYOuDQbOrSPe7gqFnCpKP++MQe3ODgO3oh2GJFORkAAdqredOa60z63GbA==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   lint-staged@16.2.7:
     resolution: {integrity: sha512-lDIj4RnYmK7/kXMya+qJsmkRFkGolciXjrsZ6PC25GdTfWOAWetR0ZbsNXRAj1EHHImRSalc+whZFg56F5DVow==}
@@ -3870,13 +3631,6 @@ packages:
 
   magicast@0.5.1:
     resolution: {integrity: sha512-xrHS24IxaLrvuo613F719wvOIv9xPHFWQHuvGUBmPnCA/3MQxKI3b+r7n1jAoDHmsbC5bRhTZYR77invLAxVnw==}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-xrHS24IxaLrvuo613F719wvOIv9xPHFWQHuvGUBmPnCA/3MQxKI3b+r7n1jAoDHmsbC5bRhTZYR77invLAxVnw==,
-      }
-=======
 
   markdown-it@14.1.0:
     resolution: {integrity: sha512-a54IwgWPaeBCAAsv13YgmALOF1elABB08FxO9i+r4VFk5Vl4pKokRPeX8u5TCgSsPi6ec1otfLjdOpVcgbpshg==}
@@ -3886,24 +3640,15 @@ packages:
     resolution: {integrity: sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==}
     engines: {node: '>= 18'}
     hasBin: true
->>>>>>> b707d83 (Bump nuxt/ui)
 
   mdn-data@2.0.28:
     resolution: {integrity: sha512-aylIc7Z9y4yzHYAJNuESG3hfhC+0Ibp/MAMiaOZgNv4pmEdFyfZhhhny4MNiAfWdBQ1RQ2mfDWmM1x8SvGyp8g==}
 
   mdn-data@2.12.2:
     resolution: {integrity: sha512-IEn+pegP1aManZuckezWCO+XZQDplx1366JoVhTpMpBB1sPey/SbveZQUosKiKiGYjg1wH4pMlNgXbCiYgihQA==}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-IEn+pegP1aManZuckezWCO+XZQDplx1366JoVhTpMpBB1sPey/SbveZQUosKiKiGYjg1wH4pMlNgXbCiYgihQA==,
-      }
-=======
 
   mdurl@2.0.0:
     resolution: {integrity: sha512-Lf+9+2r+Tdp5wXDXC4PcIBjTDtq4UKjCPMQhKIuzpJNW0b96kVqSwW0bT7FhRSfmAiFYgP+SCRvdrDozfh0U5w==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -4141,18 +3886,9 @@ packages:
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==,
-      }
-    engines: { node: ">= 0.8.0" }
-=======
 
   orderedmap@2.1.1:
     resolution: {integrity: sha512-TvAWxi0nDe1j/rtMcWcIj94+Ffe6n7zhow33h40SKxmsmozs6dz/e+EajymfoFcHd7sxNn8yHM8839uixMOV6g==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   outvariant@1.4.3:
     resolution: {integrity: sha512-+Sl2UErvtsoajRDKCE5/dBz4DIvHXQQnAxtQTF04OJxY0+DyZXSo5P5Bb7XYWOh81syohlYL24hbDwxedPUJCA==}
@@ -4485,14 +4221,6 @@ packages:
   prompts@2.4.2:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
     engines: {node: '>= 6'}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==,
-      }
-    engines: { node: ">= 6" }
-=======
 
   prosemirror-changeset@2.3.1:
     resolution: {integrity: sha512-j0kORIBm8ayJNl3zQvD1TTPHJX3g042et6y/KQhZhnPrruO8exkTgG8X+NRpj7kIyMMEx74Xb3DyMIBtO0IKkQ==}
@@ -4551,22 +4279,13 @@ packages:
 
   prosemirror-view@1.41.4:
     resolution: {integrity: sha512-WkKgnyjNncri03Gjaz3IFWvCAE94XoiEgvtr0/r2Xw7R8/IjK3sKLSiDoCHWcsXSAinVaKlGRZDvMCsF1kbzjA==}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   protocols@2.0.2:
     resolution: {integrity: sha512-hHVTzba3wboROl0/aWRRG9dMytgH6ow//STBZh43l/wQgmMhYhOFi0EHWAPtoCz9IAUymsyP0TSBHkhgMEGNnQ==}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-hHVTzba3wboROl0/aWRRG9dMytgH6ow//STBZh43l/wQgmMhYhOFi0EHWAPtoCz9IAUymsyP0TSBHkhgMEGNnQ==,
-      }
-=======
 
   punycode.js@2.3.1:
     resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
     engines: {node: '>=6'}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
@@ -4633,19 +4352,8 @@ packages:
     resolution: {integrity: sha512-NZQZdC5wOE/H3UT28fVGL+ikOZcEzfMGk/c3iN9UGxzWHMa1op7274oyiUVrAG4B2EuFhus8SvkaYnhvW92p9Q==}
     hasBin: true
 
-<<<<<<< HEAD
-  reka-ui@2.6.0:
-    resolution: {integrity: sha512-NrGMKrABD97l890mFS3TNUzB0BLUfbL3hh0NjcJRIUSUljb288bx3Mzo31nOyUcdiiW0HqFGXJwyCBh9cWgb0w==}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  reka-ui@2.6.0:
-    resolution:
-      {
-        integrity: sha512-NrGMKrABD97l890mFS3TNUzB0BLUfbL3hh0NjcJRIUSUljb288bx3Mzo31nOyUcdiiW0HqFGXJwyCBh9cWgb0w==,
-      }
-=======
   reka-ui@2.6.1:
     resolution: {integrity: sha512-XK7cJDQoNuGXfCNzBBo/81Yg/OgjPwvbabnlzXG2VsdSgNsT6iIkuPBPr+C0Shs+3bb0x0lbPvgQAhMSCKm5Ww==}
->>>>>>> b707d83 (Bump nuxt/ui)
     peerDependencies:
       vue: '>= 3.2.0'
 
@@ -5084,19 +4792,10 @@ packages:
   unimport@5.5.0:
     resolution: {integrity: sha512-/JpWMG9s1nBSlXJAQ8EREFTFy3oy6USFd8T6AoBaw1q2GGcF4R9yp3ofg32UODZlYEO5VD0EWE1RpI9XDWyPYg==}
     engines: {node: '>=18.12.0'}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-/JpWMG9s1nBSlXJAQ8EREFTFy3oy6USFd8T6AoBaw1q2GGcF4R9yp3ofg32UODZlYEO5VD0EWE1RpI9XDWyPYg==,
-      }
-    engines: { node: ">=18.12.0" }
-=======
 
   unimport@5.6.0:
     resolution: {integrity: sha512-8rqAmtJV8o60x46kBAJKtHpJDJWkA2xcBqWKPI14MgUb05o1pnpnCnXSxedUXyeq7p8fR5g3pTo2BaswZ9lD9A==}
     engines: {node: '>=18.12.0'}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   unplugin-auto-import@20.3.0:
     resolution: {integrity: sha512-RcSEQiVv7g0mLMMXibYVKk8mpteKxvyffGuDKqZZiFr7Oq3PB1HwgHdK5O7H4AzbhzHoVKG0NnMnsk/1HIVYzQ==}
@@ -5452,21 +5151,12 @@ packages:
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
     engines: {node: '>=12'}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==,
-      }
-    engines: { node: ">=12" }
-=======
 
   y-protocols@1.0.7:
     resolution: {integrity: sha512-YSVsLoXxO67J6eE/nV4AtFtT3QEotZf5sK5BHxFBXso7VDUT3Tx07IfA6hsu5Q5OmBdMkQVmFZ9QOA7fikWvnw==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
     peerDependencies:
       yjs: ^13.0.0
->>>>>>> b707d83 (Bump nuxt/ui)
 
   y18n@5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
@@ -5491,19 +5181,10 @@ packages:
   yargs@17.7.2:
     resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
     engines: {node: '>=12'}
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-    resolution:
-      {
-        integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==,
-      }
-    engines: { node: ">=12" }
-=======
 
   yjs@13.6.28:
     resolution: {integrity: sha512-EgnDOXs8+hBVm6mq3/S89Kiwzh5JRbn7w2wXwbrMRyKy/8dOFsLvuIfC+x19ZdtaDc0tA9rQmdZzbqqNHG44wA==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
@@ -6045,13 +5726,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-<<<<<<< HEAD
-  '@iconify/json@2.2.418':
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@iconify/json@2.2.418":
-=======
   '@iconify/json@2.2.419':
->>>>>>> b707d83 (Bump nuxt/ui)
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 2.0.3
@@ -6069,13 +5744,7 @@ snapshots:
       '@iconify/types': 2.0.0
       vue: 3.5.25(typescript@5.9.3)
 
-<<<<<<< HEAD
-  '@internationalized/date@3.10.0':
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@internationalized/date@3.10.0":
-=======
   '@internationalized/date@3.10.1':
->>>>>>> b707d83 (Bump nuxt/ui)
     dependencies:
       '@swc/helpers': 0.5.17
 
@@ -6556,49 +6225,9 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-<<<<<<< HEAD
-  '@nuxt/ui@4.2.1(@babel/parser@7.28.5)(change-case@5.4.4)(db0@0.3.4)(embla-carousel@8.6.0)(ioredis@5.8.2)(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))':
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@nuxt/ui@4.2.1(@babel/parser@7.28.5)(change-case@5.4.4)(db0@0.3.4)(embla-carousel@8.6.0)(ioredis@5.8.2)(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))":
-=======
   '@nuxt/ui@4.3.0(@babel/parser@7.28.5)(@floating-ui/dom@1.7.4)(@tiptap/extension-drag-handle@3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))(@tiptap/extension-collaboration@3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))(@tiptap/pm@3.13.0)(@tiptap/y-tiptap@3.0.1(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(y-protocols@1.0.7(yjs@13.6.28))(yjs@13.6.28))(yjs@13.6.28))(@tiptap/extension-node-range@3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))(@tiptap/pm@3.13.0))(@tiptap/pm@3.13.0)(@tiptap/y-tiptap@3.0.1(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(y-protocols@1.0.7(yjs@13.6.28))(yjs@13.6.28)))(@tiptap/extensions@3.13.0(@tiptap/core@3.13.0(@tiptap/pm@3.13.0))(@tiptap/pm@3.13.0))(change-case@5.4.4)(db0@0.3.4)(embla-carousel@8.6.0)(ioredis@5.8.2)(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3))':
->>>>>>> b707d83 (Bump nuxt/ui)
     dependencies:
       '@iconify/vue': 5.0.0(vue@3.5.25(typescript@5.9.3))
-<<<<<<< HEAD
-      '@internationalized/date': 3.10.0
-      '@internationalized/number': 3.6.5
-      '@nuxt/fonts': 0.12.1(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))
-      '@nuxt/icon': 2.1.1(magicast@0.5.1)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3))
-      '@nuxt/kit': 4.2.2(magicast@0.5.1)
-      '@nuxt/schema': 4.2.2
-      '@nuxtjs/color-mode': 3.5.2(magicast@0.5.1)
-      '@standard-schema/spec': 1.0.0
-      '@tailwindcss/postcss': 4.1.18
-      '@tailwindcss/vite': 4.1.18(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))
-      '@tanstack/vue-table': 8.21.3(vue@3.5.25(typescript@5.9.3))
-      '@tanstack/vue-virtual': 3.13.13(vue@3.5.25(typescript@5.9.3))
-      '@unhead/vue': 2.0.19(vue@3.5.25(typescript@5.9.3))
-      '@vueuse/core': 13.9.0(vue@3.5.25(typescript@5.9.3))
-      '@vueuse/integrations': 13.9.0(change-case@5.4.4)(fuse.js@7.1.0)(vue@3.5.25(typescript@5.9.3))
-||||||| parent of b707d83 (Bump nuxt/ui)
-      "@iconify/vue": 5.0.0(vue@3.5.25(typescript@5.9.3))
-      "@internationalized/date": 3.10.0
-      "@internationalized/number": 3.6.5
-      "@nuxt/fonts": 0.12.1(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))
-      "@nuxt/icon": 2.1.1(magicast@0.5.1)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3))
-      "@nuxt/kit": 4.2.2(magicast@0.5.1)
-      "@nuxt/schema": 4.2.2
-      "@nuxtjs/color-mode": 3.5.2(magicast@0.5.1)
-      "@standard-schema/spec": 1.0.0
-      "@tailwindcss/postcss": 4.1.18
-      "@tailwindcss/vite": 4.1.18(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))
-      "@tanstack/vue-table": 8.21.3(vue@3.5.25(typescript@5.9.3))
-      "@tanstack/vue-virtual": 3.13.13(vue@3.5.25(typescript@5.9.3))
-      "@unhead/vue": 2.0.19(vue@3.5.25(typescript@5.9.3))
-      "@vueuse/core": 13.9.0(vue@3.5.25(typescript@5.9.3))
-      "@vueuse/integrations": 13.9.0(change-case@5.4.4)(fuse.js@7.1.0)(vue@3.5.25(typescript@5.9.3))
-=======
       '@internationalized/date': 3.10.1
       '@internationalized/number': 3.6.5
       '@nuxt/fonts': 0.12.1(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))
@@ -6627,7 +6256,6 @@ snapshots:
       '@unhead/vue': 2.0.19(vue@3.5.25(typescript@5.9.3))
       '@vueuse/core': 14.1.0(vue@3.5.25(typescript@5.9.3))
       '@vueuse/integrations': 14.1.0(change-case@5.4.4)(fuse.js@7.1.0)(vue@3.5.25(typescript@5.9.3))
->>>>>>> b707d83 (Bump nuxt/ui)
       colortranslator: 5.0.0
       consola: 3.4.2
       defu: 6.1.4
@@ -6671,34 +6299,11 @@ snapshots:
       - '@capacitor/preferences'
       - '@deno/kv'
       - '@emotion/is-prop-valid'
-<<<<<<< HEAD
-      - '@netlify/blobs'
-      - '@planetscale/database'
-||||||| parent of b707d83 (Bump nuxt/ui)
-      - "@azure/app-configuration"
-      - "@azure/cosmos"
-      - "@azure/data-tables"
-      - "@azure/identity"
-      - "@azure/keyvault-secrets"
-      - "@azure/storage-blob"
-      - "@babel/parser"
-      - "@capacitor/preferences"
-      - "@deno/kv"
-      - "@emotion/is-prop-valid"
-      - "@netlify/blobs"
-      - "@planetscale/database"
-      - "@upstash/redis"
-      - "@vercel/blob"
-      - "@vercel/functions"
-      - "@vercel/kv"
-      - "@vue/composition-api"
-=======
       - '@floating-ui/dom'
       - '@netlify/blobs'
       - '@planetscale/database'
       - '@tiptap/extension-drag-handle'
       - '@tiptap/extensions'
->>>>>>> b707d83 (Bump nuxt/ui)
       - '@upstash/redis'
       - '@vercel/blob'
       - '@vercel/functions'
@@ -7033,29 +6638,12 @@ snapshots:
 
   '@poppinss/exception@1.2.2': {}
 
-<<<<<<< HEAD
-  '@rolldown/pluginutils@1.0.0-beta.50': {}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@rolldown/pluginutils@1.0.0-beta.50": {}
-=======
   '@remirror/core-constants@3.0.0': {}
->>>>>>> b707d83 (Bump nuxt/ui)
 
-<<<<<<< HEAD
-  '@rolldown/pluginutils@1.0.0-beta.54': {}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@rolldown/pluginutils@1.0.0-beta.54": {}
-=======
   '@rolldown/pluginutils@1.0.0-beta.50': {}
->>>>>>> b707d83 (Bump nuxt/ui)
 
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@rollup/plugin-alias@5.1.1(rollup@4.53.3)":
-=======
   '@rolldown/pluginutils@1.0.0-beta.54': {}
 
->>>>>>> b707d83 (Bump nuxt/ui)
   '@rollup/plugin-alias@5.1.1(rollup@4.53.3)':
     optionalDependencies:
       rollup: 4.53.3
@@ -7193,13 +6781,7 @@ snapshots:
 
   '@speed-highlight/core@1.2.12': {}
 
-<<<<<<< HEAD
-  '@standard-schema/spec@1.0.0': {}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@standard-schema/spec@1.0.0": {}
-=======
   '@standard-schema/spec@1.1.0': {}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   '@stylistic/eslint-plugin@5.6.1(eslint@9.39.2(jiti@2.6.1))':
     dependencies:
@@ -7305,10 +6887,6 @@ snapshots:
       '@tanstack/virtual-core': 3.13.13
       vue: 3.5.25(typescript@5.9.3)
 
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@tybys/wasm-util@0.10.1":
-=======
   '@tiptap/core@3.13.0(@tiptap/pm@3.13.0)':
     dependencies:
       '@tiptap/pm': 3.13.0
@@ -7539,7 +7117,6 @@ snapshots:
       y-protocols: 1.0.7(yjs@13.6.28)
       yjs: 13.6.28
 
->>>>>>> b707d83 (Bump nuxt/ui)
   '@tybys/wasm-util@0.10.1':
     dependencies:
       tslib: 2.8.1
@@ -7553,10 +7130,6 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-<<<<<<< HEAD
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@types/node@25.0.1":
-=======
   '@types/linkify-it@5.0.0': {}
 
   '@types/markdown-it@14.1.2':
@@ -7566,7 +7139,6 @@ snapshots:
 
   '@types/mdurl@2.0.0': {}
 
->>>>>>> b707d83 (Bump nuxt/ui)
   '@types/node@25.0.1':
     dependencies:
       undici-types: 7.16.0
@@ -7932,46 +7504,17 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-<<<<<<< HEAD
-  '@vueuse/core@13.9.0(vue@3.5.25(typescript@5.9.3))':
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@vueuse/core@13.9.0(vue@3.5.25(typescript@5.9.3))":
-=======
   '@vueuse/core@14.1.0(vue@3.5.25(typescript@5.9.3))':
->>>>>>> b707d83 (Bump nuxt/ui)
     dependencies:
       '@types/web-bluetooth': 0.0.21
-<<<<<<< HEAD
-      '@vueuse/metadata': 13.9.0
-      '@vueuse/shared': 13.9.0(vue@3.5.25(typescript@5.9.3))
-||||||| parent of b707d83 (Bump nuxt/ui)
-      "@types/web-bluetooth": 0.0.21
-      "@vueuse/metadata": 13.9.0
-      "@vueuse/shared": 13.9.0(vue@3.5.25(typescript@5.9.3))
-=======
       '@vueuse/metadata': 14.1.0
       '@vueuse/shared': 14.1.0(vue@3.5.25(typescript@5.9.3))
->>>>>>> b707d83 (Bump nuxt/ui)
       vue: 3.5.25(typescript@5.9.3)
 
-<<<<<<< HEAD
-  '@vueuse/integrations@13.9.0(change-case@5.4.4)(fuse.js@7.1.0)(vue@3.5.25(typescript@5.9.3))':
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@vueuse/integrations@13.9.0(change-case@5.4.4)(fuse.js@7.1.0)(vue@3.5.25(typescript@5.9.3))":
-=======
   '@vueuse/integrations@14.1.0(change-case@5.4.4)(fuse.js@7.1.0)(vue@3.5.25(typescript@5.9.3))':
->>>>>>> b707d83 (Bump nuxt/ui)
     dependencies:
-<<<<<<< HEAD
-      '@vueuse/core': 13.9.0(vue@3.5.25(typescript@5.9.3))
-      '@vueuse/shared': 13.9.0(vue@3.5.25(typescript@5.9.3))
-||||||| parent of b707d83 (Bump nuxt/ui)
-      "@vueuse/core": 13.9.0(vue@3.5.25(typescript@5.9.3))
-      "@vueuse/shared": 13.9.0(vue@3.5.25(typescript@5.9.3))
-=======
       '@vueuse/core': 14.1.0(vue@3.5.25(typescript@5.9.3))
       '@vueuse/shared': 14.1.0(vue@3.5.25(typescript@5.9.3))
->>>>>>> b707d83 (Bump nuxt/ui)
       vue: 3.5.25(typescript@5.9.3)
     optionalDependencies:
       change-case: 5.4.4
@@ -7981,13 +7524,7 @@ snapshots:
 
   '@vueuse/metadata@12.8.2': {}
 
-<<<<<<< HEAD
-  '@vueuse/metadata@13.9.0': {}
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@vueuse/metadata@13.9.0": {}
-=======
   '@vueuse/metadata@14.1.0': {}
->>>>>>> b707d83 (Bump nuxt/ui)
 
   '@vueuse/shared@10.11.1(vue@3.5.25(typescript@5.9.3))':
     dependencies:
@@ -8002,13 +7539,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-<<<<<<< HEAD
-  '@vueuse/shared@13.9.0(vue@3.5.25(typescript@5.9.3))':
-||||||| parent of b707d83 (Bump nuxt/ui)
-  "@vueuse/shared@13.9.0(vue@3.5.25(typescript@5.9.3))":
-=======
   '@vueuse/shared@14.1.0(vue@3.5.25(typescript@5.9.3))':
->>>>>>> b707d83 (Bump nuxt/ui)
     dependencies:
       vue: 3.5.25(typescript@5.9.3)
 
@@ -9576,13 +9107,7 @@ snapshots:
 
   motion-v@1.7.4(@vueuse/core@14.1.0(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3)):
     dependencies:
-<<<<<<< HEAD
-      '@vueuse/core': 13.9.0(vue@3.5.25(typescript@5.9.3))
-||||||| parent of b707d83 (Bump nuxt/ui)
-      "@vueuse/core": 13.9.0(vue@3.5.25(typescript@5.9.3))
-=======
       '@vueuse/core': 14.1.0(vue@3.5.25(typescript@5.9.3))
->>>>>>> b707d83 (Bump nuxt/ui)
       framer-motion: 12.23.12
       hey-listen: 1.0.8
       motion-dom: 12.23.12
@@ -10444,19 +9969,7 @@ snapshots:
     dependencies:
       '@floating-ui/dom': 1.7.4
       '@floating-ui/vue': 1.1.9(vue@3.5.25(typescript@5.9.3))
-<<<<<<< HEAD
-      '@internationalized/date': 3.10.0
-||||||| parent of b707d83 (Bump nuxt/ui)
-      "@floating-ui/dom": 1.7.4
-      "@floating-ui/vue": 1.1.9(vue@3.5.25(typescript@5.9.3))
-      "@internationalized/date": 3.10.0
-      "@internationalized/number": 3.6.5
-      "@tanstack/vue-virtual": 3.13.13(vue@3.5.25(typescript@5.9.3))
-      "@vueuse/core": 12.8.2(typescript@5.9.3)
-      "@vueuse/shared": 12.8.2(typescript@5.9.3)
-=======
       '@internationalized/date': 3.10.1
->>>>>>> b707d83 (Bump nuxt/ui)
       '@internationalized/number': 3.6.5
       '@tanstack/vue-virtual': 3.13.13(vue@3.5.25(typescript@5.9.3))
       '@vueuse/core': 12.8.2(typescript@5.9.3)
@@ -10944,14 +10457,7 @@ snapshots:
       unplugin-utils: 0.3.1
     optionalDependencies:
       '@nuxt/kit': 4.2.2(magicast@0.5.1)
-<<<<<<< HEAD
-      '@vueuse/core': 13.9.0(vue@3.5.25(typescript@5.9.3))
-||||||| parent of b707d83 (Bump nuxt/ui)
-      "@nuxt/kit": 4.2.2(magicast@0.5.1)
-      "@vueuse/core": 13.9.0(vue@3.5.25(typescript@5.9.3))
-=======
       '@vueuse/core': 14.1.0(vue@3.5.25(typescript@5.9.3))
->>>>>>> b707d83 (Bump nuxt/ui)
 
   unplugin-utils@0.2.5:
     dependencies:
@@ -11091,14 +10597,7 @@ snapshots:
   vaul-vue@0.4.1(reka-ui@2.6.1(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3)))(vue@3.5.25(typescript@5.9.3)):
     dependencies:
       '@vueuse/core': 10.11.1(vue@3.5.25(typescript@5.9.3))
-<<<<<<< HEAD
-      reka-ui: 2.6.0(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
-||||||| parent of b707d83 (Bump nuxt/ui)
-      "@vueuse/core": 10.11.1(vue@3.5.25(typescript@5.9.3))
-      reka-ui: 2.6.0(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
-=======
       reka-ui: 2.6.1(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
->>>>>>> b707d83 (Bump nuxt/ui)
       vue: 3.5.25(typescript@5.9.3)
     transitivePeerDependencies:
       - '@vue/composition-api'
