@@ -13,7 +13,7 @@ importers:
         version: 2.7.0
       '@iconify/json':
         specifier: ^2.2.419
-        version: 2.2.420
+        version: 2.2.421
       '@nuxt/eslint':
         specifier: 1.12.1
         version: 1.12.1(@typescript-eslint/utils@8.49.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(@vue/compiler-sfc@3.5.26)(eslint@9.39.2(jiti@2.6.1))(magicast@0.5.1)(typescript@5.9.3)(vite@7.2.7(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))
@@ -657,8 +657,8 @@ packages:
   '@iconify/collections@1.0.629':
     resolution: {integrity: sha512-1iT8HyMKpOvml6jxZDaW2dkdgzls4Ik7I/tn79hHqbPGWkNpIQsJSB3Dto+vAyboXLtsRvIKIwtSvfgrHR0HRw==}
 
-  '@iconify/json@2.2.420':
-    resolution: {integrity: sha512-3dgvkB8eiUA/PkGHaRB+x17MS1u22V2O1YtFpdpdFpbXp/fAdloOMbxeMXXgNlcGgjk7x4hUIeDunic/diHYqg==}
+  '@iconify/json@2.2.421':
+    resolution: {integrity: sha512-jc0BOjmdVz4DxfYlvJWEBl8FIdOtgRCDZkyOEDFlHqCnfw6Yyr41fDaiECU/FSzkqjwNuKu5H10N7bLN+JPQGA==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -3484,8 +3484,8 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  lib0@0.2.115:
-    resolution: {integrity: sha512-noaW4yNp6hCjOgDnWWxW0vGXE3kZQI5Kqiwz+jIWXavI9J9WyfJ9zjsbQlQlgjIbHBrvlA/x3TSIXBUJj+0L6g==}
+  lib0@0.2.116:
+    resolution: {integrity: sha512-4zsosjzmt33rx5XjmFVYUAeLNh+BTeDTiwGdLt4muxiir2btsc60Nal0EvkvDRizg+pnlK1q+BtYi7M+d4eStw==}
     engines: {node: '>=16'}
     hasBin: true
 
@@ -5733,7 +5733,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify/json@2.2.420':
+  '@iconify/json@2.2.421':
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 2.0.3
@@ -7117,7 +7117,7 @@ snapshots:
 
   '@tiptap/y-tiptap@3.0.1(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(y-protocols@1.0.7(yjs@13.6.28))(yjs@13.6.28)':
     dependencies:
-      lib0: 0.2.115
+      lib0: 0.2.116
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
       prosemirror-view: 1.41.4
@@ -8870,7 +8870,7 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  lib0@0.2.115:
+  lib0@0.2.116:
     dependencies:
       isomorphic.js: 0.2.5
 
@@ -10794,7 +10794,7 @@ snapshots:
 
   y-protocols@1.0.7(yjs@13.6.28):
     dependencies:
-      lib0: 0.2.115
+      lib0: 0.2.116
       yjs: 13.6.28
 
   y18n@5.0.8: {}
@@ -10819,7 +10819,7 @@ snapshots:
 
   yjs@13.6.28:
     dependencies:
-      lib0: 0.2.115
+      lib0: 0.2.116
 
   yocto-queue@0.1.0: {}
 
