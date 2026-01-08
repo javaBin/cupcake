@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@artmizu/nuxt-prometheus": "2.7.0",
-    "@iconify/json": "^2.2.425",
+    "@iconify/json": "^2.2.426",
     "@nuxt/eslint": "1.12.1",
     "@nuxt/icon": "^2.2.0",
     "@nuxt/ui": "4.3.0",
