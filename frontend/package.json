@@ -17,7 +17,7 @@
     "@iconify/json": "^2.2.429",
     "@nuxt/eslint": "1.12.1",
     "@nuxt/icon": "^2.2.0",
-    "@nuxt/ui": "4.3.0",
+    "@nuxt/ui": "4.4.0",
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.5",
