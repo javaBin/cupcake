@@ -25,7 +25,7 @@ export default defineNuxtConfig({
   },
   icon: {
     serverBundle: {
-      collections: ["carbon", "mdi", "openmoji"],
+      collections: ["carbon", "lucide", "logos", "openmoji"],
     },
   },
 
