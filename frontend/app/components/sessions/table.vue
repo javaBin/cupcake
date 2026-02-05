@@ -158,7 +158,7 @@ const columns: TableColumn<Session>[] = [
     :data="sessions"
     :columns="columns"
     :ui="{
-      root: 'w-full overflow-x-hidden',
+      root: 'w-full overflow-x-auto',
       base: 'table-auto w-full',
       th: 'whitespace-nowrap',
       td: 'align-top',
