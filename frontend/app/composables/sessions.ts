@@ -1,3 +1,6 @@
+import type { Conference } from "@/types/conference"
+import type { Session } from "@/types/session"
+
 export const useSessions = () => {
   const sessionLink = (conference: Conference, session: string): string =>
     `/conference/${conference.id}/session/${session}`
@@ -15,8 +18,8 @@ export const useSessions = () => {
     })
   }
 
-  const duration = (session: Session): string | undefined => {
-    if (session.length !== undefined) {
+  const duration = (session?: Session): string | undefined => {
+    if (session?.length !== undefined) {
       const hours = `${Math.floor(session.length / 60)}`.padStart(2, "0")
       const minutes = `${session.length % 60}`.padStart(2, "0")
 

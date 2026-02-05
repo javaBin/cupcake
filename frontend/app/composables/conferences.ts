@@ -1,3 +1,5 @@
+import type { Conference } from "@/types/conference"
+
 export const useConferences = () => {
   const conferenceLink = (conference: Conference): string =>
     `/conference/${conference.id}`

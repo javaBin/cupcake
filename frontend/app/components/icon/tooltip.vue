@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Icon } from "@iconify/vue"
-
 const tooltip = defineProps<{
   value: string
   select: string
@@ -16,7 +14,7 @@ const tooltip = defineProps<{
     class="inline-flex items-center gap-1.5"
   >
     <UTooltip :text="tooltip.description">
-      <Icon :icon="tooltip.name" class="cursor-help shrink-0" />
+      <Icon :name="tooltip.name" class="cursor-help shrink-0" />
     </UTooltip>
 
     <span v-if="tooltip.full" class="text-sm">

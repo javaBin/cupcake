@@ -28,14 +28,9 @@ export default defineEventHandler(async (event) => {
   }
   delete headers.host
 
-  let body: Buffer | undefined = undefined
+  let body: string | undefined = undefined
   if (!["GET", "HEAD"].includes(method)) {
-    const raw = await readRawBody(event)
-    if (typeof raw === "string") {
-      body = Buffer.from(raw)
-    } else {
-      body = raw
-    }
+    body = (await readRawBody(event)) ?? undefined
   }
 
   const response = await fetch(targetUrl, {
