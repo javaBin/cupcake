@@ -22,25 +22,29 @@ import io.ktor.server.auth.principal
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import io.ktor.util.date.GMTDate
 import no.java.cupcake.api.CallPrincipalMissing
 import no.java.cupcake.api.MissingChannelMembership
+import no.java.cupcake.api.RefreshTokenInvalid
 import no.java.cupcake.api.TokenMissing
 import no.java.cupcake.api.TokenMissingUser
 import no.java.cupcake.api.redirect
+import no.java.cupcake.api.respond
 import no.java.cupcake.config.JwtConfig
 import no.java.cupcake.slack.SlackService
 import no.java.cupcake.slack.SlackUser
 import java.time.ZonedDateTime
 import java.util.Date
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 private const val SLACK_AUTH = "slack-oauth"
 const val JWT_AUTH = "jwt-oauth"
 
-private val cookieLifetime = 8.hours.inWholeMilliseconds
+private val idTokenLifetime = 8.hours.inWholeMilliseconds
 
 private fun Map<String, Claim>.str(
     key: String,
@@ -58,22 +62,55 @@ private fun Map<String, Claim>.toSlackUser(
     member = member,
 )
 
-fun buildToken(
-    jwtAudience: String,
-    jwtSecret: String,
-    jwtIssuer: String,
+fun buildIdToken(
+    jwtConfig: JwtConfig,
     userInfo: SlackUser,
 ): String =
     JWT
         .create()
-        .withAudience(jwtAudience)
-        .withIssuer(jwtIssuer)
+        .withAudience(jwtConfig.audience)
+        .withIssuer(jwtConfig.issuer)
+        .withClaim("type", "ID")
         .withClaim("slack_id", userInfo.userId)
         .withClaim("name", userInfo.name)
         .withClaim("email", userInfo.email)
         .withClaim("avatar", userInfo.avatar)
-        .withExpiresAt(Date(System.currentTimeMillis() + cookieLifetime))
-        .sign(Algorithm.HMAC256(jwtSecret))
+        .withExpiresAt(Date(System.currentTimeMillis() + idTokenLifetime))
+        .sign(Algorithm.HMAC256(jwtConfig.secret))
+
+fun buildAccessToken(
+    jwtConfig: JwtConfig,
+    slackId: String,
+): String =
+    JWT
+        .create()
+        .withAudience(jwtConfig.audience)
+        .withIssuer(jwtConfig.issuer)
+        .withClaim("type", "ACCESS")
+        .withClaim("slack_id", slackId)
+        .withExpiresAt(
+            Date(
+                System.currentTimeMillis() +
+                    jwtConfig.accessTokenLifetimeMinutes.minutes.inWholeMilliseconds,
+            ),
+        ).sign(Algorithm.HMAC256(jwtConfig.secret))
+
+fun buildRefreshToken(
+    jwtConfig: JwtConfig,
+    slackId: String,
+): String =
+    JWT
+        .create()
+        .withAudience(jwtConfig.audience)
+        .withIssuer(jwtConfig.issuer)
+        .withClaim("type", "REFRESH")
+        .withClaim("slack_id", slackId)
+        .withExpiresAt(
+            Date(
+                System.currentTimeMillis() +
+                    jwtConfig.refreshTokenLifetimeMinutes.minutes.inWholeMilliseconds,
+            ),
+        ).sign(Algorithm.HMAC256(jwtConfig.secret))
 
 private fun ZonedDateTime.cookieExpiry(seconds: Long) =
     GMTDate(
@@ -112,7 +149,8 @@ fun Application.configureSecurity(
             verifier(jwtVerifier())
 
             validate { credential ->
-                if (credential.payload.audience.contains(jwtConfig.audience)) {
+                val type = credential.payload.getClaim("type")?.asString()
+                if (type == "ACCESS" && credential.payload.audience.contains(jwtConfig.audience)) {
                     JWTPrincipal(credential.payload)
                 } else {
                     null
@@ -131,6 +169,7 @@ fun Application.configureSecurity(
             redirect = jwtConfig.redirect,
             channelName = channelName,
             jwtConfig = jwtConfig,
+            jwtVerifier = jwtVerifier(),
         )
     }
 }
@@ -140,6 +179,7 @@ private fun Routing.configureAuthRouting(
     redirect: String,
     channelName: String,
     jwtConfig: JwtConfig,
+    jwtVerifier: JWTVerifier,
 ) {
     authenticate(SLACK_AUTH) {
         get("/login") {
@@ -153,13 +193,13 @@ private fun Routing.configureAuthRouting(
                     CallPrincipalMissing
                 }
 
-                val idToken = principal.extraParameters["id_token"]
+                val slackIdToken = principal.extraParameters["id_token"]
 
-                ensure(idToken != null) {
+                ensure(slackIdToken != null) {
                     TokenMissing
                 }
 
-                val claims: MutableMap<String, Claim> = JWT.decode(idToken).claims
+                val claims: MutableMap<String, Claim> = JWT.decode(slackIdToken).claims
 
                 val userId = claims["https://slack.com/user_id"]?.asString()
 
@@ -174,24 +214,84 @@ private fun Routing.configureAuthRouting(
                 }
 
                 val user = claims.toSlackUser(userId, true)
+                val now = ZonedDateTime.now()
 
-                val jwt =
-                    buildToken(
-                        jwtAudience = jwtConfig.audience,
-                        jwtSecret = jwtConfig.secret,
-                        jwtIssuer = jwtConfig.issuer,
-                        userInfo = user,
-                    )
+                val idToken = buildIdToken(jwtConfig = jwtConfig, userInfo = user)
+                val accessToken = buildAccessToken(jwtConfig = jwtConfig, slackId = userId)
+                val refreshToken = buildRefreshToken(jwtConfig = jwtConfig, slackId = userId)
 
                 call.response.cookies.append(
-                    name = "user_session",
-                    value = jwt,
+                    name = "id_token",
+                    value = idToken,
                     path = "/",
-                    expires = ZonedDateTime.now().cookieExpiry(cookieLifetime),
+                    expires = now.cookieExpiry(idTokenLifetime / 1000),
+                )
+                call.response.cookies.append(
+                    name = "access_token",
+                    value = accessToken,
+                    path = "/",
+                    expires = now.cookieExpiry(jwtConfig.accessTokenLifetimeMinutes * 60),
+                )
+                call.response.cookies.append(
+                    name = "refresh_token",
+                    value = refreshToken,
+                    path = "/",
+                    httpOnly = true,
+                    expires = now.cookieExpiry(jwtConfig.refreshTokenLifetimeMinutes * 60),
+                )
+
+                // Expire old user_session cookie
+                call.response.cookies.append(
+                    name = "user_session",
+                    value = "",
+                    path = "/",
+                    maxAge = 0,
                 )
 
                 redirect
             }.redirect()
+        }
+    }
+
+    post("/refresh") {
+        val refreshCookie = call.request.cookies["refresh_token"]
+
+        if (refreshCookie == null) {
+            respond(RefreshTokenInvalid)
+            return@post
+        }
+
+        try {
+            val decoded = jwtVerifier.verify(refreshCookie)
+            val type = decoded.getClaim("type")?.asString()
+            val slackId = decoded.getClaim("slack_id")?.asString()
+
+            if (type != "REFRESH" || slackId == null) {
+                respond(RefreshTokenInvalid)
+                return@post
+            }
+
+            val now = ZonedDateTime.now()
+            val newAccessToken = buildAccessToken(jwtConfig = jwtConfig, slackId = slackId)
+            val newRefreshToken = buildRefreshToken(jwtConfig = jwtConfig, slackId = slackId)
+
+            call.response.cookies.append(
+                name = "access_token",
+                value = newAccessToken,
+                path = "/",
+                expires = now.cookieExpiry(jwtConfig.accessTokenLifetimeMinutes * 60),
+            )
+            call.response.cookies.append(
+                name = "refresh_token",
+                value = newRefreshToken,
+                path = "/",
+                httpOnly = true,
+                expires = now.cookieExpiry(jwtConfig.refreshTokenLifetimeMinutes * 60),
+            )
+
+            call.respond(HttpStatusCode.OK, mapOf("status" to "refreshed"))
+        } catch (_: Exception) {
+            respond(RefreshTokenInvalid)
         }
     }
 }

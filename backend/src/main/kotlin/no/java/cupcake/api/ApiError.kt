@@ -89,3 +89,10 @@ data class MissingChannelMembership(
             message = "User not in correct slack channel - please ask in #kodesmia for access to $channelName",
         ),
     )
+
+data object RefreshTokenInvalid : ApiError(
+    ErrorResponse(
+        status = HttpStatusCode.Unauthorized,
+        message = "Refresh token is invalid or has expired",
+    ),
+)

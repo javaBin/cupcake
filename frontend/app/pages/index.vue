@@ -1,15 +1,5 @@
 <script setup lang="ts">
-const user = useCookie("user_session", {
-  readonly: true,
-})
-
-const { parseJwt } = useJwt()
-
-const userInfo = ref<User | undefined>(undefined)
-
-if (user.value !== null && user.value !== undefined) {
-  userInfo.value = parseJwt(user.value)
-}
+const { user: userInfo } = useAuth()
 </script>
 
 <template>

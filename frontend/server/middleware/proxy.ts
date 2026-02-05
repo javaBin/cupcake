@@ -9,7 +9,8 @@ const backend =
 const shouldProxy = (url: string) =>
   url.startsWith("/api") ||
   url.startsWith("/login") ||
-  url.startsWith("/slackCallback")
+  url.startsWith("/slackCallback") ||
+  url.startsWith("/refresh")
 
 export default defineEventHandler(async (event) => {
   const url = event.node.req.url || ""
@@ -45,14 +46,24 @@ export default defineEventHandler(async (event) => {
   })
 
   setResponseStatus(event, response.status)
+
+  // Use getSetCookie() to correctly forward multiple Set-Cookie headers
+  const setCookies = response.headers.getSetCookie()
+  for (const cookie of setCookies) {
+    event.node.res.appendHeader("set-cookie", cookie)
+  }
+
   for (const [key, value] of response.headers.entries()) {
     if (
-      !key.toLowerCase().startsWith("access-control-") &&
-      key.toLowerCase() !== "content-encoding"
+      key.toLowerCase() === "set-cookie" ||
+      key.toLowerCase().startsWith("access-control-") ||
+      key.toLowerCase() === "content-encoding"
     ) {
-      event.node.res.setHeader(key, value)
+      continue
     }
+    event.node.res.setHeader(key, value)
   }
+
   const data = await response.arrayBuffer()
   return send(event, Buffer.from(data))
 })

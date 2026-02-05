@@ -1,21 +1,11 @@
 <script setup lang="ts">
-const user = useCookie("user_session", {
-  readonly: true,
-})
-
-const opts: UseFetchOptions = {}
-
-if (user.value !== undefined) {
-  opts["headers"] = {
-    authorization: `Bearer ${user.value}`,
-  }
-}
+import type { Conference } from "@/types/conference"
 
 const {
   data: conferences,
   pending,
   error,
-} = await useFetch<Conference[]>(`/api/conferences`, opts)
+} = await useAuthFetch<Conference[]>(`/api/conferences`)
 
 const conferenceList = computed(() => conferences.value ?? [])
 const conferenceCount = computed(() => conferenceList.value.length)

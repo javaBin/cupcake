@@ -27,6 +27,8 @@ fun ApplicationEnvironment.jwtConfig() =
         secret = str("jwt.secret"),
         issuer = str("jwt.issuer"),
         redirect = str("jwt.redirect"),
+        accessTokenLifetimeMinutes = long("jwt.access_token_lifetime_minutes"),
+        refreshTokenLifetimeMinutes = long("jwt.refresh_token_lifetime_minutes"),
     )
 
 fun ApplicationEnvironment.slackConfig() =
