@@ -39,8 +39,24 @@ const columns: TableColumn<Session>[] = [
     accessorKey: "title",
     header: "Title",
     meta: { class: { td: "w-full" } },
-    cell: ({ row }) =>
-      h("div", { class: "break-words min-w-[28rem]" }, row.original.title),
+    cell: ({ row }) => {
+      const title = h("span", { class: "break-words" }, row.original.title)
+      if (row.original.id && props.conference) {
+        return h("div", { class: "flex items-center gap-2 min-w-[28rem]" }, [
+          h(UButton, {
+            to: sessionLink(props.conference, row.original.id),
+            variant: "ghost",
+            color: "neutral",
+            size: "xs",
+            square: true,
+            icon: "i-lucide-file-text",
+            "aria-label": "Open session",
+          }),
+          title,
+        ])
+      }
+      return h("div", { class: "min-w-[28rem]" }, [title])
+    },
   },
   {
     accessorKey: "format",
@@ -127,28 +143,6 @@ const columns: TableColumn<Session>[] = [
         }),
       )
     },
-  },
-  {
-    accessorKey: "id",
-    header: "",
-    enableSorting: false,
-    meta: {
-      class: {
-        th: "text-center whitespace-nowrap",
-        td: "text-center whitespace-nowrap w-0",
-      },
-    },
-    cell: ({ row }) =>
-      row.original.id && props.conference
-        ? h(UButton, {
-            to: sessionLink(props.conference, row.original.id),
-            variant: "ghost",
-            color: "neutral",
-            square: true,
-            icon: "i-lucide-file-text",
-            "aria-label": "Open session",
-          })
-        : null,
   },
 ]
 </script>

@@ -1,9 +1,19 @@
-function withAuth(opts: Record<string, any> = {}): Record<string, any> {
+import type { FetchContext } from "ofetch"
+
+interface FetchCallbackOptions {
+  onRequest?: (context: FetchContext) => Promise<void> | void
+  onResponseError?: (context: {
+    response: { status: number }
+  }) => Promise<void> | void
+  [key: string]: unknown
+}
+
+function withAuth(opts: FetchCallbackOptions = {}): FetchCallbackOptions {
   const { accessToken, isAccessTokenExpiringSoon, refresh } = useAuth()
 
   return {
     ...opts,
-    async onRequest(context: { options: { headers: any } }) {
+    async onRequest(context: FetchContext) {
       if (import.meta.client && isAccessTokenExpiringSoon()) {
         await refresh()
       }
@@ -14,7 +24,7 @@ function withAuth(opts: Record<string, any> = {}): Record<string, any> {
         context.options.headers.set("Authorization", `Bearer ${token}`)
       }
 
-      if (typeof opts.onRequest === "function") {
+      if (opts.onRequest) {
         await opts.onRequest(context)
       }
     },
@@ -23,17 +33,17 @@ function withAuth(opts: Record<string, any> = {}): Record<string, any> {
         await refresh()
       }
 
-      if (typeof opts.onResponseError === "function") {
+      if (opts.onResponseError) {
         await opts.onResponseError(context)
       }
     },
   }
 }
 
-export function useAuthFetch<T>(url: string, opts?: Record<string, any>) {
-  return useFetch<T>(url, withAuth(opts) as any)
+export function useAuthFetch<T>(url: string, opts?: FetchCallbackOptions) {
+  return useFetch<T>(url, withAuth(opts) as never)
 }
 
-export function useAuthLazyFetch<T>(url: string, opts?: Record<string, any>) {
-  return useLazyFetch<T>(url, withAuth(opts) as any)
+export function useAuthLazyFetch<T>(url: string, opts?: FetchCallbackOptions) {
+  return useLazyFetch<T>(url, withAuth(opts) as never)
 }
