@@ -18,11 +18,11 @@ importers:
         specifier: 1.2.10
         version: 1.2.10
       '@iconify-json/lucide':
-        specifier: 1.2.90
-        version: 1.2.90
+        specifier: 1.2.91
+        version: 1.2.91
       '@iconify-json/openmoji':
-        specifier: 1.2.21
-        version: 1.2.21
+        specifier: 1.2.22
+        version: 1.2.22
       '@nuxt/eslint':
         specifier: 1.15.1
         version: 1.15.1(@typescript-eslint/utils@8.55.0(eslint@10.0.0(jiti@2.6.1))(typescript@5.9.3))(@vue/compiler-sfc@3.5.28)(eslint@10.0.0(jiti@2.6.1))(magicast@0.5.2)(typescript@5.9.3)(vite@7.3.1(@types/node@25.0.1)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.2))
@@ -676,11 +676,11 @@ packages:
   '@iconify-json/logos@1.2.10':
     resolution: {integrity: sha512-qxaXKJ6fu8jzTMPQdHtNxlfx6tBQ0jXRbHZIYy5Ilh8Lx9US9FsAdzZWUR8MXV8PnWTKGDFO4ZZee9VwerCyMA==}
 
-  '@iconify-json/lucide@1.2.90':
-    resolution: {integrity: sha512-dPn1pRhfBa9KR+EVpdyM1Rvw3T36hCKYxd6TxK1ifffiNt0f5yXx8ZVhqnzPH4Vkz87yLMj5xFCXomNrnzd2kQ==}
+  '@iconify-json/lucide@1.2.91':
+    resolution: {integrity: sha512-8fuRiK+HiNRgCKMspn9UPsDpBw0TqVTIY0LOiDbMnFxOBwAulMXIl+SVOtp4LzxNvCXB5ofYffiiFIFDitqo7w==}
 
-  '@iconify-json/openmoji@1.2.21':
-    resolution: {integrity: sha512-x3G2/u6ZFhiNlhBSyUCSwkWXVzXructJkwjckQFDAsCe6twp8/gpIuhcYAs84cjp0t1qe41BcLOuNccR7e6aRw==}
+  '@iconify-json/openmoji@1.2.22':
+    resolution: {integrity: sha512-+Tv/hG7inR/jwWO583D3VKCP1mW0NZA4zKttu336kW14VT/0k1l/m1AmCT3XrMia+/iQYObekadnXlTp2Q1WSQ==}
 
   '@iconify/collections@1.0.642':
     resolution: {integrity: sha512-SjQpWEQDG8votqjmF/G0CCmFFYaQfm+GECNjAEhzyIGB/RpzOUWcGCIBnFQA/YCg3I+wC5sZpWF/Mko6KWeMwg==}
@@ -6053,11 +6053,11 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/lucide@1.2.90':
+  '@iconify-json/lucide@1.2.91':
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/openmoji@1.2.21':
+  '@iconify-json/openmoji@1.2.22':
     dependencies:
       '@iconify/types': 2.0.0
 
