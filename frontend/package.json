@@ -18,7 +18,7 @@
     "@iconify-json/logos": "1.2.10",
     "@iconify-json/lucide": "1.2.93",
     "@iconify-json/openmoji": "1.2.22",
-    "@nuxt/eslint": "1.15.1",
+    "@nuxt/eslint": "1.15.2",
     "@nuxt/icon": "2.2.1",
     "@nuxt/ui": "4.4.0",
     "eslint": "10.0.2",
