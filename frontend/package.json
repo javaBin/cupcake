@@ -20,7 +20,7 @@
     "@iconify-json/openmoji": "1.2.22",
     "@nuxt/eslint": "1.15.2",
     "@nuxt/icon": "2.2.1",
-    "@nuxt/ui": "4.4.0",
+    "@nuxt/ui": "4.5.0",
     "eslint": "10.0.2",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.5",
