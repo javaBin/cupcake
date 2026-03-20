@@ -4,26 +4,24 @@ import type { Session } from "@/types/session"
 
 const route = useRoute()
 
-const { findConference, conferenceTitle, conferenceLink } = useConferences()
+const { findConference, conferenceTitle, conferenceLink, fetchConferences, conferencesPending } = useConferences()
 const { findSession, duration } = useSessions()
 
 const conferenceId = String(route.params.conferenceId)
 const sessionId = String(route.params.sessionId)
 
-const { conferencesFetch, sessionsFetch, pending } =
-  useConferenceSessionsData(conferenceId)
+await fetchConferences()
 
-const conference = computed<Conference | undefined>(() => {
-  if (conferencesFetch.status.value !== "success") return undefined
-  return findConference(conferenceId, conferencesFetch.data.value)
-})
+const { sessions, sessionsPending, fetchSessions } = useSessionData(conferenceId)
+await fetchSessions()
 
-const session = computed<Session | undefined>(() => {
-  if (sessionsFetch.status.value !== "success") return undefined
-  return findSession(sessionId, sessionsFetch.data.value)
-})
+const conference = computed<Conference | undefined>(() => findConference(conferenceId))
+
+const session = computed<Session | undefined>(() => findSession(sessionId, sessions.value))
 
 const sessionLength = computed(() => duration(session.value))
+
+const pending = computed(() => conferencesPending.value || sessionsPending.value)
 </script>
 
 <template>

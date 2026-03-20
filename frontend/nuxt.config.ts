@@ -11,6 +11,7 @@ if (
 export default defineNuxtConfig({
   compatibilityDate: "2025-08-06",
 
+  ssr: false,
   devtools: { enabled: true },
   modules: [
     "@nuxt/ui",
@@ -20,7 +21,7 @@ export default defineNuxtConfig({
   ],
   vite: {
     server: {
-      allowedHosts: ["maximum-whale-singularly.ngrok-free.app", frontend_host],
+      allowedHosts: [frontend_host],
     },
   },
   icon: {

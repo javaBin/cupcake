@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import type { Session } from "@/types/session"
 import type { Conference } from "@/types/conference"
+import type { Session } from "@/types/session"
 
 const props = defineProps<{
-  sessions: Session[]
-  conference?: Conference
+  conference: Conference
 }>()
+
+const { sessions, sessionsPending, sessionsError, fetchSessions } = useSessionData(props.conference.id)
+await fetchSessions()
+
 
 type Filters = {
   format?: string
@@ -49,7 +52,7 @@ function sessionMatchesSearch(session: Session, q: string): boolean {
 }
 
 const filteredSessions = computed(() => {
-  const all = props.sessions ?? []
+  const all = sessions.value
   const cityQ = (filters.city ?? "").trim().toUpperCase()
   const countyQ = (filters.county ?? "").trim().toUpperCase()
 
@@ -112,6 +115,8 @@ const rangeText = computed(() => {
 
 <template>
   <div class="space-y-4">
+    <div v-if="sessionsError" class="text-red-500">Failed to load sessions</div>
+
     <div class="flex items-center gap-3">
       <UInput
         v-model="search"
@@ -140,7 +145,8 @@ const rangeText = computed(() => {
       />
     </div>
 
-    <SessionsTable :sessions="paginatedSessions" :conference="conference" />
+    <UProgress v-if="sessionsPending" indeterminate class="w-full" />
+    <SessionsTable v-else :sessions="paginatedSessions" :conference="conference" />
 
     <div class="flex justify-end">
       <UPagination

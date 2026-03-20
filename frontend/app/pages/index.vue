@@ -1,5 +1,8 @@
 <script setup lang="ts">
-const { user: userInfo } = useAuth()
+
+const {user, fetchUser} = useUser()
+await fetchUser()
+
 </script>
 
 <template>
@@ -7,18 +10,10 @@ const { user: userInfo } = useAuth()
     <UCard class="p-8">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <img
-          v-if="userInfo === undefined"
-          width="250"
-          src="~/assets/marius_duke.svg"
-          alt="Duke"
-          class="w-full h-auto rounded-lg"
-        />
-        <img
-          v-else
-          width="250"
-          :src="userInfo.avatar"
-          :alt="userInfo.name"
-          class="w-full h-auto rounded-lg"
+            width="250"
+            src="~/assets/marius_duke.svg"
+            alt="Duke"
+            class="w-full h-auto rounded-lg"
         />
 
         <div>
@@ -28,21 +23,12 @@ const { user: userInfo } = useAuth()
             Access to all the JavaZone talks through the years
           </p>
 
-          <UButton
-            v-if="userInfo === undefined"
-            size="xl"
-            href="/login"
-            class="my-6"
-            external
-          >
-            <template #leading>
-              <Icon name="logos:slack-icon" />
-            </template>
-            Sign in with slack
-          </UButton>
+          <p v-if="user" class="text-lg text-gray-600 dark:text-gray-300">
+            Welcome {{ user.preferredUsername.charAt(0).toUpperCase() + user.preferredUsername.slice(1).toLowerCase() }}
+          </p>
 
-          <p v-else class="text-lg text-gray-600 dark:text-gray-300">
-            Welcome {{ userInfo.name }}
+          <p v-if="user && !user.hasPkomRole" class="mt-4 font-semibold text-red-600 dark:text-red-400">
+            You need the program committee role to use this application &mdash; ask in <strong>#pkom</strong> on Slack.
           </p>
         </div>
       </div>

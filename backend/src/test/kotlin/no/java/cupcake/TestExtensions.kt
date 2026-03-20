@@ -10,12 +10,15 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.AuthenticationContext
+import io.ktor.server.auth.AuthenticationProvider
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.utils.io.ByteReadChannel
 import kotlinx.serialization.json.Json
 import no.java.cupcake.bring.BringService
 import no.java.cupcake.plugins.configureSerialization
-import no.java.cupcake.slack.SlackService
 import no.java.cupcake.sleepingpill.SleepingPillService
 import java.util.UUID
 
@@ -42,9 +45,18 @@ fun ApplicationTestBuilder.buildTestClient() =
         }
     }
 
+private class NoOpAuthProvider(
+    name: String,
+) : AuthenticationProvider(object : Config(name) {}) {
+    override suspend fun onAuthenticate(context: AuthenticationContext) = Unit
+}
+
 fun ApplicationTestBuilder.serializedTestApplication(block: Application.() -> Unit) {
     application {
         configureSerialization()
+        install(Authentication) {
+            register(NoOpAuthProvider("javaBin"))
+        }
         block()
     }
 }
@@ -71,25 +83,13 @@ fun buildErrorMockEngine(
     httpStatusCode: HttpStatusCode,
     message: String,
 ): MockEngine =
-    MockEngine { request ->
+    MockEngine { _ ->
         respond(
             content = ByteReadChannel(message),
             status = httpStatusCode,
             headers = headersOf(HttpHeaders.ContentType, "text/plain"),
         )
     }
-
-fun buildSlackService(
-    fixture: String,
-    channel: String,
-    membersUrl: String,
-    block: (suspend (request: HttpRequestData) -> Unit)? = null,
-): SlackService =
-    SlackService(
-        botClient = buildClient(buildMockEngine(fixture, block)),
-        channel = channel,
-        membersUrl = membersUrl,
-    )
 
 fun buildSleepingPillService(
     fixture: String,

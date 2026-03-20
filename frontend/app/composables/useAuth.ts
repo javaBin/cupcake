@@ -1,95 +1,177 @@
-import type { User } from "@/types/user"
+import { User, UserManager, WebStorageStateStore, Log } from 'oidc-client-ts'
 
-function parseJwtPayload(token: string): Record<string, unknown> | undefined {
-  const base64Payload = token.split(".")[1]
-  if (base64Payload === undefined) return undefined
-
-  const base64 = base64Payload.replace(/-/g, "+").replace(/_/g, "/")
-
-  let jsonPayload: string
-  if (typeof window !== "undefined") {
-    jsonPayload = decodeURIComponent(
-      window
-        .atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(""),
-    )
-  } else {
-    jsonPayload = Buffer.from(base64, "base64").toString("utf-8")
-  }
-
-  return JSON.parse(jsonPayload)
+interface AuthState {
+  returnUrl: string
 }
 
-let refreshPromise: Promise<void> | null = null
+function isAuthState(value: unknown): value is AuthState {
+  return (
+      typeof value === 'object' &&
+      value !== null &&
+      'returnUrl' in value &&
+      typeof (value as { returnUrl?: unknown }).returnUrl === 'string'
+  )
+}
 
-export const useAuth = () => {
-  const idTokenCookie = useCookie("id_token", { readonly: true })
-  const accessTokenCookie = useCookie("access_token", { readonly: true })
+type Discovery = { token_endpoint: string }
 
-  const user = computed<User | undefined>(() => {
-    const token = idTokenCookie.value
-    if (!token) return undefined
+type TokenResponse = {
+  access_token: string
+  refresh_token?: string
+  id_token?: string
+  expires_in: number
+  token_type: string
+}
 
-    const payload = parseJwtPayload(token)
-    if (!payload) return undefined
+const AUTHORITY = 'https://auth.home.chrissearle.org/realms/HA12'
+const CLIENT_ID = 'cupcake-client'
 
-    return {
-      id: payload["slack_id"] as string,
-      name: payload["name"] as string,
-      avatar: payload["avatar"] as string,
-      email: payload["email"] as string,
+Log.setLevel(Log.WARN)
+
+let _userManager: UserManager | null = null
+
+function getUserManager(): UserManager {
+  if (!_userManager) {
+    const origin = window.location.origin
+    _userManager = new UserManager({
+      authority: AUTHORITY,
+      client_id: CLIENT_ID,
+      redirect_uri: `${origin}/`,
+      response_type: 'code',
+      scope: 'openid profile email offline_access',
+      userStore: new WebStorageStateStore({ store: window.sessionStorage }),
+      automaticSilentRenew: false,
+      loadUserInfo: false,
+    })
+  }
+  return _userManager
+}
+
+let currentUser: User | null = null
+
+export async function getUser(): Promise<User | null> {
+  if (currentUser) return currentUser
+  currentUser = await getUserManager().getUser()
+  return currentUser
+}
+
+export async function isAuthenticated(): Promise<boolean> {
+  const user = await getUser()
+  return !!user && !user.expired
+}
+
+export async function login(): Promise<void> {
+  const state: AuthState = { returnUrl: window.location.href }
+  await getUserManager().signinRedirect({ state })
+}
+
+export async function completeLoginCallback(): Promise<string> {
+  const user = await getUserManager().signinRedirectCallback()
+  currentUser = user
+
+  const st = user.state
+  if (isAuthState(st)) return st.returnUrl
+
+  return `${window.location.origin}/`
+}
+
+export async function logout(): Promise<void> {
+  currentUser = null
+  await getUserManager().removeUser()
+  await getUserManager().signoutRedirect()
+}
+
+let tokenEndpointPromise: Promise<string> | null = null
+
+async function getTokenEndpoint(): Promise<string> {
+  if (!tokenEndpointPromise) {
+    tokenEndpointPromise = fetch(`${AUTHORITY}/.well-known/openid-configuration`)
+        .then(async (r) => {
+          if (!r.ok) throw new Error('Failed to fetch OIDC discovery')
+          return (await r.json()) as Discovery
+        })
+        .then((d) => d.token_endpoint)
+  }
+  return tokenEndpointPromise
+}
+
+let refreshInFlight: Promise<string | null> | null = null
+
+export async function ensureAccessToken(skewSeconds = 30): Promise<string | null> {
+  const user = await getUser()
+
+  if (!user) {
+    await login()
+    return null
+  }
+
+  const now = Math.floor(Date.now() / 1000)
+  const exp = user.expires_at ?? 0
+
+  if (exp > now + skewSeconds && user.access_token) {
+    return user.access_token
+  }
+
+  if (!user.refresh_token) {
+    currentUser = null
+    await getUserManager().removeUser()
+    await login()
+    return null
+  }
+
+  if (refreshInFlight) return refreshInFlight
+
+  refreshInFlight = (async () => {
+    const tokenEndpoint = await getTokenEndpoint()
+
+    const refreshToken = user.refresh_token
+    if (!refreshToken) {
+      currentUser = null
+      await getUserManager().removeUser()
+      await login()
+      return null
     }
-  })
 
-  const isAuthenticated = computed(() => !!accessTokenCookie.value)
+    const body = new URLSearchParams()
+    body.set('grant_type', 'refresh_token')
+    body.set('client_id', CLIENT_ID)
+    body.set('refresh_token', refreshToken)
 
-  const accessToken = computed(() => accessTokenCookie.value)
+    const resp = await fetch(tokenEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    })
 
-  const isAccessTokenExpiringSoon = () => {
-    const token = accessTokenCookie.value
-    if (!token) return true
+    if (!resp.ok) {
+      currentUser = null
+      await getUserManager().removeUser()
+      await login()
+      return null
+    }
 
-    const payload = parseJwtPayload(token)
-    if (!payload || typeof payload.exp !== "number") return true
+    const tr = (await resp.json()) as TokenResponse
 
-    const expiresAt = payload.exp * 1000
-    const twoMinutes = 2 * 60 * 1000
-    return Date.now() + twoMinutes >= expiresAt
-  }
+    const now = Math.floor(Date.now() / 1000)
+    const expiresAt = now + tr.expires_in
 
-  const refresh = async (): Promise<void> => {
-    if (refreshPromise) return refreshPromise
+    const updated = new User({
+      ...user,
+      access_token: tr.access_token,
+      refresh_token: tr.refresh_token ?? user.refresh_token,
+      id_token: tr.id_token ?? user.id_token,
+      token_type: tr.token_type,
+      expires_at: expiresAt,
+    })
 
-    refreshPromise = $fetch("/refresh", { method: "POST" })
-      .then(() => {})
-      .catch(() => {})
-      .finally(() => {
-        refreshPromise = null
-      })
+    await getUserManager().storeUser(updated)
+    currentUser = updated
+    return updated.access_token
+  })()
 
-    return refreshPromise
-  }
-
-  const logout = () => {
-    const idCookie = useCookie("id_token")
-    const accessCookie = useCookie("access_token")
-    const refreshCookieWrite = useCookie("refresh_token")
-
-    idCookie.value = null
-    accessCookie.value = null
-    refreshCookieWrite.value = null
-
-    navigateTo("/")
-  }
-
-  return {
-    user,
-    isAuthenticated,
-    accessToken,
-    isAccessTokenExpiringSoon,
-    refresh,
-    logout,
+  try {
+    return await refreshInFlight
+  } finally {
+    refreshInFlight = null
   }
 }

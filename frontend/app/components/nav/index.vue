@@ -1,19 +1,33 @@
 <script setup lang="ts">
-import type { Conference } from "@/types/conference"
-
 const {
-  data: conferences,
-  pending,
-  error,
-} = await useAuthFetch<Conference[]>(`/api/conferences`)
+  conferences,
+  conferencesPending,
+  conferencesError,
+  conferencesLoaded,
+  fetchConferences,
+  conferenceLink,
+} = useConferences()
 
-const conferenceList = computed(() => conferences.value ?? [])
+await fetchConferences()
+
+const route = useRoute()
+const conferenceList = computed(() => conferences.value)
 const conferenceCount = computed(() => conferenceList.value.length)
 
-const { conferenceLink } = useConferences()
+const currentConference = computed(() => {
+  const id = route.params.conferenceId
+  if (!id) return undefined
+  return conferenceList.value.find((c) => c.id === id)
+})
+
+const buttonLabel = computed(() => {
+  if (conferencesPending.value) return "Loading…"
+  if (currentConference.value) return currentConference.value.name
+  return "Select Conference"
+})
 
 const conferenceItems = computed(() => [
-  ...(error.value
+  ...(conferencesError.value
     ? [[{ label: "Failed to load conferences", disabled: true }]]
     : []),
 
@@ -22,7 +36,7 @@ const conferenceItems = computed(() => [
     to: conferenceLink(c),
   })),
 
-  ...(!pending.value && !error.value && conferenceCount.value === 0
+  ...(conferencesLoaded.value && !conferencesError.value && conferenceCount.value === 0
     ? [[{ label: "No conferences found", disabled: true }]]
     : []),
 ])
@@ -35,9 +49,9 @@ const conferenceItems = computed(() => [
         variant="ghost"
         color="neutral"
         trailing-icon="i-lucide-chevron-down"
-        :label="pending ? 'Loading…' : 'Select Conference'"
-        :loading="pending"
-        :disabled="pending || conferenceCount === 0"
+        :label="buttonLabel"
+        :loading="conferencesPending"
+        :disabled="conferencesPending || conferenceCount === 0"
         class="font-medium"
       />
     </UDropdownMenu>

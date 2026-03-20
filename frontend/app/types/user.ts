@@ -1,6 +1,6 @@
 export type User = {
-  id: string
-  name: string
-  avatar: string
+  sub: string
+  preferredUsername: string
   email: string
+  hasPkomRole: boolean
 }

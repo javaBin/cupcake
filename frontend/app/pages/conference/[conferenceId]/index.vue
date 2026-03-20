@@ -2,26 +2,22 @@
 import type { Conference } from "@/types/conference"
 
 const route = useRoute()
-const { findConference } = useConferences()
+const { conferencesPending, fetchConferences, findConference } = useConferences()
 
 const conferenceId = String(route.params.conferenceId)
 
-const { conferencesFetch, sessionsFetch, ready } =
-  useConferenceSessionsData(conferenceId)
+await fetchConferences()
 
-const conference = computed<Conference | undefined>(() => {
-  if (conferencesFetch.status.value !== "success") return undefined
-  return findConference(conferenceId, conferencesFetch.data.value)
-})
+const conference = computed<Conference | undefined>(() => findConference(conferenceId))
 </script>
 
 <template>
-  <div v-if="ready" class="mx-2">
+  <div v-if="!conferencesPending" class="mx-2">
     <SessionsBrowser
-      :sessions="sessionsFetch.data.value ?? []"
-      :conference="conference"
+        v-if="conference"
+        :conference="conference"
     />
   </div>
 
-  <UProgress v-else indeterminate class="w-full" />
+  <UProgress v-else indeterminate class="w-full"/>
 </template>

@@ -15,11 +15,8 @@ import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import no.java.cupcake.buildClient
 import no.java.cupcake.buildErrorMockEngine
-import no.java.cupcake.buildSlackService
 import no.java.cupcake.buildSleepingPillService
 import no.java.cupcake.buildTestClient
-import no.java.cupcake.config.JwtConfig
-import no.java.cupcake.config.SlackConfig
 import no.java.cupcake.randomString
 import no.java.cupcake.serializedTestApplication
 import no.java.cupcake.sleepingpill.Conference
@@ -154,33 +151,6 @@ private fun buildService(
 
 private fun ApplicationTestBuilder.buildTestApplication(service: SleepingPillService) {
     serializedTestApplication {
-        configureSecurity(
-            provider =
-                slackProvider(
-                    SlackConfig(
-                        clientId = randomString(),
-                        clientSecret = randomString(),
-                        authUrl = randomString(),
-                        accessTokenUrl = randomString(),
-                    ),
-                ),
-            callback = randomString(),
-            slackService =
-                buildSlackService(
-                    fixture = "/slack_members.json",
-                    channel = "TestChannel",
-                    membersUrl = "/test",
-                ),
-            channelName = randomString(),
-            jwtConfig =
-                JwtConfig(
-                    realm = randomString(),
-                    audience = randomString(),
-                    secret = randomString(),
-                    issuer = randomString(),
-                    redirect = randomString(),
-                ),
-        )
         configureRouting(sleepingPillService = service, securityOptional = true)
     }
 }

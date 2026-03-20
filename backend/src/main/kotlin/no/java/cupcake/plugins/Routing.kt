@@ -25,8 +25,8 @@ fun Application.configureRouting(
     }
 
     routing {
-        authenticate(JWT_AUTH, optional = securityOptional) {
-            route("/api") {
+        route("/api") {
+            authenticate("javaBin", optional = securityOptional) {
                 route("/conferences") {
                     get {
                         either {
