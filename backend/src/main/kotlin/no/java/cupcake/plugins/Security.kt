@@ -71,8 +71,12 @@ fun Application.configureAuth(oidcConfig: OidcConfig) {
 
                 @Suppress("UNCHECKED_CAST")
                 val clientRoles =
-                    (cred.payload.getClaim("resource_access")?.asMap()?.get(oidcConfig.expectedAzp) as? Map<String, Any>)
-                        ?.get("roles") as? List<*>
+                    (
+                        cred.payload
+                            .getClaim("resource_access")
+                            ?.asMap()
+                            ?.get(oidcConfig.expectedAzp) as? Map<String, Any>
+                    )?.get("roles") as? List<*>
 
                 if (clientRoles?.contains("pkom") == true) JWTPrincipal(cred.payload) else null
             }
@@ -103,8 +107,12 @@ fun Application.configureUserInfoRoute(oidcConfig: OidcConfig) {
 
                 @Suppress("UNCHECKED_CAST")
                 val clientRoles =
-                    (p.payload.getClaim("resource_access")?.asMap()?.get(oidcConfig.expectedAzp) as? Map<String, Any>)
-                        ?.get("roles") as? List<*>
+                    (
+                        p.payload
+                            .getClaim("resource_access")
+                            ?.asMap()
+                            ?.get(oidcConfig.expectedAzp) as? Map<String, Any>
+                    )?.get("roles") as? List<*>
 
                 call.respond(
                     UserInfo(
