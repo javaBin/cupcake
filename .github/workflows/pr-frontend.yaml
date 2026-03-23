@@ -1,0 +1,40 @@
+name: PR Check Frontend
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - frontend/**
+      - .github/workflows/pr-frontend.yaml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: frontend
+
+      - name: Lint
+        run: pnpm lint
+        working-directory: frontend
+
+      - name: Build
+        run: pnpm build
+        working-directory: frontend
