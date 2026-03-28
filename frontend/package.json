@@ -13,7 +13,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@artmizu/nuxt-prometheus": "3.0.0",
+    "@artmizu/nuxt-prometheus": "3.0.1",
     "@iconify-json/carbon": "1.2.20",
     "@iconify-json/logos": "1.2.10",
     "@iconify-json/lucide": "1.2.100",

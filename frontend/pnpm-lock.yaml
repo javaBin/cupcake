@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@artmizu/nuxt-prometheus':
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.0.1
+        version: 3.0.1
       '@iconify-json/carbon':
         specifier: 1.2.20
         version: 1.2.20
@@ -88,8 +88,8 @@ packages:
     peerDependencies:
       '@types/json-schema': ^7.0.15
 
-  '@artmizu/nuxt-prometheus@3.0.0':
-    resolution: {integrity: sha512-Qkxt7Cyjgen6DOof8Emu4tuRmScBhpv4pL0wJ9fDJEpvLSwkiKnu0pfDFVKn8Mb4huWIbCIKF5MrLfebtdl3kg==}
+  '@artmizu/nuxt-prometheus@3.0.1':
+    resolution: {integrity: sha512-I7JWql4/KHLckQ8OqERjXxxIoCSqdfT31jG/WJRTgtnrrAprC0+2k3fDSFYZxFXABKxg2trCmwc+bnY54gANCg==}
 
   '@babel/code-frame@7.29.0':
     resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
@@ -3455,9 +3455,6 @@ packages:
     resolution: {integrity: sha512-O1Ld7Dr+nqPnmGpdhzLmMTQ4vAsD+rHwMm1NLUmoUFFymBOMKxCCrtDxqdBRYXdeEPEi3SyoR4TizJLQrnKBNA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  h3@1.15.5:
-    resolution: {integrity: sha512-xEyq3rSl+dhGX2Lm0+eFQIAzlDN6Fs0EcC4f7BNUmzaRX/PTzeuM+Tr2lHB8FoXggsQIeXLj8EDVgs5ywxyxmg==}
-
   h3@1.15.8:
     resolution: {integrity: sha512-iOH6Vl8mGd9nNfu9C0IZ+GuOAfJHcyf3VriQxWaSWIB76Fg4BnFuk4cxBxjmQSSxJS664+pgjP6e7VBnUzFfcg==}
 
@@ -5499,12 +5496,12 @@ snapshots:
       '@types/json-schema': 7.0.15
       js-yaml: 4.1.1
 
-  '@artmizu/nuxt-prometheus@3.0.0':
+  '@artmizu/nuxt-prometheus@3.0.1':
     dependencies:
       '@mswjs/interceptors': 0.40.0
       consola: 3.4.2
       defu: 6.1.4
-      h3: 1.15.5
+      h3: 1.15.8
       prom-client: 15.1.3
 
   '@babel/code-frame@7.29.0':
@@ -5953,7 +5950,7 @@ snapshots:
       chokidar: 4.0.3
       esbuild: 0.27.3
       eslint: 10.1.0(jiti@2.6.1)
-      h3: 1.15.5
+      h3: 1.15.8
       tinyglobby: 0.2.15
       ws: 8.19.0
     transitivePeerDependencies:
@@ -9032,18 +9029,6 @@ snapshots:
   gzip-size@7.0.0:
     dependencies:
       duplexer: 0.1.2
-
-  h3@1.15.5:
-    dependencies:
-      cookie-es: 1.2.2
-      crossws: 0.3.5
-      defu: 6.1.4
-      destr: 2.0.5
-      iron-webcrypto: 1.2.1
-      node-mock-http: 1.0.4
-      radix3: 1.1.2
-      ufo: 1.6.3
-      uncrypto: 0.1.3
 
   h3@1.15.8:
     dependencies:
