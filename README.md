@@ -3,7 +3,7 @@
 A minimal server providing a read-only version of [cake](https://github.com/javaBin/cake-redux) for javaBin regions to
 be able to find possible speakers for local talks.
 
-For frontend - see [frosting](./frontend)
+For frontend - see [frosting](https://github.com/javaBin/frosting)
 
 ## Build
 
@@ -23,7 +23,7 @@ You will require env variables:
     JWT_ENABLED=true/false
 
 The frontend OIDC authority and client ID can be overridden via `NUXT_PUBLIC_OIDC_AUTHORITY` and
-`NUXT_PUBLIC_OIDC_CLIENT_ID` (see [frontend README](./frontend/README.md)). They default to the
+`NUXT_PUBLIC_OIDC_CLIENT_ID` (see [frontend README](https://github.com/javaBin/frosting/README.md)). They default to the
 development Keycloak realm and client, so no change is needed for local dev against that environment.
 
 If you are not running with auth (`JWT_ENABLED=false`) then localhost is fine.
@@ -48,12 +48,11 @@ For example - let's say we setup:
     https://cupcake.javazone.no -> frontend
 
 We would then need to set the host in the frontend for non development builds to `https://cupcake_backend.javazone.no` in
-the [proxy](./frontend/server/middleware/proxy.ts) file - but this is set using the CUPCAKE_BACKEND env var.
+the [proxy](https://github.com/javaBin/frosting/server/middleware/proxy.ts) file - but this is set using the CUPCAKE_BACKEND env var.
 
 All app configuration for the backend is done via the environment.
 
-If deploying with docker - you can place both on the same docker network and use the service name for the env var - see
-[docker-compose.yml](./docker-compose.yml) for an example.
+If deploying with docker - you can place both on the same docker network and use the service name for the env var.
 
 ### JWT
 

@@ -6,9 +6,6 @@ on:
       - main
     tags-ignore:
       - '**'
-    paths:
-      - backend/**
-      - .github/workflows/backend.yaml
   workflow_dispatch:
 
 permissions:
@@ -34,7 +31,6 @@ jobs:
 
       - name: Test
         run: ./gradlew clean check
-        working-directory: backend
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
@@ -63,7 +59,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
-          context: ./backend
+          context: .
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -81,7 +77,6 @@ jobs:
       - name: Generate summary
         run: |
           echo "Tag: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
-        working-directory: backend
 
       - name: Upload reports if failed
         if: failure()
@@ -89,8 +84,8 @@ jobs:
         with:
           name: cupcake-reports
           path: |
-            backend/**/build/reports/
-            backend/**/build/test-results/
+            **/build/reports/
+            **/build/test-results/
 
       - name: Upload coverage if passed
         if: success()
@@ -98,4 +93,4 @@ jobs:
         with:
           name: cupcake-coverage
           path: |
-            backend/**/build/reports/jacoco/
+            **/build/reports/jacoco/

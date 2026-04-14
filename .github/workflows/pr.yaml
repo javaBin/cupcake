@@ -4,9 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - backend/**
-      - .github/workflows/pr-backend.yaml
   workflow_dispatch:
 
 permissions:
@@ -30,7 +27,6 @@ jobs:
 
       - name: Check
         run: ./gradlew check
-        working-directory: backend
 
       - name: Upload reports on failure
         if: failure()
@@ -38,5 +34,5 @@ jobs:
         with:
           name: backend-reports
           path: |
-            backend/**/build/reports/
-            backend/**/build/test-results/
+            **/build/reports/
+            **/build/test-results/

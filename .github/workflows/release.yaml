@@ -32,14 +32,3 @@ jobs:
             --tag ghcr.io/javabin/cupcake:${{ github.ref_name }} \
             ghcr.io/javabin/cupcake:staging
 
-      - name: Create release tag from staging frosting
-        run: |
-          docker buildx imagetools create \
-            --tag ghcr.io/javabin/frosting:release \
-            ghcr.io/javabin/frosting:staging
-
-      - name: Create version tag from staging frosting
-        run: |
-          docker buildx imagetools create \
-            --tag ghcr.io/javabin/frosting:${{ github.ref_name }} \
-            ghcr.io/javabin/frosting:staging
