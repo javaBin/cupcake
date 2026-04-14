@@ -22,9 +22,9 @@ You will require env variables:
     OIDC_EXPECTED_AZP=<expected client ID - defaults to "cupcake-client">
     JWT_ENABLED=true/false
 
-Note - the frontend OIDC authority and client ID are currently hardcoded in
-`frontend/app/composables/useAuth.ts`. If you need to use a different OIDC provider locally,
-update `AUTHORITY` and `CLIENT_ID` in that file.
+The frontend OIDC authority and client ID can be overridden via `NUXT_PUBLIC_OIDC_AUTHORITY` and
+`NUXT_PUBLIC_OIDC_CLIENT_ID` (see [frontend README](./frontend/README.md)). They default to the
+development Keycloak realm and client, so no change is needed for local dev against that environment.
 
 If you are not running with auth (`JWT_ENABLED=false`) then localhost is fine.
 
@@ -83,7 +83,9 @@ in the OIDC provider under the client specified by `OIDC_EXPECTED_AZP`.
 
 The backend fetches the JWKS from the discovery document and validates incoming tokens against it.
 
-Note - the frontend has the OIDC authority and client ID hardcoded in
-`frontend/app/composables/useAuth.ts` (`AUTHORITY` and `CLIENT_ID` constants). These must be
-kept in sync with the backend `OIDC_WELL_KNOWN_URL` and `OIDC_EXPECTED_AZP` settings.
+The frontend OIDC settings are configured via environment variables and must be kept in sync with
+the backend `OIDC_WELL_KNOWN_URL` and `OIDC_EXPECTED_AZP` settings:
+
+    NUXT_PUBLIC_OIDC_AUTHORITY - the OIDC authority URL (e.g. https://auth.example.com/realms/myrealm)
+    NUXT_PUBLIC_OIDC_CLIENT_ID - the OIDC client ID (defaults to "cupcake-client")
 

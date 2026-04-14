@@ -23,19 +23,17 @@ type TokenResponse = {
   token_type: string
 }
 
-const AUTHORITY = 'https://auth.home.chrissearle.org/realms/HA12'
-const CLIENT_ID = 'cupcake-client'
-
 Log.setLevel(Log.WARN)
 
 let _userManager: UserManager | null = null
 
 function getUserManager(): UserManager {
   if (!_userManager) {
+    const { oidcAuthority, oidcClientId } = useRuntimeConfig().public
     const origin = window.location.origin
     _userManager = new UserManager({
-      authority: AUTHORITY,
-      client_id: CLIENT_ID,
+      authority: oidcAuthority,
+      client_id: oidcClientId,
       redirect_uri: `${origin}/`,
       response_type: 'code',
       scope: 'openid profile email offline_access',
@@ -85,7 +83,8 @@ let tokenEndpointPromise: Promise<string> | null = null
 
 async function getTokenEndpoint(): Promise<string> {
   if (!tokenEndpointPromise) {
-    tokenEndpointPromise = fetch(`${AUTHORITY}/.well-known/openid-configuration`)
+    const { oidcAuthority } = useRuntimeConfig().public
+    tokenEndpointPromise = fetch(`${oidcAuthority}/.well-known/openid-configuration`)
         .then(async (r) => {
           if (!r.ok) throw new Error('Failed to fetch OIDC discovery')
           return (await r.json()) as Discovery
@@ -132,9 +131,11 @@ export async function ensureAccessToken(skewSeconds = 30): Promise<string | null
       return null
     }
 
+    const { oidcClientId } = useRuntimeConfig().public
+
     const body = new URLSearchParams()
     body.set('grant_type', 'refresh_token')
-    body.set('client_id', CLIENT_ID)
+    body.set('client_id', oidcClientId)
     body.set('refresh_token', refreshToken)
 
     const resp = await fetch(tokenEndpoint, {

@@ -10,18 +10,18 @@ Always lots to do - but - before we can release this:
 
 ## Build
 
-Nuxt application using npm
+Nuxt application using pnpm
 
-    npm install
+    pnpm install
 
 ## Local running
 
-    npm run dev
+    pnpm dev
 
 ## Preview build
 
-    npm build
-    npm preview
+    pnpm build
+    pnpm preview
 
 ## Deploy
 
@@ -29,7 +29,8 @@ Assuming we will build a docker container - add to [frontend action](../.github/
 
 ### Configuration
 
-Set the environment variable `CUPCAKE_BACKEND` to the backend URL prefix (protocol, host and port, no trailing `/`). It
-expects to find `/api`, `/login` and `/slackCallback` at this location.
-
-If not set it will use `http://localhost:8080` for development.
+| Environment Variable       | Description                                              | Default                                        |
+|----------------------------|----------------------------------------------------------|------------------------------------------------|
+| `CUPCAKE_FRONTEND`         | Hostname the dev server allows (Vite `allowedHosts`)     | `localhost`                                    |
+| `NUXT_PUBLIC_OIDC_AUTHORITY` | OIDC authority URL (e.g. Keycloak realm URL)           | `https://auth.home.chrissearle.org/realms/HA12` |
+| `NUXT_PUBLIC_OIDC_CLIENT_ID` | OIDC client ID                                         | `cupcake-client`                               |

@@ -11,6 +11,13 @@ if (
 export default defineNuxtConfig({
   compatibilityDate: "2025-08-06",
 
+  runtimeConfig: {
+    public: {
+      oidcAuthority: "https://auth.home.chrissearle.org/realms/HA12",
+      oidcClientId: "cupcake-client",
+    },
+  },
+
   ssr: false,
   devtools: { enabled: true },
   modules: [
