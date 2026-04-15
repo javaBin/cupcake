@@ -53,13 +53,6 @@ data class SleepingPillCallFailed(
         systemName = "SleepingPill",
     )
 
-data class SlackCallFailed(
-    override val upstream: ErrorResponse,
-) : UpstreamError(
-        upstream = upstream,
-        systemName = "Slack",
-    )
-
 data object CallPrincipalMissing : ApiError(
     ErrorResponse(
         status = HttpStatusCode.Unauthorized,
@@ -80,15 +73,6 @@ data object TokenMissingUser : ApiError(
         message = "User missing in token",
     ),
 )
-
-data class MissingChannelMembership(
-    val channelName: String,
-) : ApiError(
-        ErrorResponse(
-            status = HttpStatusCode.Unauthorized,
-            message = "User not in correct slack channel - please ask in #kodesmia for access to $channelName",
-        ),
-    )
 
 data object RefreshTokenInvalid : ApiError(
     ErrorResponse(
