@@ -1,4 +1,4 @@
-    package no.java.cupcake.plugins
+package no.java.cupcake.plugins
 
 import com.auth0.jwk.JwkProviderBuilder
 import io.ktor.client.HttpClient
@@ -84,8 +84,10 @@ fun Application.configureAuth(oidcConfig: OidcConfig): String {
             }
 
             validate { cred ->
-                val groups = cred.payload.getClaim("cognito:groups")
-                    ?.asList(String::class.java) ?: emptyList()
+                val groups =
+                    cred.payload
+                        .getClaim("cognito:groups")
+                        ?.asList(String::class.java) ?: emptyList()
                 if (groups.contains("helter")) JWTPrincipal(cred.payload) else null
             }
 
@@ -113,16 +115,20 @@ fun Application.configureUserInfoRoute(userInfoEndpoint: String) {
         authenticate("javaBin") {
             get("/api/me") {
                 val p = call.principal<JWTPrincipal>()!!
-                val token = call.request.headers[HttpHeaders.Authorization]
-                    ?.removePrefix("Bearer ") ?: ""
+                val token =
+                    call.request.headers[HttpHeaders.Authorization]
+                        ?.removePrefix("Bearer ") ?: ""
 
-                val groups = p.payload.getClaim("cognito:groups")
-                    ?.asList(String::class.java) ?: emptyList()
+                val groups =
+                    p.payload
+                        .getClaim("cognito:groups")
+                        ?.asList(String::class.java) ?: emptyList()
 
                 val userInfo =
-                    http.get(userInfoEndpoint) {
-                        header(HttpHeaders.Authorization, "Bearer $token")
-                    }.body<UserInfoResponse>()
+                    http
+                        .get(userInfoEndpoint) {
+                            header(HttpHeaders.Authorization, "Bearer $token")
+                        }.body<UserInfoResponse>()
 
                 call.respond(
                     UserInfo(
