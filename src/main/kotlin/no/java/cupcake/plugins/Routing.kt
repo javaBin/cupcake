@@ -25,6 +25,10 @@ fun Application.configureRouting(
     }
 
     routing {
+        get("/health") {
+            call.respondText("OK")
+        }
+
         route("/api") {
             authenticate("javaBin", optional = securityOptional) {
                 route("/conferences") {
