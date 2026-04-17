@@ -32,10 +32,8 @@ fun Application.module() {
     configureSerialization()
     configureMonitoring()
     configureHTTP()
-    configureAuth(
-        oidcConfig = environment.oidcConfig(),
-    )
-    configureUserInfoRoute(oidcConfig = environment.oidcConfig())
+    val userInfoEndpoint = configureAuth(oidcConfig = environment.oidcConfig())
+    configureUserInfoRoute(userInfoEndpoint = userInfoEndpoint)
     configureRouting(
         sleepingPillService = sleepingPillService(bringService()),
         securityOptional = !environment.bool("jwt.enabled"),

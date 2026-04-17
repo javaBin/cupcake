@@ -1,4 +1,4 @@
-package no.java.cupcake.plugins
+    package no.java.cupcake.plugins
 
 import com.auth0.jwk.JwkProviderBuilder
 import io.ktor.client.HttpClient
@@ -6,6 +6,8 @@ import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -32,13 +34,29 @@ private const val JWK_REFILL_RATE = 10L
 private const val JWK_CACHE_SIZE = 10L
 private const val JWK_EXPIRES_IN = 24L
 
-fun Application.configureAuth(oidcConfig: OidcConfig) {
-    @Serializable
-    data class OidcConfig(
-        val issuer: String,
-        @SerialName("jwks_uri") val jwksUri: String,
-    )
+@Serializable
+private data class OidcDiscovery(
+    val issuer: String,
+    @SerialName("jwks_uri") val jwksUri: String,
+    @SerialName("userinfo_endpoint") val userInfoEndpoint: String,
+)
 
+@Serializable
+private data class UserInfoResponse(
+    val sub: String,
+    val email: String? = null,
+    val name: String? = null,
+)
+
+@Serializable
+private data class UserInfo(
+    val sub: String,
+    val preferredUsername: String,
+    val email: String,
+    val groups: List<String>,
+)
+
+fun Application.configureAuth(oidcConfig: OidcConfig): String {
     val http =
         HttpClient(CIO) {
             install(ContentNegotiation) {
@@ -48,7 +66,7 @@ fun Application.configureAuth(oidcConfig: OidcConfig) {
 
     val oidc =
         runBlocking {
-            http.get(oidcConfig.wellKnownUrl).body<OidcConfig>()
+            http.get(oidcConfig.wellKnownUrl).body<OidcDiscovery>()
         }
 
     val jwkProvider =
@@ -66,19 +84,9 @@ fun Application.configureAuth(oidcConfig: OidcConfig) {
             }
 
             validate { cred ->
-                val azp = cred.payload.getClaim("azp")?.asString()
-                if (azp != oidcConfig.expectedAzp) return@validate null
-
-                @Suppress("UNCHECKED_CAST")
-                val clientRoles =
-                    (
-                        cred.payload
-                            .getClaim("resource_access")
-                            ?.asMap()
-                            ?.get(oidcConfig.expectedAzp) as? Map<String, Any>
-                    )?.get("roles") as? List<*>
-
-                if (clientRoles?.contains("pkom") == true) JWTPrincipal(cred.payload) else null
+                val groups = cred.payload.getClaim("cognito:groups")
+                    ?.asList(String::class.java) ?: emptyList()
+                if (groups.contains("helter")) JWTPrincipal(cred.payload) else null
             }
 
             challenge { _, _ ->
@@ -89,37 +97,39 @@ fun Application.configureAuth(oidcConfig: OidcConfig) {
             }
         }
     }
+
+    return oidc.userInfoEndpoint
 }
 
-@Serializable
-private data class UserInfo(
-    val sub: String,
-    val preferredUsername: String,
-    val email: String?,
-    val hasPkomRole: Boolean,
-)
+fun Application.configureUserInfoRoute(userInfoEndpoint: String) {
+    val http =
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json(Json { ignoreUnknownKeys = true })
+            }
+        }
 
-fun Application.configureUserInfoRoute(oidcConfig: OidcConfig) {
     routing {
         authenticate("javaBin") {
             get("/api/me") {
                 val p = call.principal<JWTPrincipal>()!!
+                val token = call.request.headers[HttpHeaders.Authorization]
+                    ?.removePrefix("Bearer ") ?: ""
 
-                @Suppress("UNCHECKED_CAST")
-                val clientRoles =
-                    (
-                        p.payload
-                            .getClaim("resource_access")
-                            ?.asMap()
-                            ?.get(oidcConfig.expectedAzp) as? Map<String, Any>
-                    )?.get("roles") as? List<*>
+                val groups = p.payload.getClaim("cognito:groups")
+                    ?.asList(String::class.java) ?: emptyList()
+
+                val userInfo =
+                    http.get(userInfoEndpoint) {
+                        header(HttpHeaders.Authorization, "Bearer $token")
+                    }.body<UserInfoResponse>()
 
                 call.respond(
                     UserInfo(
                         sub = p.payload.subject,
-                        preferredUsername = p.payload.getClaim("preferred_username").asString(),
-                        email = p.payload.getClaim("email")?.asString(),
-                        hasPkomRole = clientRoles?.contains("pkom") == true,
+                        preferredUsername = userInfo.email ?: p.payload.subject,
+                        email = userInfo.email ?: "",
+                        groups = groups,
                     ),
                 )
             }

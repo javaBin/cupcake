@@ -46,8 +46,7 @@ Set the following environment variables (a `local.env` file in the root is gitig
 | `SP_PASSWORD` | Sleeping Pill password |
 | `BRING_API_KEY` | Bring API key |
 | `BRING_API_USER` | Bring API user (email) |
-| `OIDC_WELL_KNOWN_URL` | OIDC discovery endpoint (e.g. `https://auth.example.com/realms/myrealm/.well-known/openid-configuration`) |
-| `OIDC_EXPECTED_AZP` | Expected OIDC client ID (defaults to `cupcake-client`) |
+| `OIDC_WELL_KNOWN_URL` | OIDC discovery endpoint (e.g. `https://cognito-idp.eu-central-1.amazonaws.com/{pool-id}/.well-known/openid-configuration`) |
 | `JWT_ENABLED` | `true` to enforce JWT authentication, `false` to disable |
 
 Then run:
@@ -83,11 +82,9 @@ The image uses a multi-stage build (Eclipse Temurin JDK 22 build stage, JRE runt
 Example hostnames:
 
 ```
-https://cupcake-backend.java.no  →  backend (this service)
-https://cupcake.java.no          →  frontend (frosting)
+https://cupcake-backend.javazone.no  →  backend (this service)
+https://cupcake.javazone.no          →  frontend (frosting)
 ```
-
-If deploying with Docker Compose or a shared Docker network, or inside kubernetes with access, use the service name as the `CUPCAKE_BACKEND` value.
 
 ### Environment variables for deployment
 
@@ -97,9 +94,8 @@ If deploying with Docker Compose or a shared Docker network, or inside kubernete
 |---|---|
 | `JWT_ENABLED` | `true` |
 | `OIDC_WELL_KNOWN_URL` | OIDC discovery endpoint |
-| `OIDC_EXPECTED_AZP` | Expected client ID (defaults to `cupcake-client`) |
 
-Users must have the `pkom` role assigned in the OIDC provider under the client specified by `OIDC_EXPECTED_AZP`.
+Users must be members of the `helter` Cognito group (all approved javaBin heroes).
 
 #### OIDC (frontend — must match backend)
 

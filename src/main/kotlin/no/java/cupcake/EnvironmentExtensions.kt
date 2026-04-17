@@ -22,5 +22,4 @@ fun ApplicationEnvironment.sleepingPillConfig() =
 fun ApplicationEnvironment.oidcConfig() =
     OidcConfig(
         wellKnownUrl = str("oidc.well_known_url"),
-        expectedAzp = str("oidc.expected_azp"),
     )
