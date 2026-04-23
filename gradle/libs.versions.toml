@@ -14,7 +14,7 @@ kotlinx_serialization = "1.11.0"
 ktor = "3.4.3"
 logback = "1.5.32"
 prometheus = "1.16.5"
-serialization = "2.3.20"
+serialization = "2.3.21"
 release = "3.1.0"
 
 [libraries]
