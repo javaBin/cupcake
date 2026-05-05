@@ -42,7 +42,7 @@ fun Application.configureRouting(
                         get("/sessions") {
                             either {
                                 sleepingPillService.sessions(
-                                    id = ConferenceId(call.parameters["id"]).bind(),
+                                    id = ConferenceId(call.parameters["id"]),
                                 )
                             }.respond()
                         }

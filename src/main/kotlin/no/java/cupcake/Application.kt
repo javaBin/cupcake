@@ -1,8 +1,10 @@
 package no.java.cupcake
 
 import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.server.cio.EngineMain
+import kotlinx.coroutines.launch
 import no.java.cupcake.bring.BringService
 import no.java.cupcake.clients.bringClient
 import no.java.cupcake.clients.sleepingPillClient
@@ -34,10 +36,13 @@ fun Application.module() {
     configureHTTP()
     val userInfoEndpoint = configureAuth(oidcConfig = environment.oidcConfig())
     configureUserInfoRoute(userInfoEndpoint = userInfoEndpoint)
+    val sleepingPillService = sleepingPillService(bringService())
     configureRouting(
-        sleepingPillService = sleepingPillService(bringService()),
+        sleepingPillService = sleepingPillService,
         securityOptional = !environment.bool("jwt.enabled"),
     )
+    val ready = launch { sleepingPillService.warmUp() }
+    intercept(ApplicationCallPipeline.Setup) { ready.join() }
 }
 
 private fun Application.sleepingPillService(bringService: BringService): SleepingPillService {

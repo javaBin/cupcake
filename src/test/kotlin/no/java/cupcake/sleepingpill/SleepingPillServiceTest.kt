@@ -70,7 +70,7 @@ class SleepingPillServiceTest :
 
             val sessions =
                 either {
-                    service.sessions(ConferenceId(randomString()).bind())
+                    service.sessions(ConferenceId(randomString()))
                 }
 
             sessions.isRight() shouldBe true
@@ -107,7 +107,7 @@ class SleepingPillServiceTest :
 
             val sessions =
                 either {
-                    service.sessions(ConferenceId(null).bind())
+                    service.sessions(ConferenceId(null))
                 }
 
             sessions.isRight() shouldBe false

@@ -1,8 +1,9 @@
 package no.java.cupcake.sleepingpill
 
-import arrow.core.raise.either
-import arrow.core.raise.ensure
+import arrow.core.raise.Raise
+import arrow.core.raise.context.ensureNotNull
 import kotlinx.serialization.Serializable
+import no.java.cupcake.api.ApiError
 import no.java.cupcake.api.ConferenceIdRequired
 import java.time.Year
 
@@ -29,14 +30,13 @@ data class SleepingPillConferences(
 )
 
 @Serializable
-data class ConferenceId private constructor(
+@JvmInline
+value class ConferenceId private constructor(
     val id: String,
 ) {
     companion object {
+        context(_: Raise<ApiError>)
         operator fun invoke(id: String?) =
-            either {
-                ensure(!id.isNullOrBlank()) { ConferenceIdRequired }
-                ConferenceId(id)
-            }
+            ConferenceId(ensureNotNull(id?.takeIf { it.isNotBlank() }) { ConferenceIdRequired })
     }
 }

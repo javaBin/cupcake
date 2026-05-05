@@ -1,9 +1,11 @@
 package no.java.cupcake.sleepingpill
 
 import arrow.core.Either
+import arrow.core.getOrElse
 import arrow.core.raise.Raise
+import arrow.core.raise.context.ensure
+import arrow.core.raise.context.raise
 import arrow.core.raise.either
-import arrow.core.raise.ensure
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache
 import com.github.benmanes.caffeine.cache.Caffeine
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -19,7 +21,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.future.await
-import kotlinx.coroutines.runBlocking
 import no.java.cupcake.api.ApiError
 import no.java.cupcake.api.ErrorResponse
 import no.java.cupcake.api.SleepingPillCallFailed
@@ -39,7 +40,6 @@ class SleepingPillService(
     cacheTimeoutSeconds: Long,
     private val maxPastYears: Long,
     private val includeCurrentYear: Boolean,
-    private val initAtStart: Boolean = false,
 ) {
     private val ttl: Duration = if (cacheTimeoutSeconds <= 0) Duration.ZERO else Duration.ofSeconds(cacheTimeoutSeconds)
     private val cacheScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -48,10 +48,7 @@ class SleepingPillService(
         Caffeine.newBuilder().apply { if (!ttl.isZero) expireAfterWrite(ttl) }.buildAsync { _, _ ->
             cacheScope
                 .async {
-                    uncachedConferencesEither().fold(
-                        ifLeft = { throw ApiErrorException(it) },
-                        ifRight = { it },
-                    )
+                    uncachedConferencesEither().getOrElse { throw ApiErrorException(it) }
                 }.asCompletableFuture()
         }
 
@@ -59,33 +56,21 @@ class SleepingPillService(
         Caffeine.newBuilder().apply { if (!ttl.isZero) expireAfterWrite(ttl) }.buildAsync { id, _ ->
             cacheScope
                 .async {
-                    uncachedSessionsEither(id).fold(
-                        ifLeft = { throw ApiErrorException(it) },
-                        ifRight = { it },
-                    )
+                    uncachedSessionsEither(id).getOrElse { throw ApiErrorException(it) }
                 }.asCompletableFuture()
         }
 
-    init {
-        if (initAtStart) {
-            runBlocking {
-                either {
-                    val conferences = conferences()
-                    conferences.forEach { conference ->
-                        sessions(ConferenceId(conference.id).bind())
-                    }
-                }.onLeft { error ->
-                    logger.warn { "Failed to initialize conferences cache: $error" }
-                }
-            }
-        }
+    suspend fun warmUp() {
+        either {
+            conferences().forEach { sessions(ConferenceId(it.id)) }
+        }.onLeft { logger.warn { "Failed to warm cache: $it" } }
     }
 
     private suspend fun uncachedConferencesEither(): Either<ApiError, List<Conference>> =
         either {
             client
                 .get("/data/conference")
-                .valid(this)
+                .valid()
                 .body<SleepingPillConferences>()
                 .conferences
                 .filterNot { rejectSlugs.contains(it.slug) }
@@ -105,7 +90,7 @@ class SleepingPillService(
         either {
             client
                 .get("/data/conference/${id.id}/session")
-                .valid(this)
+                .valid()
                 .body<SleepingPillSessions>()
                 .sessions
                 .map {
@@ -141,25 +126,26 @@ class SleepingPillService(
         val error: ApiError,
     ) : RuntimeException()
 
-    private suspend fun HttpResponse.valid(raise: Raise<ApiError>): HttpResponse {
-        raise.ensure(this.status.isSuccess()) {
+    context(_: Raise<ApiError>)
+    private suspend fun HttpResponse.valid(): HttpResponse {
+        ensure(this.status.isSuccess()) {
             logger.warn { "Failed to fetch information from sleeping pill - ${this.status}" }
             SleepingPillCallFailed(ErrorResponse(this.status, this.bodyAsText()))
         }
         return this
     }
 
-    context(raise: Raise<ApiError>)
+    context(_: Raise<ApiError>)
     private suspend fun <T> getOrRaise(block: suspend () -> T): T =
         try {
             block()
         } catch (e: ApiErrorException) {
-            raise.raise(e.error)
+            raise(e.error)
         }
 
-    context(raise: Raise<ApiError>)
+    context(_: Raise<ApiError>)
     suspend fun conferences(): List<Conference> = getOrRaise { conferencesCache.get("all").await() }
 
-    context(raise: Raise<ApiError>)
+    context(_: Raise<ApiError>)
     suspend fun sessions(id: ConferenceId): List<Session> = getOrRaise { sessionsCache.get(id).await() }
 }

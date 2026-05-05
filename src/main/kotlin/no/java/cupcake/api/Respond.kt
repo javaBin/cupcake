@@ -7,27 +7,15 @@ import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.RoutingContext
 
 context(context: RoutingContext)
-suspend inline fun <reified A : Any> Either<ApiError, A>.performResponse(
-    status: HttpStatusCode = HttpStatusCode.OK,
-    redirect: Boolean = false,
-) = when (this) {
-    is Either.Left -> {
-        context.respond(value)
-    }
-
-    is Either.Right -> {
-        when (redirect) {
-            false -> context.call.respond(status, value)
-            true -> context.call.respondRedirect(value.toString())
-        }
-    }
+suspend inline fun <reified A : Any> Either<ApiError, A>.respond(status: HttpStatusCode = HttpStatusCode.OK) {
+    onLeft { context.respond(it) }
+    onRight { context.call.respond(status, it) }
 }
 
 context(context: RoutingContext)
-suspend inline fun <reified A : Any> Either<ApiError, A>.respond(status: HttpStatusCode = HttpStatusCode.OK) =
-    performResponse(status, redirect = false)
-
-context(context: RoutingContext)
-suspend inline fun <reified A : Any> Either<ApiError, A>.redirect() = performResponse(redirect = true)
+suspend inline fun <reified A : Any> Either<ApiError, A>.redirect() {
+    onLeft { context.respond(it) }
+    onRight { context.call.respondRedirect(it.toString()) }
+}
 
 suspend fun RoutingContext.respond(error: ApiError) = call.respond(error.status(), error.messageMap())

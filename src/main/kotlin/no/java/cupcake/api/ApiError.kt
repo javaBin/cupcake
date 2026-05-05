@@ -11,38 +11,44 @@ data class ErrorResponse(
     val fieldValue: String? = null,
 )
 
-sealed class ApiError(
-    protected open val errorResponse: ErrorResponse,
-) {
-    open fun messageMap(): Map<String, ErrorResponse> = mapOf("error" to errorResponse)
-
-    fun status() = this.errorResponse.status
+sealed interface ApiError {
+    val response: ErrorResponse
 }
+
+fun ApiError.status() = response.status
+
+fun ApiError.messageMap(): Map<String, ErrorResponse> =
+    when (this) {
+        is UpstreamError -> mapOf("upstream" to upstream, "error" to response)
+
+        is RequiredField,
+        is CallPrincipalMissing,
+        is TokenMissing,
+        is TokenMissingUser,
+        is RefreshTokenInvalid,
+        -> mapOf("error" to response)
+    }
 
 abstract class UpstreamError(
     open val upstream: ErrorResponse,
     val systemName: String,
-) : ApiError(
+) : ApiError {
+    override val response =
         ErrorResponse(
             status = HttpStatusCode.InternalServerError,
             message = "call to $systemName failed",
-        ),
-    ) {
-    override fun messageMap() =
-        mapOf(
-            "upstream" to upstream,
-            "error" to errorResponse,
         )
 }
 
 abstract class RequiredField(
     val fieldName: String,
-) : ApiError(
+) : ApiError {
+    override val response =
         ErrorResponse(
             status = HttpStatusCode.BadRequest,
             message = "$fieldName required",
-        ),
-    )
+        )
+}
 
 data object ConferenceIdRequired : RequiredField(fieldName = "id")
 
@@ -53,30 +59,41 @@ data class SleepingPillCallFailed(
         systemName = "SleepingPill",
     )
 
-data object CallPrincipalMissing : ApiError(
-    ErrorResponse(
-        status = HttpStatusCode.Unauthorized,
-        message = "Principal missing",
-    ),
-)
+data class CognitoCallFailed(
+    override val upstream: ErrorResponse,
+) : UpstreamError(
+        upstream = upstream,
+        systemName = "Cognito",
+    )
 
-data object TokenMissing : ApiError(
-    ErrorResponse(
-        status = HttpStatusCode.Unauthorized,
-        message = "Principal missing token",
-    ),
-)
+data object CallPrincipalMissing : ApiError {
+    override val response =
+        ErrorResponse(
+            status = HttpStatusCode.Unauthorized,
+            message = "Principal missing",
+        )
+}
 
-data object TokenMissingUser : ApiError(
-    ErrorResponse(
-        status = HttpStatusCode.Unauthorized,
-        message = "User missing in token",
-    ),
-)
+data object TokenMissing : ApiError {
+    override val response =
+        ErrorResponse(
+            status = HttpStatusCode.Unauthorized,
+            message = "Principal missing token",
+        )
+}
 
-data object RefreshTokenInvalid : ApiError(
-    ErrorResponse(
-        status = HttpStatusCode.Unauthorized,
-        message = "Refresh token is invalid or has expired",
-    ),
-)
+data object TokenMissingUser : ApiError {
+    override val response =
+        ErrorResponse(
+            status = HttpStatusCode.Unauthorized,
+            message = "User missing in token",
+        )
+}
+
+data object RefreshTokenInvalid : ApiError {
+    override val response =
+        ErrorResponse(
+            status = HttpStatusCode.Unauthorized,
+            message = "Refresh token is invalid or has expired",
+        )
+}

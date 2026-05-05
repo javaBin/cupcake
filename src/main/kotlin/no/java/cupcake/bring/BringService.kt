@@ -44,11 +44,7 @@ class BringService(
         }
     }
 
-    fun getPostalCode(id: String?): PostalCode? {
-        if (id == null) return null
-
-        return cache.get(id)
-    }
+    fun getPostalCode(id: String?) = id?.let(cache::get)
 
     private fun scheduleRefresh() {
         logger.info { "Scheduling postal code cache refresh" }

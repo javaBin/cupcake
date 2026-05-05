@@ -1,5 +1,9 @@
 package no.java.cupcake.plugins
 
+import arrow.core.Either
+import arrow.core.raise.context.bind
+import arrow.core.raise.context.either
+import arrow.core.raise.context.ensureNotNull
 import com.auth0.jwk.JwkProviderBuilder
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -17,7 +21,6 @@ import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.auth.principal
-import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
@@ -25,6 +28,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import no.java.cupcake.api.CallPrincipalMissing
+import no.java.cupcake.api.CognitoCallFailed
+import no.java.cupcake.api.ErrorResponse
+import no.java.cupcake.api.TokenMissing
+import no.java.cupcake.api.TokenMissingUser
+import no.java.cupcake.api.respond
 import no.java.cupcake.config.OidcConfig
 import java.net.URI
 import java.util.concurrent.TimeUnit
@@ -114,30 +123,44 @@ fun Application.configureUserInfoRoute(userInfoEndpoint: String) {
     routing {
         authenticate("javaBin") {
             get("/api/me") {
-                val p = call.principal<JWTPrincipal>()!!
-                val token =
-                    call.request.headers[HttpHeaders.Authorization]
-                        ?.removePrefix("Bearer ") ?: ""
+                either {
+                    val principal = ensureNotNull(call.principal<JWTPrincipal>()) { CallPrincipalMissing }
+                    val token =
+                        ensureNotNull(
+                            call.request.headers[HttpHeaders.Authorization]?.removePrefix("Bearer "),
+                        ) { TokenMissing }
 
-                val groups =
-                    p.payload
-                        .getClaim("cognito:groups")
-                        ?.asList(String::class.java) ?: emptyList()
+                    val groups =
+                        principal.payload
+                            .getClaim("cognito:groups")
+                            ?.asList(String::class.java)
+                            .orEmpty()
 
-                val userInfo =
-                    http
-                        .get(userInfoEndpoint) {
-                            header(HttpHeaders.Authorization, "Bearer $token")
-                        }.body<UserInfoResponse>()
+                    val userInfo =
+                        Either
+                            .catch {
+                                http
+                                    .get(userInfoEndpoint) {
+                                        header(HttpHeaders.Authorization, "Bearer $token")
+                                    }.body<UserInfoResponse>()
+                            }.mapLeft {
+                                CognitoCallFailed(
+                                    ErrorResponse(
+                                        HttpStatusCode.BadGateway,
+                                        it.message ?: "userinfo call failed",
+                                    ),
+                                )
+                            }.bind()
 
-                call.respond(
+                    val email = ensureNotNull(userInfo.email) { TokenMissingUser }
+
                     UserInfo(
-                        sub = p.payload.subject,
-                        preferredUsername = userInfo.email ?: p.payload.subject,
-                        email = userInfo.email ?: "",
+                        sub = principal.payload.subject,
+                        preferredUsername = email,
+                        email = email,
                         groups = groups,
-                    ),
-                )
+                    )
+                }.respond()
             }
         }
     }

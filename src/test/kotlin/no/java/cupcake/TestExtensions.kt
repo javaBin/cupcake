@@ -104,7 +104,6 @@ fun buildSleepingPillService(
         cacheTimeoutSeconds = 10,
         maxPastYears = 3,
         includeCurrentYear = includeCurrentYear,
-        initAtStart = false,
     )
 
 fun buildBringService(
