@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.23
 
-FROM --platform=$BUILDPLATFORM eclipse-temurin:22 AS build
+FROM eclipse-temurin:22-jdk AS build
 
 WORKDIR /build
 COPY . .
