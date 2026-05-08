@@ -13,9 +13,9 @@ suspend inline fun <reified A : Any> Either<ApiError, A>.respond(status: HttpSta
 }
 
 context(context: RoutingContext)
-suspend inline fun <reified A : Any> Either<ApiError, A>.redirect() {
+suspend fun Either<ApiError, String>.redirect() {
     onLeft { context.respond(it) }
-    onRight { context.call.respondRedirect(it.toString()) }
+    onRight { context.call.respondRedirect(it) }
 }
 
 suspend fun RoutingContext.respond(error: ApiError) = call.respond(error.status(), error.messageMap())

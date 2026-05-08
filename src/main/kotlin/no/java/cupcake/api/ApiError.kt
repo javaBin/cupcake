@@ -20,13 +20,7 @@ fun ApiError.status() = response.status
 fun ApiError.messageMap(): Map<String, ErrorResponse> =
     when (this) {
         is UpstreamError -> mapOf("upstream" to upstream, "error" to response)
-
-        is RequiredField,
-        is CallPrincipalMissing,
-        is TokenMissing,
-        is TokenMissingUser,
-        is RefreshTokenInvalid,
-        -> mapOf("error" to response)
+        else -> mapOf("error" to response)
     }
 
 abstract class UpstreamError(
