@@ -3,6 +3,12 @@ on:
   push:
     branches: [main]
   pull_request:
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+
 jobs:
   javabin:
     uses: javaBin/platform/.github/workflows/javabin.yml@main
