@@ -1,0 +1,29 @@
+name: cupcake-backend
+team: cupcake
+
+compute:
+  cpu: 512
+  memory: 1024
+  port: 8080
+  health_check: /health
+
+routing:
+  host: cupcake-backend.javazone.no
+  priority: 101
+
+resources:
+  secrets:
+    - name: sp_user
+      env: SP_USER
+    - name: sp_password
+      env: SP_PASSWORD
+    - name: bring_api_user
+      env: BRING_API_USER
+    - name: bring_api_key
+      env: BRING_API_KEY
+
+auth: internal
+
+environment:
+  SP_BASE_URL: https://sleepingpill.javazone.no
+  OIDC_WELL_KNOWN_URL: https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_Icikv3dtD/.well-known/openid-configuration
