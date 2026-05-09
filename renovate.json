@@ -3,6 +3,7 @@
   "extends": [
     "config:recommended"
   ],
+  "ignoreDeps": ["javaBin/platform"],
   "packageRules": [
     {
       "matchDatasources": [
