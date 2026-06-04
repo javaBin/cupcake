@@ -1,5 +1,5 @@
 [versions]
-arrow = "2.2.2.1"
+arrow = "2.2.3"
 cache4k = "0.14.0"
 caffeine = "3.2.4"
 dependency_analysis = "3.14.1"
