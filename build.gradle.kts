@@ -16,7 +16,7 @@ kotlin {
     jvmToolchain(22)
 
     compilerOptions {
-        freeCompilerArgs = listOf("-Xconsistent-data-class-copy-visibility", "-Xcontext-parameters")
+        freeCompilerArgs = listOf("-Xconsistent-data-class-copy-visibility")
     }
 }
 
