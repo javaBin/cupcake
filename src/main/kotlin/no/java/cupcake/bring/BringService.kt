@@ -5,6 +5,7 @@ import io.github.reactivecircus.cache4k.Cache
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,6 +20,7 @@ class BringService(
     private val client: HttpClient,
     private val postalCodeUrl: String,
     scheduler: Boolean = true,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     private val cache = Cache.Builder<String, PostalCode>().expireAfterWrite(24.hours).build()
 
@@ -53,7 +55,7 @@ class BringService(
             timerTask {
                 logger.info { "Running scheduled refresh" }
 
-                val scope = CoroutineScope(Dispatchers.IO)
+                val scope = CoroutineScope(dispatcher)
 
                 scope.launch {
                     refresh()

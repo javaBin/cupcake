@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags-ignore:
-      - '**'
+      - "**"
   workflow_dispatch:
 
 permissions:
@@ -44,11 +44,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Set up JDK
-        uses: actions/setup-java@v6
-        with:
-          java-version: '22'
-          distribution: 'temurin'
+      - name: Setup mise
+        uses: jdx/mise-action@v4
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6

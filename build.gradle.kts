@@ -13,7 +13,7 @@ plugins {
 group = "no.java.cupcake"
 
 kotlin {
-    jvmToolchain(22)
+    jvmToolchain(25)
 
     compilerOptions {
         freeCompilerArgs = listOf("-Xconsistent-data-class-copy-visibility")
@@ -22,9 +22,14 @@ kotlin {
 
 application {
     mainClass.set("no.java.cupcake.ApplicationKt")
+    applicationName = "cupcake"
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+
+base {
+    archivesName = "cupcake"
 }
 
 repositories {
@@ -49,13 +54,16 @@ dependencies {
     testRuntimeOnly(libs.kotlin.test.junit)
 }
 
-tasks.shadowJar {
-    dependsOn(tasks.startScripts)
-    archiveFileName.set("cupcake.jar")
+jacoco {
+    toolVersion = libs.versions.jacoco.get()
 }
 
-tasks.jar {
-    enabled = false
+tasks.check {
+    dependsOn(tasks.detektMain, tasks.detektTest)
+}
+
+listOf("distTar", "distZip", "shadowJar", "startShadowScripts", "shadowDistTar", "shadowDistZip").forEach { name ->
+    tasks.named(name) { enabled = false }
 }
 
 tasks.withType<Test>().configureEach {
@@ -68,12 +76,4 @@ tasks.test {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
-}
-
-tasks.named("distZip") {
-    dependsOn(tasks.shadowJar)
-}
-
-tasks.named("distTar") {
-    dependsOn(tasks.shadowJar)
 }

@@ -1,15 +1,19 @@
 # syntax=docker/dockerfile:1.27
 
-FROM eclipse-temurin:22-jdk AS build
+FROM eclipse-temurin:25-jdk AS build
 
-WORKDIR /build
+WORKDIR /app
 COPY . .
 
-RUN ./gradlew clean build -x test
+RUN ./gradlew clean installDist \
+    && mkdir -p /app/appjar \
+    && mv /app/build/install/cupcake/lib/cupcake*.jar /app/appjar/
 
-FROM eclipse-temurin:22-jre AS deploy
+FROM eclipse-temurin:25-jre AS deploy
 
-WORKDIR /opt/app
-COPY --from=build /build/build/libs/cupcake.jar /opt/app
+COPY --from=build /app/build/install/cupcake/bin /opt/app/bin
+COPY --from=build /app/build/install/cupcake/lib /opt/app/lib
 
-CMD ["java", "-jar", "/opt/app/cupcake.jar"]
+COPY --from=build /app/appjar/ /opt/app/lib/
+
+CMD ["/opt/app/bin/cupcake"]

@@ -15,6 +15,7 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -40,9 +41,10 @@ class SleepingPillService(
     cacheTimeoutSeconds: Long,
     private val maxPastYears: Long,
     private val includeCurrentYear: Boolean,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     private val ttl: Duration = if (cacheTimeoutSeconds <= 0) Duration.ZERO else Duration.ofSeconds(cacheTimeoutSeconds)
-    private val cacheScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val cacheScope: CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
 
     private val conferencesCache: AsyncLoadingCache<String, List<Conference>> =
         Caffeine.newBuilder().apply { if (!ttl.isZero) expireAfterWrite(ttl) }.buildAsync { _, _ ->

@@ -31,4 +31,3 @@ jobs:
           docker buildx imagetools create \
             --tag ghcr.io/javabin/cupcake:${{ github.ref_name }} \
             ghcr.io/javabin/cupcake:staging
-

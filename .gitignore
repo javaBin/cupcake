@@ -39,3 +39,5 @@ out/
 .vscode/
 
 .claude
+
+mise.local.toml

@@ -23,6 +23,7 @@ fun ApiError.messageMap(): Map<String, ErrorResponse> =
         else -> mapOf("error" to response)
     }
 
+@Suppress("AbstractClassCanBeConcreteClass")
 abstract class UpstreamError(
     open val upstream: ErrorResponse,
     val systemName: String,
@@ -34,6 +35,7 @@ abstract class UpstreamError(
         )
 }
 
+@Suppress("AbstractClassCanBeConcreteClass")
 abstract class RequiredField(
     val fieldName: String,
 ) : ApiError {

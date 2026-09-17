@@ -96,7 +96,8 @@ fun Application.configureAuth(oidcConfig: OidcConfig): String {
                 val groups =
                     cred.payload
                         .getClaim("cognito:groups")
-                        ?.asList(String::class.java) ?: emptyList()
+                        ?.asList(String::class.java)
+                        .orEmpty()
                 if (groups.contains("helter")) JWTPrincipal(cred.payload) else null
             }
 
