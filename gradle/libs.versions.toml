@@ -16,7 +16,7 @@ ktor = "3.6.0"
 logback = "1.6.5"
 prometheus = "1.17.1"
 serialization = "2.4.20"
-release = "3.1.0"
+release = "3.2.0"
 
 [libraries]
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
