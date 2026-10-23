@@ -22,8 +22,11 @@ resources:
     - name: bring_api_key
       env: BRING_API_KEY
 
-auth: internal
+auth:
+  pool: internal
+  client: none
+  env:
+    COGNITO_WELL_KNOWN_URL: OIDC_WELL_KNOWN_URL
 
 environment:
   SP_BASE_URL: https://sleepingpill.javazone.no
-  OIDC_WELL_KNOWN_URL: https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_Icikv3dtD/.well-known/openid-configuration
