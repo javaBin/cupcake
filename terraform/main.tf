@@ -4,6 +4,7 @@ module "platform" {
 
   project = "javabin"
   domain  = "javazone.no"
+  team    = "cupcake"
 }
 
 module "ecr" {
@@ -74,12 +75,11 @@ module "secret_bring_api_key" {
 module "auth" {
   source = "git::https://github.com/javaBin/platform//terraform/modules/cognito-app-client?ref=main"
 
-  app_name      = "cupcake-backend"
-  team          = "cupcake"
-  pool          = "internal"
-  callback_urls = ["https://cupcake-backend.javazone.no/", "https://cupcake-backend.javazone.no/auth/callback"]
-  logout_urls   = ["https://cupcake-backend.javazone.no/"]
-  project       = "javabin"
+  app_name    = "cupcake-backend"
+  team        = "cupcake"
+  pool        = "internal"
+  client_type = "none"
+  project     = "javabin"
 }
 
 module "task_role" {
@@ -118,19 +118,18 @@ module "service" {
   readonly_root_filesystem = true
   target_group_arn         = module.routing.target_group_arn
   environment = {
-    SP_BASE_URL          = "https://sleepingpill.javazone.no"
-    OIDC_WELL_KNOWN_URL  = "https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_Icikv3dtD/.well-known/openid-configuration"
-    COGNITO_USER_POOL_ID = module.auth.user_pool_id
-    COGNITO_DOMAIN       = module.auth.user_pool_domain
-    COGNITO_ISSUER_URL   = module.auth.issuer_url
+    SP_BASE_URL            = "https://sleepingpill.javazone.no"
+    COGNITO_USER_POOL_ID   = module.auth.user_pool_id
+    COGNITO_DOMAIN         = module.auth.user_pool_domain
+    COGNITO_ISSUER_URL     = module.auth.issuer_url
+    COGNITO_WELL_KNOWN_URL = module.auth.well_known_url
+    OIDC_WELL_KNOWN_URL    = module.auth.well_known_url
   }
   secrets = {
-    SP_USER               = module.secret_sp_user.parameter_arn
-    SP_PASSWORD           = module.secret_sp_password.parameter_arn
-    BRING_API_USER        = module.secret_bring_api_user.parameter_arn
-    BRING_API_KEY         = module.secret_bring_api_key.parameter_arn
-    COGNITO_CLIENT_ID     = module.auth.client_id_arn
-    COGNITO_CLIENT_SECRET = module.auth.client_secret_arn
+    SP_USER        = module.secret_sp_user.parameter_arn
+    SP_PASSWORD    = module.secret_sp_password.parameter_arn
+    BRING_API_USER = module.secret_bring_api_user.parameter_arn
+    BRING_API_KEY  = module.secret_bring_api_key.parameter_arn
   }
 }
 
