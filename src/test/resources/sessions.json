@@ -344,15 +344,7 @@
         },
         "feedback": {
           "privateData": true,
-          "value": {
-            "commentList": [
-              "great guy, touching and entertaining",
-              "moro"
-            ],
-            "usefulSum": 90,
-            "count": 20,
-            "enjoySum": 100
-          }
+          "value": {}
         }
       },
       "status": "SUBMITTED"

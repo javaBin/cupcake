@@ -68,9 +68,9 @@ data class Session(
     val speakers: List<Speaker>,
 )
 
+// Only fields cupcake uses are modelled; unknown keys are ignored, so other fields can't break parsing
 @Serializable
 data class SleepingPillSession(
-    val postedBy: String?,
     val speakers: List<SleepingPillSpeaker>,
     val id: String,
     val data: SleepingPillTalk,
@@ -92,7 +92,6 @@ data class SleepingPillSpeaker(
 
 @Serializable
 data class SleepingPillSpeakerData(
-    val twitter: PrivateValue<String>?,
     val bio: PrivateValue<String>?,
     @SerialName("zip-code") val zipCode: PrivateValue<String>?,
     val residence: PrivateValue<String>?,
@@ -100,42 +99,11 @@ data class SleepingPillSpeakerData(
 
 @Serializable
 data class SleepingPillTalk(
-    val participation: PrivateValue<String>?,
-    val intendedAudience: PrivateValue<String>?,
-    val outline: PrivateValue<String>?,
-    val suggestedKeywords: PrivateValue<String>?,
     val length: PrivateValue<String>?,
     val format: PrivateValue<String>,
-    val infoToProgramCommittee: PrivateValue<String>?,
-    val equipment: PrivateValue<String>?,
     val language: PrivateValue<String>,
-    @SerialName("abstract") var abstractText: PrivateValue<String>?,
+    @SerialName("abstract") val abstractText: PrivateValue<String>?,
     val title: PrivateValue<String>,
-    val pkomfeedbacks: PrivateValue<List<SleepingPillPkomFeedback>>?,
-    val tagswithauthor: PrivateValue<List<SleepingPillTag>>?,
-    val tags: PrivateValue<List<String>>?,
-    val feedback: PrivateValue<SleepingPillFeedback>?,
-)
-
-@Serializable
-data class SleepingPillTag(
-    val author: String,
-    val tag: String,
-)
-
-@Serializable
-data class SleepingPillPkomFeedback(
-    val author: String,
-    val feedbacktype: String,
-    val info: String,
-)
-
-@Serializable
-data class SleepingPillFeedback(
-    val usefulSum: Int,
-    val count: Int,
-    val enjoySum: Int,
-    val commentList: List<String>,
 )
 
 @Serializable
