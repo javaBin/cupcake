@@ -2,6 +2,7 @@ package no.java.cupcake
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestData
@@ -20,6 +21,9 @@ import kotlinx.serialization.json.Json
 import no.java.cupcake.bring.BringService
 import no.java.cupcake.plugins.configureSerialization
 import no.java.cupcake.sleepingpill.SleepingPillService
+import java.time.Clock
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.UUID
 
 fun randomString() = UUID.randomUUID().toString()
@@ -65,6 +69,17 @@ fun HttpRequestData.urlString() = url.toString()
 
 fun loadFixture(path: String): String = object {}.javaClass.getResource(path)!!.readText()
 
+private val oslo = ZoneId.of("Europe/Oslo")
+
+fun fixedClock(date: String): Clock = Clock.fixed(LocalDate.parse(date).atStartOfDay(oslo).toInstant(), oslo)
+
+private fun MockRequestHandleScope.respondFixture(fixture: String) =
+    respond(
+        content = ByteReadChannel(loadFixture(fixture)),
+        status = HttpStatusCode.OK,
+        headers = headersOf(HttpHeaders.ContentType, "application/json"),
+    )
+
 fun buildMockEngine(
     fixture: String,
     block: (suspend (request: HttpRequestData) -> Unit)? = null,
@@ -72,11 +87,23 @@ fun buildMockEngine(
     MockEngine { request ->
         block?.invoke(request)
 
-        respond(
-            content = ByteReadChannel(loadFixture(fixture)),
-            status = HttpStatusCode.OK,
-            headers = headersOf(HttpHeaders.ContentType, "application/json"),
-        )
+        respondFixture(fixture)
+    }
+
+// Serves /public/config from configFixture (404 when null) and everything else from fixture
+fun buildSleepingPillMockEngine(
+    fixture: String,
+    configFixture: String?,
+    block: (suspend (request: HttpRequestData) -> Unit)? = null,
+): MockEngine =
+    MockEngine { request ->
+        block?.invoke(request)
+
+        when {
+            request.url.encodedPath != "/public/config" -> respondFixture(fixture)
+            configFixture != null -> respondFixture(configFixture)
+            else -> respond(content = "Not found", status = HttpStatusCode.NotFound)
+        }
     }
 
 fun buildErrorMockEngine(
@@ -94,16 +121,16 @@ fun buildErrorMockEngine(
 fun buildSleepingPillService(
     fixture: String,
     client: HttpClient? = null,
-    bringService: BringService? = null,
-    includeCurrentYear: Boolean = false,
+    configFixture: String? = "/public_config_2026.json",
+    clock: Clock = fixedClock("2026-10-24"),
     block: (suspend (request: HttpRequestData) -> Unit)? = null,
 ): SleepingPillService =
     SleepingPillService(
-        client = client ?: buildClient(buildMockEngine(fixture, block)),
-        bringService = bringService ?: buildBringService(fixture = "/postal_codes.json", postalCodeUrl = "/test"),
+        client = client ?: buildClient(buildSleepingPillMockEngine(fixture, configFixture, block)),
+        bringService = buildBringService(fixture = "/postal_codes.json", postalCodeUrl = "/test"),
         cacheTimeoutSeconds = 10,
         maxPastYears = 3,
-        includeCurrentYear = includeCurrentYear,
+        clock = clock,
     )
 
 fun buildBringService(

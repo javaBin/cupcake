@@ -17,6 +17,7 @@ fun ApplicationEnvironment.sleepingPillConfig() =
         password = str("sleepingpill.password"),
         rootUrl = str("sleepingpill.base"),
         cacheTtlSeconds = long("sleepingpill.cache_ttl_seconds"),
+        maxPastYears = long("sleepingpill.max_past_years"),
     )
 
 fun ApplicationEnvironment.oidcConfig() =

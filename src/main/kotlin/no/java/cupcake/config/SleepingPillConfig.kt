@@ -6,5 +6,4 @@ data class SleepingPillConfig(
     val rootUrl: String,
     val cacheTtlSeconds: Long,
     val maxPastYears: Long = 3,
-    val includeCurrentYear: Boolean = false,
 )

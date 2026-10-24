@@ -2,10 +2,13 @@ package no.java.cupcake.sleepingpill
 
 import arrow.core.raise.either
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
 import no.java.cupcake.api.ConferenceIdRequired
 import no.java.cupcake.buildSleepingPillService
+import no.java.cupcake.fixedClock
 import no.java.cupcake.randomString
+import java.time.Clock
 
 class SleepingPillServiceTest :
     FunSpec({
@@ -19,11 +22,7 @@ class SleepingPillServiceTest :
 
             conferences.isRight() shouldBe true
 
-            val conferenceList = conferences.getOrNull()!!
-
-            conferenceList.size shouldBe 3
-
-            val conference2024 = conferenceList.first { it.slug == "javazone_2024" }
+            val conference2024 = conferences.getOrNull()!!.first { it.slug == "javazone_2024" }
 
             conference2024 shouldBe
                 Conference(
@@ -31,38 +30,39 @@ class SleepingPillServiceTest :
                     slug = "javazone_2024",
                     id = "ad82e461-9444-40a4-a9d5-cc4885f9107a",
                 )
-
-            rejectSlugs.forEach { slug ->
-                conferenceList.filter { it.slug == slug } shouldBe emptyList()
-            }
         }
 
-        test("Can fetch conference list with current year") {
-            val service = buildService("/conferences.json", true)
+        test("Includes the conference year once the conference is complete") {
+            buildService("/conferences.json", clock = fixedClock("2026-10-24")).slugs() shouldBe
+                listOf("javazone_2024", "javazone_2025", "javazone_2026")
+        }
 
-            val conferences =
-                either {
-                    service.conferences()
-                }
+        test("Excludes the conference year before the conference is complete") {
+            buildService("/conferences.json", clock = fixedClock("2026-08-15")).slugs() shouldBe
+                listOf("javazone_2023", "javazone_2024", "javazone_2025")
+        }
 
-            conferences.isRight() shouldBe true
+        test("Excludes the conference year on the last conference day") {
+            buildService("/conferences.json", clock = fixedClock("2026-09-03")).slugs() shouldBe
+                listOf("javazone_2023", "javazone_2024", "javazone_2025")
+        }
 
-            val conferenceList = conferences.getOrNull()!!
+        test("Falls back to last year when public config is unavailable") {
+            buildService("/conferences.json", configFixture = null, clock = fixedClock("2026-10-24")).slugs() shouldBe
+                listOf("javazone_2023", "javazone_2024", "javazone_2025")
+        }
 
-            conferenceList.size shouldBe 4
+        test("Rejected conferences are excluded from the window") {
+            val slugs =
+                buildService(
+                    "/conferences.json",
+                    configFixture = null,
+                    clock = fixedClock("2022-06-01"),
+                ).slugs()
 
-            val conference2024 = conferenceList.first { it.slug == "javazone_2024" }
+            slugs shouldBe listOf("javazone_2019", "javazone_2021")
 
-            conference2024 shouldBe
-                Conference(
-                    name = "JavaZone 2024",
-                    slug = "javazone_2024",
-                    id = "ad82e461-9444-40a4-a9d5-cc4885f9107a",
-                )
-
-            rejectSlugs.forEach { slug ->
-                conferenceList.filter { it.slug == slug } shouldBe emptyList()
-            }
+            rejectSlugs.forEach { slug -> slugs shouldNotContain slug }
         }
 
         test("Can fetch session list") {
@@ -117,5 +117,9 @@ class SleepingPillServiceTest :
 
 private fun buildService(
     fixture: String,
-    includeCurrentYear: Boolean = false,
-) = buildSleepingPillService(fixture, includeCurrentYear = includeCurrentYear)
+    configFixture: String? = "/public_config_2026.json",
+    clock: Clock = fixedClock("2026-10-24"),
+) = buildSleepingPillService(fixture, configFixture = configFixture, clock = clock)
+
+private suspend fun SleepingPillService.slugs(): List<String> =
+    either { conferences() }.getOrNull()!!.map { it.slug }.sorted()

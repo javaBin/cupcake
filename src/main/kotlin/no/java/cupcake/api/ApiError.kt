@@ -55,6 +55,16 @@ data class SleepingPillCallFailed(
         systemName = "SleepingPill",
     )
 
+data class SleepingPillConfigUnreadable(
+    val e: Throwable,
+) : ApiError {
+    override val response =
+        ErrorResponse(
+            status = HttpStatusCode.InternalServerError,
+            message = "SleepingPill public config unreadable: ${e.message}",
+        )
+}
+
 data class CognitoCallFailed(
     override val upstream: ErrorResponse,
 ) : UpstreamError(

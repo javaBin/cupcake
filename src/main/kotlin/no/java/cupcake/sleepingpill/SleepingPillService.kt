@@ -3,6 +3,7 @@ package no.java.cupcake.sleepingpill
 import arrow.core.Either
 import arrow.core.getOrElse
 import arrow.core.raise.Raise
+import arrow.core.raise.catch
 import arrow.core.raise.context.ensure
 import arrow.core.raise.context.raise
 import arrow.core.raise.either
@@ -25,9 +26,13 @@ import kotlinx.coroutines.future.await
 import no.java.cupcake.api.ApiError
 import no.java.cupcake.api.ErrorResponse
 import no.java.cupcake.api.SleepingPillCallFailed
+import no.java.cupcake.api.SleepingPillConfigUnreadable
 import no.java.cupcake.bring.BringService
+import java.time.Clock
 import java.time.Duration
+import java.time.LocalDate
 import java.time.Year
+import java.time.ZoneId
 
 private val logger = KotlinLogging.logger {}
 
@@ -40,7 +45,7 @@ class SleepingPillService(
     private val bringService: BringService,
     cacheTimeoutSeconds: Long,
     private val maxPastYears: Long,
-    private val includeCurrentYear: Boolean,
+    private val clock: Clock = Clock.system(ZoneId.of("Europe/Oslo")),
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     private val ttl: Duration = if (cacheTimeoutSeconds <= 0) Duration.ZERO else Duration.ofSeconds(cacheTimeoutSeconds)
@@ -68,18 +73,33 @@ class SleepingPillService(
         }.onLeft { logger.warn { "Failed to warm cache: $it" } }
     }
 
+    private suspend fun cutoffYear(): Year =
+        either {
+            catch({
+                client
+                    .get("/public/config")
+                    .valid()
+                    .body<SleepingPillPublicConfig>()
+                    .completedYear(LocalDate.now(clock))
+            }) { raise(SleepingPillConfigUnreadable(it)) }
+        }.getOrElse {
+            logger.warn { "Could not determine last completed conference, falling back to last year: $it" }
+            Year.now(clock).minusYears(1)
+        }
+
     private suspend fun uncachedConferencesEither(): Either<ApiError, List<Conference>> =
         either {
+            val cutoff = cutoffYear()
+            val window = cutoff.minusYears(maxPastYears - 1)..cutoff
+
             client
                 .get("/data/conference")
                 .valid()
                 .body<SleepingPillConferences>()
                 .conferences
                 .filterNot { rejectSlugs.contains(it.slug) }
-                .filter {
-                    val now = Year.now()
-                    it.year.isAfter(now.minusYears(maxPastYears + 1)) && (includeCurrentYear || it.year.isBefore(now))
-                }.map {
+                .filter { it.year in window }
+                .map {
                     Conference(
                         name = it.name,
                         slug = it.slug,

@@ -5,7 +5,9 @@ import arrow.core.raise.context.ensureNotNull
 import kotlinx.serialization.Serializable
 import no.java.cupcake.api.ApiError
 import no.java.cupcake.api.ConferenceIdRequired
+import java.time.LocalDate
 import java.time.Year
+import java.time.format.DateTimeFormatter
 
 @Serializable
 data class Conference(
@@ -28,6 +30,21 @@ data class SleepingPillConference(
 data class SleepingPillConferences(
     val conferences: List<SleepingPillConference>,
 )
+
+private val publicConfigDateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+@Serializable
+data class SleepingPillPublicConfig(
+    val conferenceName: String,
+    val conferenceDates: List<String>,
+) {
+    val year: Year get() = Year.of(conferenceName.substringAfterLast(" ").toInt())
+
+    val lastDay: LocalDate get() = conferenceDates.maxOf { LocalDate.parse(it, publicConfigDateFormat) }
+
+    // The latest year whose conference is over: this one once its last day has passed, otherwise the one before
+    fun completedYear(today: LocalDate): Year = if (lastDay.isBefore(today)) year else year.minusYears(1)
+}
 
 @Serializable
 @JvmInline
