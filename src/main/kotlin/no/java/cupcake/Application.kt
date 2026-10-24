@@ -4,6 +4,7 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationCallPipeline
 import io.ktor.server.application.ApplicationEnvironment
 import io.ktor.server.cio.EngineMain
+import io.ktor.server.request.path
 import kotlinx.coroutines.launch
 import no.java.cupcake.bring.BringService
 import no.java.cupcake.clients.bringClient
@@ -42,7 +43,9 @@ fun Application.module() {
         securityOptional = !environment.bool("jwt.enabled"),
     )
     val ready = launch { sleepingPillService.warmUp() }
-    intercept(ApplicationCallPipeline.Setup) { ready.join() }
+    intercept(ApplicationCallPipeline.Setup) {
+        if (context.request.path() != "/health") ready.join()
+    }
 }
 
 private fun Application.sleepingPillService(bringService: BringService): SleepingPillService {
