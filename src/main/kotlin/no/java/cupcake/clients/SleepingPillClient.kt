@@ -8,6 +8,7 @@ import io.ktor.client.plugins.auth.providers.basic
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import kotlinx.serialization.json.Json
@@ -15,7 +16,9 @@ import no.java.cupcake.config.SleepingPillConfig
 
 fun Application.sleepingPillClient(config: SleepingPillConfig): HttpClient =
     HttpClient(CIO) {
-        install(Logging)
+        install(Logging) {
+            sanitizeHeader { header -> header == HttpHeaders.Authorization }
+        }
 
         install(ContentNegotiation) {
             json(

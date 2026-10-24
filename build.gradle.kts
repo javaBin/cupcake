@@ -41,7 +41,6 @@ dependencies {
     implementation(libs.bundles.ktor.client)
 
     implementation(libs.arrow.core)
-    implementation(libs.cache4k)
     implementation(libs.caffeine)
     implementation(libs.kotlinx.coroutines.core)
 

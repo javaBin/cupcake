@@ -65,6 +65,23 @@ data class SleepingPillConfigUnreadable(
         )
 }
 
+data class BringCallFailed(
+    override val upstream: ErrorResponse,
+) : UpstreamError(
+        upstream = upstream,
+        systemName = "Bring",
+    )
+
+data class BringResponseUnreadable(
+    val e: Throwable,
+) : ApiError {
+    override val response =
+        ErrorResponse(
+            status = HttpStatusCode.InternalServerError,
+            message = "Bring postal codes unreadable: ${e.message}",
+        )
+}
+
 data class CognitoCallFailed(
     override val upstream: ErrorResponse,
 ) : UpstreamError(

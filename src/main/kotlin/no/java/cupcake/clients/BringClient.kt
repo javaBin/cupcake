@@ -10,9 +10,13 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import no.java.cupcake.config.BringConfig
 
+private const val BRING_API_KEY_HEADER = "X-Mybring-API-Key"
+
 fun bringClient(bringConfig: BringConfig): HttpClient =
     HttpClient(CIO) {
-        install(Logging)
+        install(Logging) {
+            sanitizeHeader { header -> header == BRING_API_KEY_HEADER }
+        }
 
         install(ContentNegotiation) {
             json(
@@ -27,6 +31,6 @@ fun bringClient(bringConfig: BringConfig): HttpClient =
 
         defaultRequest {
             header("X-Mybring-API-Uid", bringConfig.username)
-            header("X-Mybring-API-Key", bringConfig.apiKey)
+            header(BRING_API_KEY_HEADER, bringConfig.apiKey)
         }
     }

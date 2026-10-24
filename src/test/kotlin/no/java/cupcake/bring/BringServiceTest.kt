@@ -7,8 +7,10 @@ import io.ktor.client.engine.mock.respond
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
+import io.ktor.http.isSuccess
 import io.ktor.utils.io.ByteReadChannel
 import no.java.cupcake.buildClient
+import no.java.cupcake.buildErrorMockEngine
 import no.java.cupcake.loadFixture
 
 class BringServiceTest :
@@ -47,18 +49,37 @@ class BringServiceTest :
 
             postalCode shouldBe null
         }
+
+        test("Postal code with surrounding whitespace is found") {
+            val service = buildService()
+
+            service.getPostalCode(" 1555 ")?.city shouldBe "Son"
+        }
+
+        test("Failed refresh does not throw and returns no postal codes") {
+            val service = buildService(HttpStatusCode.Unauthorized, "Authentication failed")
+
+            service.getPostalCode("1555") shouldBe null
+        }
     })
 
-private fun buildService(): BringService =
+private fun buildService(
+    status: HttpStatusCode = HttpStatusCode.OK,
+    errorBody: String = "",
+): BringService =
     BringService(
         client =
             buildClient(
-                MockEngine { request ->
-                    respond(
-                        content = ByteReadChannel(loadFixture("/postal_codes.json")),
-                        status = HttpStatusCode.OK,
-                        headers = headersOf(HttpHeaders.ContentType, "application/json"),
-                    )
+                if (status.isSuccess()) {
+                    MockEngine { _ ->
+                        respond(
+                            content = ByteReadChannel(loadFixture("/postal_codes.json")),
+                            status = status,
+                            headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                        )
+                    }
+                } else {
+                    buildErrorMockEngine(status, errorBody)
                 },
             ),
         postalCodeUrl = "/test",

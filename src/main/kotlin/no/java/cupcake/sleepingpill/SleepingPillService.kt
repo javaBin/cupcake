@@ -129,15 +129,14 @@ class SleepingPillService(
                                 ?.toInt(),
                         speakers =
                             it.speakers.map { speaker ->
-                                val code = bringService.getPostalCode(speaker.data.zipCode?.value)
                                 Speaker(
                                     name = speaker.name,
                                     email = speaker.email,
                                     bio = speaker.data.bio?.value,
                                     postcode = speaker.data.zipCode?.value,
                                     location = speaker.data.residence?.value,
-                                    city = code?.city,
-                                    county = code?.county,
+                                    city = null,
+                                    county = null,
                                 )
                             },
                     )
@@ -169,5 +168,16 @@ class SleepingPillService(
     suspend fun conferences(): List<Conference> = getOrRaise { conferencesCache.get("all").await() }
 
     context(_: Raise<ApiError>)
-    suspend fun sessions(id: ConferenceId): List<Session> = getOrRaise { sessionsCache.get(id).await() }
+    suspend fun sessions(id: ConferenceId): List<Session> =
+        getOrRaise { sessionsCache.get(id).await() }.map { it.withPostalCodes() }
+
+    // Looked up per request, not cached with the session, so late-loaded postal codes apply at once
+    private fun Session.withPostalCodes(): Session =
+        copy(
+            speakers =
+                speakers.map { speaker ->
+                    val code = bringService.getPostalCode(speaker.postcode)
+                    speaker.copy(city = code?.city, county = code?.county)
+                },
+        )
 }
