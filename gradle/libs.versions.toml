@@ -12,7 +12,7 @@ kotlinter = "5.7.0"
 kotlinx_coroutines = "1.11.0"
 kotlinx_serialization = "1.12.0"
 ktor = "3.6.0"
-logback = "1.6.6"
+log4j2 = "2.26.1"
 prometheus = "1.17.2"
 serialization = "2.4.21"
 release = "3.2.0"
@@ -48,7 +48,10 @@ ktor-server-status-pages = { module = "io.ktor:ktor-server-status-pages-jvm", ve
 
 ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
-logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+log4j-api = { group = "org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j2" }
+log4j-core = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j2" }
+log4j-layout-template-json = { group = "org.apache.logging.log4j", name = "log4j-layout-template-json", version.ref = "log4j2" }
+log4j-slf4j2-impl = { group = "org.apache.logging.log4j", name = "log4j-slf4j2-impl", version.ref = "log4j2" }
 
 micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "prometheus" }
 
@@ -59,6 +62,7 @@ kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref =
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 
 [bundles]
+logging = ["log4j-api", "log4j-core", "log4j-layout-template-json", "log4j-slf4j2-impl"]
 ktor-client = ["ktor-client-content-negotiation", "ktor-client-core", "ktor-client-logging", "ktor-client-cio", "ktor-client-call-id", "ktor-client-auth"]
 ktor-server = ["ktor-server-auth", "ktor-server-auth-jwt", "ktor-server-call-id", "ktor-server-call-logging", "ktor-server-content-negotiation", "ktor-server-core", "ktor-server-metrics-micrometer", "ktor-server-cio", "ktor-server-status-pages", "ktor-serialization", "kotlinx-serialization", "ktor-server-compression", "ktor-server-cors"]
 test = ["ktor-server-test-host", "kotest", "kotest-assertions", "ktor-client-mock"]

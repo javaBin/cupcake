@@ -47,7 +47,7 @@ dependencies {
     implementation(libs.kotlin.logging)
     implementation(libs.micrometer.registry.prometheus)
 
-    runtimeOnly(libs.logback.classic)
+    runtimeOnly(libs.bundles.logging)
 
     testImplementation(libs.bundles.test)
     testRuntimeOnly(libs.kotlin.test.junit)
