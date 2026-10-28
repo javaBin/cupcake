@@ -11,51 +11,36 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import no.java.cupcake.api.ApiError
 import no.java.cupcake.api.BringCallFailed
 import no.java.cupcake.api.BringResponseUnreadable
 import no.java.cupcake.api.ErrorResponse
-import java.util.Timer
-import kotlin.concurrent.timerTask
-import kotlin.time.Duration.Companion.hours
 
-val logger = KotlinLogging.logger {}
+private val logger = KotlinLogging.logger {}
 
 private const val MAX_ERROR_BODY = 500
 
+// Holds the postal code lookup; when to call refresh() is decided by the refresh loop in PostalCodeRefresh.kt
 class BringService(
     private val client: HttpClient,
     private val postalCodeUrl: String,
-    scheduler: Boolean = true,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     // Swapped as a whole on each successful refresh, so a failed refresh keeps the previous codes
     @Volatile
     private var postalCodes: Map<String, PostalCode> = emptyMap()
 
-    init {
-        if (scheduler) {
-            scheduleRefresh()
-        } else {
-            runBlocking {
-                refresh()
-            }
-        }
-    }
+    val hasCodes: Boolean get() = postalCodes.isNotEmpty()
 
-    private suspend fun refresh() {
+    // Returns whether the refresh succeeded
+    suspend fun refresh(): Boolean {
         logger.info { "Refreshing postal code cache" }
 
-        either { fetchPostalCodes() }
+        return either { fetchPostalCodes() }
             .onRight { codes ->
                 postalCodes = codes.associateBy { it.postalCode }
                 logger.info { "Loaded ${codes.size} postal codes" }
             }.onLeft { logger.warn { "Postal code refresh failed, keeping ${postalCodes.size} cached codes: $it" } }
+            .isRight()
     }
 
     context(_: Raise<ApiError>)
@@ -71,24 +56,4 @@ class BringService(
         }) { raise(BringResponseUnreadable(it)) }
 
     fun getPostalCode(id: String?) = id?.trim()?.let(postalCodes::get)
-
-    private fun scheduleRefresh() {
-        logger.info { "Scheduling postal code cache refresh" }
-
-        Timer().scheduleAtFixedRate(
-            timerTask {
-                logger.info { "Running scheduled refresh" }
-
-                val scope = CoroutineScope(dispatcher)
-
-                scope.launch {
-                    refresh()
-                }
-            },
-            0L,
-            1.hours.inWholeMilliseconds,
-        )
-
-        logger.info { "Scheduler setup complete" }
-    }
 }

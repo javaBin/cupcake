@@ -18,6 +18,7 @@ import io.ktor.server.auth.AuthenticationContext
 import io.ktor.server.auth.AuthenticationProvider
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.utils.io.ByteReadChannel
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import no.java.cupcake.bring.BringService
 import no.java.cupcake.plugins.configureSerialization
@@ -162,5 +163,4 @@ fun buildBringService(
     BringService(
         client = client ?: buildClient(buildMockEngine(fixture, block)),
         postalCodeUrl = postalCodeUrl,
-        scheduler = false,
-    )
+    ).also { runBlocking { it.refresh() } }

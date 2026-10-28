@@ -25,6 +25,7 @@ caffeine = { group = "com.github.ben-manes.caffeine", name="caffeine", version.r
 kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "kotlin_logging" }
 
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx_coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx_coroutines" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx_serialization" }
 
 ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
@@ -65,7 +66,7 @@ ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 logging = ["log4j-api", "log4j-core", "log4j-layout-template-json", "log4j-slf4j2-impl"]
 ktor-client = ["ktor-client-content-negotiation", "ktor-client-core", "ktor-client-logging", "ktor-client-cio", "ktor-client-call-id", "ktor-client-auth"]
 ktor-server = ["ktor-server-auth", "ktor-server-auth-jwt", "ktor-server-call-id", "ktor-server-call-logging", "ktor-server-content-negotiation", "ktor-server-core", "ktor-server-metrics-micrometer", "ktor-server-cio", "ktor-server-status-pages", "ktor-serialization", "kotlinx-serialization", "ktor-server-compression", "ktor-server-cors"]
-test = ["ktor-server-test-host", "kotest", "kotest-assertions", "ktor-client-mock"]
+test = ["ktor-server-test-host", "kotest", "kotest-assertions", "ktor-client-mock", "kotlinx-coroutines-test"]
 
 [plugins]
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependency_analysis" }

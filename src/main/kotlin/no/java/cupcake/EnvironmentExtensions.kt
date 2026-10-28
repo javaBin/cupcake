@@ -9,6 +9,8 @@ fun ApplicationEnvironment.bringConfig() =
     BringConfig(
         username = str("bring.username"),
         apiKey = str("bring.api_key"),
+        postalCodesUrl = str("bring.postalcodes_url"),
+        refreshHours = long("bring.refresh_hours"),
     )
 
 fun ApplicationEnvironment.sleepingPillConfig() =

@@ -9,6 +9,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import io.ktor.http.isSuccess
 import io.ktor.utils.io.ByteReadChannel
+import kotlinx.coroutines.runBlocking
 import no.java.cupcake.buildClient
 import no.java.cupcake.buildErrorMockEngine
 import no.java.cupcake.loadFixture
@@ -60,6 +61,34 @@ class BringServiceTest :
             val service = buildService(HttpStatusCode.Unauthorized, "Authentication failed")
 
             service.getPostalCode("1555") shouldBe null
+            service.hasCodes shouldBe false
+        }
+
+        test("Failed refresh keeps the previously loaded codes") {
+            var failing = false
+            val service =
+                BringService(
+                    client =
+                        buildClient(
+                            MockEngine { _ ->
+                                if (failing) {
+                                    respond(content = "down", status = HttpStatusCode.ServiceUnavailable)
+                                } else {
+                                    respond(
+                                        content = ByteReadChannel(loadFixture("/postal_codes.json")),
+                                        headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                                    )
+                                }
+                            },
+                        ),
+                    postalCodeUrl = "/test",
+                )
+
+            service.refresh() shouldBe true
+            failing = true
+            service.refresh() shouldBe false
+
+            service.getPostalCode("1555")?.city shouldBe "Son"
         }
     })
 
@@ -83,5 +112,4 @@ private fun buildService(
                 },
             ),
         postalCodeUrl = "/test",
-        scheduler = false,
-    )
+    ).also { runBlocking { it.refresh() } }

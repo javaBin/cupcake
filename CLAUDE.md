@@ -42,7 +42,7 @@ Optional: `SP_CACHE_TTL_SECONDS` (default 21600; entries refresh in the backgrou
 - **`plugins/`** — Ktor plugin configuration: `Routing.kt`, `Security.kt`, `Monitoring.kt`, `HTTP.kt`, `Serialization.kt`
 - **`clients/`** — HTTP clients for Sleeping Pill and Bring API
 - **`sleepingpill/`** — Domain models (`Conference`, `Session`) and `SleepingPillService` with Caffeine async cache
-- **`bring/`** — `BringService` with in-memory postal code map (refreshed hourly; a failed refresh keeps the previous codes)
+- **`bring/`** — `BringService` with in-memory postal code map; `PostalCodeRefresh.kt` runs the refresh loop (daily by default, `BRING_REFRESH_HOURS`; retries with backoff until the first load; a failed refresh keeps the previous codes)
 - **`api/`** — `ApiError` sealed class and `Respond.kt` extension functions
 - **`config/`** — Configuration data classes (loaded from `application.conf` via HOCON)
 
@@ -59,7 +59,7 @@ All require JWT authentication with `helter` Cognito group membership (unless `J
 
 **Error handling**: Arrow's `Either<ApiError, T>` throughout. `ApiError` is a sealed class; `RoutingContext.respond(error: ApiError)` in `Respond.kt` maps errors to HTTP responses.
 
-**Caching**: Sleeping Pill data uses Caffeine async cache (configurable TTL). Postal codes are refreshed hourly from Bring and looked up per request, not cached with sessions. Setting TTL ≤ 0 disables caching.
+**Caching**: Sleeping Pill data uses Caffeine async cache (configurable TTL). Postal codes are refreshed daily from Bring and looked up per request, not cached with sessions. Setting TTL ≤ 0 disables caching.
 
 **Security**: JWT validated via Auth0 JWK provider against Cognito's JWKS. Requires `helter` group in `cognito:groups` claim. `/api/me` calls the Cognito UserInfo endpoint with the Bearer token to retrieve email and name; `hasPkomRole` is derived from `cognito:groups` containing `pkom`.
 
