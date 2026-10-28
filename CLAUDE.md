@@ -33,7 +33,7 @@ Create a `local.env` file in the root (gitignored) for local development. Requir
 | `OIDC_WELL_KNOWN_URL` | OIDC discovery endpoint |
 | `JWT_ENABLED` | Set to `false` to disable auth locally |
 
-Optional: `SP_CACHE_TTL_SECONDS` (default 3600), `PORT` (default 8080).
+Optional: `SP_CACHE_TTL_SECONDS` (default 21600; entries refresh in the background after this, never expire), `PORT` (default 8080).
 
 ## Architecture
 

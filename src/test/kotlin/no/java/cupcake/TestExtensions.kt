@@ -1,5 +1,6 @@
 package no.java.cupcake
 
+import com.github.benmanes.caffeine.cache.Ticker
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockRequestHandleScope
@@ -25,8 +26,23 @@ import java.time.Clock
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.UUID
+import java.util.concurrent.atomic.AtomicLong
+import kotlin.time.Duration
 
 fun randomString() = UUID.randomUUID().toString()
+
+// JavaZone 2024 in conferences.json - inside the conference window for the default test clock
+const val CONFERENCE_2024_ID = "ad82e461-9444-40a4-a9d5-cc4885f9107a"
+
+class FakeTicker : Ticker {
+    private val nanos = AtomicLong()
+
+    override fun read() = nanos.get()
+
+    fun advance(duration: Duration) {
+        nanos.addAndGet(duration.inWholeNanoseconds)
+    }
+}
 
 fun buildClient(engine: MockEngine): HttpClient =
     HttpClient(engine) {
@@ -90,7 +106,8 @@ fun buildMockEngine(
         respondFixture(fixture)
     }
 
-// Serves /public/config from configFixture (404 when null) and everything else from fixture
+// Serves /public/config from configFixture (404 when null), the conference list from conferences.json
+// and everything else from fixture
 fun buildSleepingPillMockEngine(
     fixture: String,
     configFixture: String?,
@@ -100,6 +117,7 @@ fun buildSleepingPillMockEngine(
         block?.invoke(request)
 
         when {
+            request.url.encodedPath == "/data/conference" -> respondFixture("/conferences.json")
             request.url.encodedPath != "/public/config" -> respondFixture(fixture)
             configFixture != null -> respondFixture(configFixture)
             else -> respond(content = "Not found", status = HttpStatusCode.NotFound)
@@ -123,6 +141,7 @@ fun buildSleepingPillService(
     client: HttpClient? = null,
     configFixture: String? = "/public_config_2026.json",
     clock: Clock = fixedClock("2026-10-24"),
+    ticker: Ticker = Ticker.systemTicker(),
     block: (suspend (request: HttpRequestData) -> Unit)? = null,
 ): SleepingPillService =
     SleepingPillService(
@@ -131,6 +150,7 @@ fun buildSleepingPillService(
         cacheTimeoutSeconds = 10,
         maxPastYears = 3,
         clock = clock,
+        ticker = ticker,
     )
 
 fun buildBringService(

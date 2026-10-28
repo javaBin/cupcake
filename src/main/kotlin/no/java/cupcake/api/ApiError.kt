@@ -48,6 +48,16 @@ abstract class RequiredField(
 
 data object ConferenceIdRequired : RequiredField(fieldName = "id")
 
+data class ConferenceNotFound(
+    val id: String,
+) : ApiError {
+    override val response =
+        ErrorResponse(
+            status = HttpStatusCode.NotFound,
+            message = "Conference not found: $id",
+        )
+}
+
 data class SleepingPillCallFailed(
     override val upstream: ErrorResponse,
 ) : UpstreamError(
@@ -62,6 +72,16 @@ data class SleepingPillConfigUnreadable(
         ErrorResponse(
             status = HttpStatusCode.InternalServerError,
             message = "SleepingPill public config unreadable: ${e.message}",
+        )
+}
+
+data class SleepingPillUnreachable(
+    val e: Throwable,
+) : ApiError {
+    override val response =
+        ErrorResponse(
+            status = HttpStatusCode.BadGateway,
+            message = "SleepingPill unreachable: ${e.message}",
         )
 }
 

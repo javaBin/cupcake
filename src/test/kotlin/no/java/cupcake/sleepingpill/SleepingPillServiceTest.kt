@@ -1,14 +1,29 @@
 package no.java.cupcake.sleepingpill
 
 import arrow.core.raise.either
+import io.kotest.assertions.nondeterministic.eventually
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
+import io.ktor.http.HttpStatusCode
+import no.java.cupcake.CONFERENCE_2024_ID
+import no.java.cupcake.FakeTicker
 import no.java.cupcake.api.ConferenceIdRequired
+import no.java.cupcake.api.ConferenceNotFound
+import no.java.cupcake.api.SleepingPillUnreachable
+import no.java.cupcake.buildClient
+import no.java.cupcake.buildSleepingPillMockEngine
 import no.java.cupcake.buildSleepingPillService
 import no.java.cupcake.fixedClock
 import no.java.cupcake.randomString
+import java.io.IOException
 import java.time.Clock
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.time.Duration.Companion.seconds
 
 class SleepingPillServiceTest :
     FunSpec({
@@ -70,7 +85,7 @@ class SleepingPillServiceTest :
 
             val sessions =
                 either {
-                    service.sessions(ConferenceId(randomString()))
+                    service.sessions(ConferenceId(CONFERENCE_2024_ID))
                 }
 
             sessions.isRight() shouldBe true
@@ -113,7 +128,96 @@ class SleepingPillServiceTest :
             sessions.isRight() shouldBe false
             sessions.swap().getOrNull()!! shouldBe ConferenceIdRequired
         }
+
+        test("Unknown conference id is rejected without reading sessions from SleepingPill") {
+            val calls = ConcurrentLinkedQueue<String>()
+            val service = buildSleepingPillService("/sessions.json") { calls.add(it.url.encodedPath) }
+
+            val sessions = either { service.sessions(ConferenceId(randomString())) }
+
+            sessions.swap().getOrNull().shouldBeInstanceOf<ConferenceNotFound>()
+            calls.sessionReads() shouldBe 0
+        }
+
+        test("Repeated calls within the TTL read SleepingPill once") {
+            val calls = ConcurrentLinkedQueue<String>()
+            val service = buildSleepingPillService("/sessions.json") { calls.add(it.url.encodedPath) }
+
+            repeat(10) {
+                either { service.sessions(ConferenceId(CONFERENCE_2024_ID)) }.isRight() shouldBe true
+            }
+
+            calls.conferenceReads() shouldBe 1
+            calls.sessionReads() shouldBe 1
+        }
+
+        test("Past the TTL the cached value is served while one background refresh runs") {
+            val calls = ConcurrentLinkedQueue<String>()
+            val ticker = FakeTicker()
+            val service =
+                buildSleepingPillService("/sessions.json", ticker = ticker) { calls.add(it.url.encodedPath) }
+
+            val first = either { service.sessions(ConferenceId(CONFERENCE_2024_ID)) }.getOrNull()!!
+
+            ticker.advance(11.seconds)
+
+            either { service.sessions(ConferenceId(CONFERENCE_2024_ID)) }.getOrNull() shouldBe first
+
+            eventually(5.seconds) { calls.sessionReads() shouldBe 2 }
+
+            repeat(5) { either { service.sessions(ConferenceId(CONFERENCE_2024_ID)) } }
+
+            calls.sessionReads() shouldBe 2
+        }
+
+        test("A failed refresh keeps serving the cached value") {
+            val failing = AtomicBoolean(false)
+            val calls = ConcurrentLinkedQueue<String>()
+            val ticker = FakeTicker()
+            val healthy = buildSleepingPillMockEngine("/sessions.json", "/public_config_2026.json")
+            val engine =
+                MockEngine { request ->
+                    calls.add(request.url.encodedPath)
+                    if (failing.get()) {
+                        respond(content = "down", status = HttpStatusCode.ServiceUnavailable)
+                    } else {
+                        healthy.config.requestHandlers.first()(this, request)
+                    }
+                }
+            val service =
+                buildSleepingPillService("/sessions.json", client = buildClient(engine), ticker = ticker)
+
+            val first = either { service.sessions(ConferenceId(CONFERENCE_2024_ID)) }.getOrNull()!!
+
+            failing.set(true)
+            ticker.advance(11.seconds)
+
+            either { service.sessions(ConferenceId(CONFERENCE_2024_ID)) }.getOrNull() shouldBe first
+            eventually(5.seconds) { calls.sessionReads() shouldBe 2 }
+            either { service.sessions(ConferenceId(CONFERENCE_2024_ID)) }.getOrNull() shouldBe first
+        }
+
+        test("A timed out session fetch is an ApiError and warm-up carries on") {
+            val healthy = buildSleepingPillMockEngine("/sessions.json", "/public_config_2026.json")
+            val engine =
+                MockEngine { request ->
+                    if (request.url.encodedPath.endsWith("/session")) throw IOException("Request timeout has expired")
+                    healthy.config.requestHandlers.first()(this, request)
+                }
+            val service = buildSleepingPillService("/sessions.json", client = buildClient(engine))
+
+            service.warmUp()
+
+            either { service.sessions(ConferenceId(CONFERENCE_2024_ID)) }
+                .swap()
+                .getOrNull()
+                .shouldBeInstanceOf<SleepingPillUnreachable>()
+        }
     })
+
+private fun Collection<String>.conferenceReads() = count { it == "/data/conference" }
+
+private fun Collection<String>.sessionReads() = count { it.endsWith("/session") }
 
 private fun buildService(
     fixture: String,

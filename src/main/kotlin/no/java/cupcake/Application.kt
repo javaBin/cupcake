@@ -31,6 +31,9 @@ fun ApplicationEnvironment.long(key: String) =
         .getString()
         .toLong()
 
+// Infrastructure endpoints answer while the caches warm up; everything else waits for warm-up
+private val ungatedPaths = setOf("/health", "/metrics-micrometer")
+
 fun Application.module() {
     configureSerialization()
     configureMonitoring()
@@ -44,7 +47,7 @@ fun Application.module() {
     )
     val ready = launch { sleepingPillService.warmUp() }
     intercept(ApplicationCallPipeline.Setup) {
-        if (context.request.path() != "/health") ready.join()
+        if (context.request.path() !in ungatedPaths) ready.join()
     }
 }
 

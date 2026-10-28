@@ -9,6 +9,7 @@ import arrow.core.raise.context.raise
 import arrow.core.raise.either
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache
 import com.github.benmanes.caffeine.cache.Caffeine
+import com.github.benmanes.caffeine.cache.Ticker
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -24,9 +25,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.future.asCompletableFuture
 import kotlinx.coroutines.future.await
 import no.java.cupcake.api.ApiError
+import no.java.cupcake.api.ConferenceNotFound
 import no.java.cupcake.api.ErrorResponse
 import no.java.cupcake.api.SleepingPillCallFailed
 import no.java.cupcake.api.SleepingPillConfigUnreadable
+import no.java.cupcake.api.SleepingPillUnreachable
 import no.java.cupcake.bring.BringService
 import java.time.Clock
 import java.time.Duration
@@ -40,6 +43,9 @@ private val logger = KotlinLogging.logger {}
 // 2007 - empty
 val rejectSlugs = listOf("javazone_2020", "javazone_2007")
 
+// Only known conference ids reach the cache, so this is a backstop rather than the real bound
+private const val MAX_CACHED_CONFERENCES = 50L
+
 class SleepingPillService(
     private val client: HttpClient,
     private val bringService: BringService,
@@ -47,12 +53,18 @@ class SleepingPillService(
     private val maxPastYears: Long,
     private val clock: Clock = Clock.system(ZoneId.of("Europe/Oslo")),
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val ticker: Ticker = Ticker.systemTicker(),
 ) {
     private val ttl: Duration = if (cacheTimeoutSeconds <= 0) Duration.ZERO else Duration.ofSeconds(cacheTimeoutSeconds)
     private val cacheScope: CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
 
+    // refreshAfterWrite serves the cached value past the TTL while one background reload runs; a failed
+    // reload keeps the old value. SleepingPill is read at most once per key per TTL and no request waits on it.
+    private fun cacheBuilder(): Caffeine<Any, Any> =
+        Caffeine.newBuilder().ticker(ticker).apply { if (!ttl.isZero) refreshAfterWrite(ttl) }
+
     private val conferencesCache: AsyncLoadingCache<String, List<Conference>> =
-        Caffeine.newBuilder().apply { if (!ttl.isZero) expireAfterWrite(ttl) }.buildAsync { _, _ ->
+        cacheBuilder().buildAsync { _, _ ->
             cacheScope
                 .async {
                     uncachedConferencesEither().getOrElse { throw ApiErrorException(it) }
@@ -60,17 +72,22 @@ class SleepingPillService(
         }
 
     private val sessionsCache: AsyncLoadingCache<ConferenceId, List<Session>> =
-        Caffeine.newBuilder().apply { if (!ttl.isZero) expireAfterWrite(ttl) }.buildAsync { id, _ ->
+        cacheBuilder().maximumSize(MAX_CACHED_CONFERENCES).buildAsync { id, _ ->
             cacheScope
                 .async {
                     uncachedSessionsEither(id).getOrElse { throw ApiErrorException(it) }
                 }.asCompletableFuture()
         }
 
+    // Sequential on purpose: SleepingPill is slow to serve large session lists and parallel fetches time out
     suspend fun warmUp() {
-        either {
-            conferences().forEach { sessions(ConferenceId(it.id)) }
-        }.onLeft { logger.warn { "Failed to warm cache: $it" } }
+        either { conferences() }
+            .onLeft { logger.warn { "Failed to warm conference cache: $it" } }
+            .getOrElse { emptyList() }
+            .forEach { conference ->
+                either { sessions(ConferenceId(conference.id)) }
+                    .onLeft { logger.warn { "Failed to warm sessions for ${conference.name}: $it" } }
+            }
     }
 
     private suspend fun cutoffYear(): Year =
@@ -92,56 +109,65 @@ class SleepingPillService(
             val cutoff = cutoffYear()
             val window = cutoff.minusYears(maxPastYears - 1)..cutoff
 
-            client
-                .get("/data/conference")
-                .valid()
-                .body<SleepingPillConferences>()
-                .conferences
-                .filterNot { rejectSlugs.contains(it.slug) }
-                .filter { it.year in window }
-                .map {
-                    Conference(
-                        name = it.name,
-                        slug = it.slug,
-                        id = it.id,
-                    )
-                }
+            reachable {
+                client
+                    .get("/data/conference")
+                    .valid()
+                    .body<SleepingPillConferences>()
+                    .conferences
+                    .filterNot { rejectSlugs.contains(it.slug) }
+                    .filter { it.year in window }
+                    .map {
+                        Conference(
+                            name = it.name,
+                            slug = it.slug,
+                            id = it.id,
+                        )
+                    }
+            }
         }
 
     private suspend fun uncachedSessionsEither(id: ConferenceId): Either<ApiError, List<Session>> =
         either {
-            client
-                .get("/data/conference/${id.id}/session")
-                .valid()
-                .body<SleepingPillSessions>()
-                .sessions
-                .map {
-                    Session(
-                        id = it.id,
-                        title = it.data.title.value,
-                        description = it.data.abstractText?.value ?: "No abstract provided",
-                        status = Status.from(it.status),
-                        format = Format.from(it.data.format.value),
-                        language = Language.from(it.data.language.value),
-                        length =
-                            it.data.length
-                                ?.value
-                                ?.toInt(),
-                        speakers =
-                            it.speakers.map { speaker ->
-                                Speaker(
-                                    name = speaker.name,
-                                    email = speaker.email,
-                                    bio = speaker.data.bio?.value,
-                                    postcode = speaker.data.zipCode?.value,
-                                    location = speaker.data.residence?.value,
-                                    city = null,
-                                    county = null,
-                                )
-                            },
-                    )
-                }
+            reachable {
+                client
+                    .get("/data/conference/${id.id}/session")
+                    .valid()
+                    .body<SleepingPillSessions>()
+                    .sessions
+                    .map {
+                        Session(
+                            id = it.id,
+                            title = it.data.title.value,
+                            description = it.data.abstractText?.value ?: "No abstract provided",
+                            status = Status.from(it.status),
+                            format = Format.from(it.data.format.value),
+                            language = Language.from(it.data.language.value),
+                            length =
+                                it.data.length
+                                    ?.value
+                                    ?.toInt(),
+                            speakers =
+                                it.speakers.map { speaker ->
+                                    Speaker(
+                                        name = speaker.name,
+                                        email = speaker.email,
+                                        bio = speaker.data.bio?.value,
+                                        postcode = speaker.data.zipCode?.value,
+                                        location = speaker.data.residence?.value,
+                                        city = null,
+                                        county = null,
+                                    )
+                                },
+                        )
+                    }
+            }
         }
+
+    // Timeouts and connection failures are exceptions, not ApiErrors; without this they escape Raise
+    context(_: Raise<ApiError>)
+    private suspend fun <T> reachable(block: suspend () -> T): T =
+        catch({ block() }) { raise(SleepingPillUnreachable(it)) }
 
     private class ApiErrorException(
         val error: ApiError,
@@ -167,9 +193,13 @@ class SleepingPillService(
     context(_: Raise<ApiError>)
     suspend fun conferences(): List<Conference> = getOrRaise { conferencesCache.get("all").await() }
 
+    // Unknown ids are rejected before the cache, so arbitrary URLs can't trigger SleepingPill reads
     context(_: Raise<ApiError>)
-    suspend fun sessions(id: ConferenceId): List<Session> =
-        getOrRaise { sessionsCache.get(id).await() }.map { it.withPostalCodes() }
+    suspend fun sessions(id: ConferenceId): List<Session> {
+        ensure(conferences().any { it.id == id.id }) { ConferenceNotFound(id.id) }
+
+        return getOrRaise { sessionsCache.get(id).await() }.map { it.withPostalCodes() }
+    }
 
     // Looked up per request, not cached with the session, so late-loaded postal codes apply at once
     private fun Session.withPostalCodes(): Session =

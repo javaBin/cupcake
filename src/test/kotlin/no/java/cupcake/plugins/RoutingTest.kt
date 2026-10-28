@@ -13,6 +13,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
+import no.java.cupcake.CONFERENCE_2024_ID
 import no.java.cupcake.buildClient
 import no.java.cupcake.buildErrorMockEngine
 import no.java.cupcake.buildSleepingPillService
@@ -65,11 +66,11 @@ class RoutingTest :
 
         test("Fetch sessions") {
             testApplication {
-                val id = randomString()
+                val id = CONFERENCE_2024_ID
 
                 buildTestApplication(
                     buildService("/sessions.json") { request ->
-                        request.urlString() shouldContain id
+                        if (request.url.encodedPath.endsWith("/session")) request.urlString() shouldContain id
                     },
                 )
 
@@ -110,9 +111,23 @@ class RoutingTest :
             }
         }
 
+        test("Fetch sessions - unknown conference") {
+            testApplication {
+                buildTestApplication(buildService("/sessions.json"))
+
+                buildTestClient()
+                    .get("/api/conferences/${randomString()}/sessions") {
+                        accept(ContentType.Application.Json)
+                    }.apply {
+                        status shouldBe HttpStatusCode.NotFound
+                        bodyAsText() shouldContain "Conference not found"
+                    }
+            }
+        }
+
         test("Fetch sessions - sleeping pill error") {
             testApplication {
-                val id = randomString()
+                val id = CONFERENCE_2024_ID
 
                 buildTestApplication(
                     buildService(
