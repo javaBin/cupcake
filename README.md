@@ -48,6 +48,7 @@ Set the following environment variables (a `local.env` file in the root is gitig
 | `BRING_API_USER` | Bring API user (email) |
 | `JWT_ENABLED` | `true` to enforce JWT authentication, `false` to disable |
 | `OIDC_WELL_KNOWN_URL` | Optional. OIDC discovery endpoint; defaults to the javaBin internal Cognito pool |
+| `LOG_LEVEL` | Optional. Root log level; `DEBUG` by default, `TRACE` under `./gradlew run` |
 
 Then run:
 

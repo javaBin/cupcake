@@ -7,7 +7,8 @@
     </Appenders>
 
     <Loggers>
-        <Root level="TRACE">
+        <!-- DEBUG unless LOG_LEVEL says otherwise; `./gradlew run` and local.env set TRACE for local dev -->
+        <Root level="${env:LOG_LEVEL:-DEBUG}">
             <AppenderRef ref="stdout_json"/>
         </Root>
     </Loggers>

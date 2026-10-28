@@ -65,6 +65,11 @@ listOf("distTar", "distZip", "shadowJar", "startShadowScripts", "shadowDistTar",
     tasks.named(name) { enabled = false }
 }
 
+// `./gradlew run` is local dev, so log everything; deployed images use the start script and default to DEBUG
+tasks.named<JavaExec>("run") {
+    environment("LOG_LEVEL", System.getenv("LOG_LEVEL") ?: "TRACE")
+}
+
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
