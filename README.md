@@ -62,23 +62,21 @@ To test with login, set `JWT_ENABLED=true` here and in frosting's `local.env`. B
 
 ## Docker
 
-Multi-platform images (`linux/amd64`, `linux/arm64`) are published to `ghcr.io/javabin/cupcake`.
-
-To build locally:
+The javaBin platform builds and pushes the deployed image (see CI/CD). To build locally:
 
 ```bash
 docker build -t cupcake .
 ```
 
-The image uses a multi-stage build (Eclipse Temurin JDK 22 build stage, JRE runtime stage) and runs on port 8080.
+The image uses a multi-stage build (Eclipse Temurin 25 JDK build stage, JRE runtime stage) and runs on port 8080.
 
 ## CI/CD
 
 | Trigger | Workflow | What it does |
 |---|---|---|
-| Push to `main` | `build.yaml` | Runs `check`, builds and pushes multi-platform Docker image, tags as `staging` |
-| Pull request | `pr.yaml` | Runs `check` (tests, linting, analysis) |
-| Tag `v*` | `release.yaml` | Promotes `staging` image to `release` and version tag |
+| Push to `main` | `deploy.yaml` | The javaBin platform workflow runs `./gradlew build` (which includes `check`: tests, kotlinter, detekt), then builds the image and deploys it. Nothing deploys if the build fails |
+| Pull request | `deploy.yaml` | Platform build and Terraform plan, no deploy |
+| Pull request | `pr.yaml` | Runs `./gradlew check` (tests, linting, analysis) |
 
 ## Deploy
 
