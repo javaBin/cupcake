@@ -11,6 +11,7 @@ import io.ktor.client.request.accept
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
@@ -124,7 +125,23 @@ class RoutingTest :
                     }.apply {
                         status shouldBe HttpStatusCode.NotFound
                         bodyAsText() shouldContain "Conference not found"
+                        headers[HttpHeaders.CacheControl] shouldBe null
                     }
+            }
+        }
+
+        test("Successful conference data responses are privately cacheable for 5 minutes") {
+            testApplication {
+                buildTestApplication(buildService("/sessions.json"))
+
+                val client = buildTestClient()
+
+                listOf("/api/conferences", "/api/conferences/$CONFERENCE_2024_ID/sessions").forEach { path ->
+                    client.get(path).apply {
+                        status shouldBe HttpStatusCode.OK
+                        headers[HttpHeaders.CacheControl] shouldBe "max-age=300, private"
+                    }
+                }
             }
         }
 

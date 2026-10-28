@@ -2,11 +2,13 @@ package no.java.cupcake.plugins
 
 import arrow.core.raise.either
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.ktor.http.CacheControl
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.auth.authenticate
 import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.request.path
+import io.ktor.server.response.cacheControl
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
@@ -20,6 +22,16 @@ import no.java.cupcake.sleepingpill.ConferenceId
 import no.java.cupcake.sleepingpill.SleepingPillService
 
 private val logger = KotlinLogging.logger {}
+
+private const val CONFERENCE_DATA_MAX_AGE_SECONDS = 300
+
+// Lets a browser reload reuse conference data for a few minutes without a round trip. Private because the
+// endpoints are authenticated; set on success only, so a 404 or upstream error is never cached.
+private val conferenceDataCacheControl =
+    CacheControl.MaxAge(
+        maxAgeSeconds = CONFERENCE_DATA_MAX_AGE_SECONDS,
+        visibility = CacheControl.Visibility.Private,
+    )
 
 fun Application.configureRouting(
     sleepingPillService: SleepingPillService,
@@ -44,7 +56,8 @@ fun Application.configureRouting(
                     get {
                         either {
                             sleepingPillService.conferences().sortedByDescending { it.name }
-                        }.respond()
+                        }.onRight { call.response.cacheControl(conferenceDataCacheControl) }
+                            .respond()
                     }
 
                     route("/{id}") {
@@ -53,7 +66,8 @@ fun Application.configureRouting(
                                 sleepingPillService.sessions(
                                     id = ConferenceId(call.parameters["id"]),
                                 )
-                            }.respond()
+                            }.onRight { call.response.cacheControl(conferenceDataCacheControl) }
+                                .respond()
                         }
                     }
                 }

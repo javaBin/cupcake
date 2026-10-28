@@ -59,7 +59,7 @@ All require JWT authentication with `helter` Cognito group membership (unless `J
 
 **Error handling**: Arrow's `Either<ApiError, T>` throughout. `ApiError` is a sealed class; `RoutingContext.respond(error: ApiError)` in `Respond.kt` maps errors to HTTP responses.
 
-**Caching**: Sleeping Pill data uses Caffeine async cache (configurable TTL). Postal codes are refreshed daily from Bring and looked up per request, not cached with sessions. Setting TTL ≤ 0 disables caching.
+**Caching**: Sleeping Pill data uses Caffeine async cache (configurable TTL). Postal codes are refreshed daily from Bring and looked up per request, not cached with sessions. Setting TTL ≤ 0 disables caching. Successful `/api/conferences*` responses carry `Cache-Control: max-age=300, private` so browser reloads skip the round trip; errors are never marked cacheable.
 
 **Security**: JWT validated via Auth0 JWK provider against Cognito's JWKS. Requires `helter` group in `cognito:groups` claim. `/api/me` calls the Cognito UserInfo endpoint with the Bearer token to retrieve email and name; `hasPkomRole` is derived from `cognito:groups` containing `pkom`.
 
