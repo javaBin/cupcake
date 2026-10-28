@@ -3,6 +3,7 @@ package no.java.cupcake.plugins
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestData
@@ -11,6 +12,8 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import no.java.cupcake.CONFERENCE_2024_ID
@@ -122,6 +125,21 @@ class RoutingTest :
                         status shouldBe HttpStatusCode.NotFound
                         bodyAsText() shouldContain "Conference not found"
                     }
+            }
+        }
+
+        test("Unhandled exceptions return a generic 500 without the exception text") {
+            testApplication {
+                serializedTestApplication {
+                    configureRouting(sleepingPillService = buildService("/conferences.json"), securityOptional = true)
+                    routing { get("/boom") { error("secret internal detail") } }
+                }
+
+                buildTestClient().get("/boom").apply {
+                    status shouldBe HttpStatusCode.InternalServerError
+                    bodyAsText() shouldContain "Internal server error"
+                    bodyAsText() shouldNotContain "secret internal detail"
+                }
             }
         }
 

@@ -1,0 +1,136 @@
+{
+  "conferences": [
+    {
+      "name": "JavaZone 2006",
+      "id": "1ca89aef-c7ce-45b5-95a0-630f55d7efa6",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2006"
+    },
+    {
+      "name": "JavaZone 2007",
+      "id": "407f368f-41d4-4248-b825-39d0f973dfe1",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2007"
+    },
+    {
+      "name": "JavaZone 2008",
+      "id": "5e130372-285d-49cd-aedb-7f306d97b04d",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2008"
+    },
+    {
+      "name": "JavaZone 2009",
+      "id": "b582a071-d4c2-4a48-ac66-812a5ef94c1b",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2009"
+    },
+    {
+      "name": "JavaZone 2010",
+      "id": "28a1c5c2-b61e-4d2f-a67e-b60f9efdc2a8",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2010"
+    },
+    {
+      "name": "JavaZone 2011",
+      "id": "1307dbcc-048e-4f80-9faa-ffa1bef40fda",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2011"
+    },
+    {
+      "name": "JavaZone 2012",
+      "id": "4c18f45a-054a-4699-a2bc-6a59a9dd8382",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2012"
+    },
+    {
+      "name": "JavaZone 2013",
+      "id": "cee37cc1-5399-47ef-9418-21f9b6444bfa",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2013"
+    },
+    {
+      "name": "JavaZone 2014",
+      "id": "9f40063a-5f20-4d7b-b1e8-ed0c6cc18a5f",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2014"
+    },
+    {
+      "name": "JavaZone 2015",
+      "id": "0e6d98e9-5b06-42e7-b275-6abadb498c81",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2015"
+    },
+    {
+      "name": "JavaZone 2016",
+      "id": "3baa25d3-9cca-459a-90d7-9fc349209289",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2016"
+    },
+    {
+      "name": "JavaZone 2017",
+      "id": "30d5c2f1cb214fc8b0649a44fdf3b4bf",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2017"
+    },
+    {
+      "name": "JavaZone 2018",
+      "id": "346cb6bd41ea4812971927ffa33e0333",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2018"
+    },
+    {
+      "name": "JavaZone 2019",
+      "id": "99f71831-fdd3-41e3-962e-f25af5e091b9",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2019"
+    },
+    {
+      "name": "JavaZone 2020",
+      "id": "02a3a811-afe1-48d3-a64b-10d9732b3735",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2020"
+    },
+    {
+      "name": "JavaZone 2021",
+      "id": "48aaa57f-bcf7-46a9-aa96-a9e82447fe5c",
+      "slottimes": "09:30,10:40,11:50,13:30,14:40,15:50",
+      "slug": "javazone_2021"
+    },
+    {
+      "name": "JavaZone 2022",
+      "id": "62854772-dcb8-4626-9ab7-095cf3fb3168",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2022"
+    },
+    {
+      "name": "JavaZone 2023",
+      "id": "5c979d4b-9f92-43e3-a8c2-e3de0298d8de",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2023"
+    },
+    {
+      "name": "JavaZone 2024",
+      "id": "ad82e461-9444-40a4-a9d5-cc4885f9107a",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2024"
+    },
+    {
+      "name": "JavaZone 2025",
+      "id": "ffbdc06b-b570-4409-bf2f-7d3b5dd2aed3",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2025"
+    },
+    {
+      "name": "JavaZone 2026",
+      "id": "95759742-2a8c-4542-9eb0-7c52f598a3da",
+      "slottimes": "09:00,10:20,11:40,13:00,14:20,15:40,17:00,18:20",
+      "slug": "javazone_2026"
+    },
+    {
+      "name": "JavaZone Special",
+      "id": "0d9b1a52-6a0e-4f0f-9a43-5b1d2c3e4f50",
+      "slottimes": null,
+      "slug": "javazone_special"
+    }
+  ]
+}

@@ -10,6 +10,7 @@ import no.java.cupcake.bring.BringService
 import no.java.cupcake.bring.launchRefreshLoop
 import no.java.cupcake.bring.nextRefreshDelay
 import no.java.cupcake.clients.bringClient
+import no.java.cupcake.clients.oidcClient
 import no.java.cupcake.clients.sleepingPillClient
 import no.java.cupcake.plugins.configureAuth
 import no.java.cupcake.plugins.configureHTTP
@@ -41,8 +42,9 @@ fun Application.module() {
     configureSerialization()
     configureMonitoring()
     configureHTTP()
-    val userInfoEndpoint = configureAuth(oidcConfig = environment.oidcConfig())
-    configureUserInfoRoute(userInfoEndpoint = userInfoEndpoint)
+    val oidcClient = oidcClient()
+    val userInfoEndpoint = configureAuth(oidcConfig = environment.oidcConfig(), http = oidcClient)
+    configureUserInfoRoute(userInfoEndpoint = userInfoEndpoint, http = oidcClient)
     val sleepingPillService = sleepingPillService(bringService())
     configureRouting(
         sleepingPillService = sleepingPillService,

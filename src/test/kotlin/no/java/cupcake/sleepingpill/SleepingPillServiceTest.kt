@@ -67,6 +67,21 @@ class SleepingPillServiceTest :
                 listOf("javazone_2023", "javazone_2024", "javazone_2025")
         }
 
+        test("A conference whose name has no year is skipped, not fatal") {
+            buildService("/conferences_without_year.json").slugs() shouldBe
+                listOf("javazone_2024", "javazone_2025", "javazone_2026")
+        }
+
+        test("A session with an unparseable length keeps the rest of the list") {
+            val sessions =
+                either {
+                    buildService("/sessions_with_bad_length.json").sessions(ConferenceId(CONFERENCE_2024_ID))
+                }.getOrNull()!!
+
+            sessions.size shouldBe 2
+            sessions.first { it.id == "3f0c2a1e-bad0-4c5e-9d1a-000000000001" }.length shouldBe null
+        }
+
         test("Rejected conferences are excluded from the window") {
             val slugs =
                 buildService(

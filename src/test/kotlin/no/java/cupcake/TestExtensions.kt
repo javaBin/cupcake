@@ -107,8 +107,8 @@ fun buildMockEngine(
         respondFixture(fixture)
     }
 
-// Serves /public/config from configFixture (404 when null), the conference list from conferences.json
-// and everything else from fixture
+// Serves /public/config from configFixture (404 when null), the conference list from fixture when it is a
+// conferences*.json fixture (otherwise conferences.json) and everything else from fixture
 fun buildSleepingPillMockEngine(
     fixture: String,
     configFixture: String?,
@@ -118,10 +118,21 @@ fun buildSleepingPillMockEngine(
         block?.invoke(request)
 
         when {
-            request.url.encodedPath == "/data/conference" -> respondFixture("/conferences.json")
-            request.url.encodedPath != "/public/config" -> respondFixture(fixture)
-            configFixture != null -> respondFixture(configFixture)
-            else -> respond(content = "Not found", status = HttpStatusCode.NotFound)
+            request.url.encodedPath == "/data/conference" -> {
+                respondFixture(if (fixture.startsWith("/conferences")) fixture else "/conferences.json")
+            }
+
+            request.url.encodedPath != "/public/config" -> {
+                respondFixture(fixture)
+            }
+
+            configFixture != null -> {
+                respondFixture(configFixture)
+            }
+
+            else -> {
+                respond(content = "Not found", status = HttpStatusCode.NotFound)
+            }
         }
     }
 

@@ -13,7 +13,9 @@ enum class Status {
     ;
 
     companion object {
-        fun from(status: String) = entries.firstOrNull { it.name == status.uppercase() } ?: UNKNOWN
+        private val byName = entries.associateBy { it.name }
+
+        fun from(status: String) = byName[status.uppercase()] ?: UNKNOWN
     }
 }
 
@@ -28,7 +30,9 @@ enum class Format(
     ;
 
     companion object {
-        fun from(format: String) = entries.firstOrNull { it.format.uppercase() == format.uppercase() } ?: UNKNOWN
+        private val byFormat = entries.associateBy { it.format.uppercase() }
+
+        fun from(format: String) = byFormat[format.uppercase()] ?: UNKNOWN
     }
 }
 
@@ -41,7 +45,9 @@ enum class Language(
     ;
 
     companion object {
-        fun from(language: String) = entries.firstOrNull { it.language.uppercase() == language.uppercase() } ?: UNKNOWN
+        private val byLanguage = entries.associateBy { it.language.uppercase() }
+
+        fun from(language: String) = byLanguage[language.uppercase()] ?: UNKNOWN
     }
 }
 

@@ -19,6 +19,9 @@ import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import org.slf4j.event.Level
 
+// Polled by the load balancer and Prometheus; logging every call drowns out real traffic
+private val quietPaths = setOf("/health", "/metrics-micrometer")
+
 fun Application.configureMonitoring() {
     val appMicrometerRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
 
@@ -35,7 +38,7 @@ fun Application.configureMonitoring() {
     }
     install(CallLogging) {
         level = Level.INFO
-        filter { call -> call.request.path().startsWith("/") }
+        filter { call -> call.request.path() !in quietPaths }
         callIdMdc("call-id")
     }
     install(CallId) {

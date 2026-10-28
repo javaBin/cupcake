@@ -7,13 +7,10 @@ import arrow.core.raise.context.ensureNotNull
 import com.auth0.jwk.JwkProviderBuilder
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
@@ -27,7 +24,6 @@ import io.ktor.server.routing.routing
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import no.java.cupcake.api.CallPrincipalMissing
 import no.java.cupcake.api.CognitoCallFailed
 import no.java.cupcake.api.ErrorResponse
@@ -65,14 +61,10 @@ private data class UserInfo(
     val groups: List<String>,
 )
 
-fun Application.configureAuth(oidcConfig: OidcConfig): String {
-    val http =
-        HttpClient(CIO) {
-            install(ContentNegotiation) {
-                json(Json { ignoreUnknownKeys = true })
-            }
-        }
-
+fun Application.configureAuth(
+    oidcConfig: OidcConfig,
+    http: HttpClient,
+): String {
     val oidc =
         runBlocking {
             http.get(oidcConfig.wellKnownUrl).body<OidcDiscovery>()
@@ -113,14 +105,10 @@ fun Application.configureAuth(oidcConfig: OidcConfig): String {
     return oidc.userInfoEndpoint
 }
 
-fun Application.configureUserInfoRoute(userInfoEndpoint: String) {
-    val http =
-        HttpClient(CIO) {
-            install(ContentNegotiation) {
-                json(Json { ignoreUnknownKeys = true })
-            }
-        }
-
+fun Application.configureUserInfoRoute(
+    userInfoEndpoint: String,
+    http: HttpClient,
+) {
     routing {
         authenticate("javaBin") {
             get("/api/me") {

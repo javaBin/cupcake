@@ -109,6 +109,14 @@ data class CognitoCallFailed(
         systemName = "Cognito",
     )
 
+data object InternalError : ApiError {
+    override val response =
+        ErrorResponse(
+            status = HttpStatusCode.InternalServerError,
+            message = "Internal server error",
+        )
+}
+
 data object CallPrincipalMissing : ApiError {
     override val response =
         ErrorResponse(

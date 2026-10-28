@@ -23,7 +23,8 @@ data class SleepingPillConference(
     val id: String,
     val slottimes: String?,
 ) {
-    val year: Year get() = Year.of(name.substringAfterLast(" ").toInt())
+    // Null for names that don't end in a year; those conferences are skipped rather than failing the list
+    val year: Year? get() = name.substringAfterLast(" ").toIntOrNull()?.let(Year::of)
 }
 
 @Serializable

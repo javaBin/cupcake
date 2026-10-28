@@ -7,6 +7,7 @@ import arrow.core.raise.catch
 import arrow.core.raise.context.ensure
 import arrow.core.raise.context.raise
 import arrow.core.raise.either
+import arrow.core.raise.nullable
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.Ticker
@@ -42,6 +43,15 @@ private val logger = KotlinLogging.logger {}
 // 2020 - invalid data due to covid
 // 2007 - empty
 val rejectSlugs = listOf("javazone_2020", "javazone_2007")
+
+// Rejected, year-less and out-of-window conferences are skipped, not request failures
+private fun SleepingPillConference.toConference(window: ClosedRange<Year>): Conference? =
+    nullable {
+        ensure(slug !in rejectSlugs)
+        ensure(year.bind() in window)
+
+        Conference(name = name, slug = slug, id = id)
+    }
 
 // Only known conference ids reach the cache, so this is a backstop rather than the real bound
 private const val MAX_CACHED_CONFERENCES = 50L
@@ -115,15 +125,7 @@ class SleepingPillService(
                     .valid()
                     .body<SleepingPillConferences>()
                     .conferences
-                    .filterNot { rejectSlugs.contains(it.slug) }
-                    .filter { it.year in window }
-                    .map {
-                        Conference(
-                            name = it.name,
-                            slug = it.slug,
-                            id = it.id,
-                        )
-                    }
+                    .mapNotNull { it.toConference(window) }
             }
         }
 
@@ -146,7 +148,7 @@ class SleepingPillService(
                             length =
                                 it.data.length
                                     ?.value
-                                    ?.toInt(),
+                                    ?.toIntOrNull(),
                             speakers =
                                 it.speakers.map { speaker ->
                                     Speaker(
