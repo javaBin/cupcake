@@ -56,22 +56,27 @@ private fun SleepingPillConference.toConference(window: ClosedRange<Year>): Conf
 // Only known conference ids reach the cache, so this is a backstop rather than the real bound
 private const val MAX_CACHED_CONFERENCES = 50L
 
+// TTL ≤ 0 disables refreshing; the ticker is the caches' clock, which tests move forward
+data class CacheSettings(
+    val ttlSeconds: Long,
+    val ticker: Ticker = Ticker.systemTicker(),
+)
+
 class SleepingPillService(
     private val client: HttpClient,
     private val bringService: BringService,
-    cacheTimeoutSeconds: Long,
+    private val cache: CacheSettings,
     private val maxPastYears: Long,
     private val clock: Clock = Clock.system(ZoneId.of("Europe/Oslo")),
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
-    private val ticker: Ticker = Ticker.systemTicker(),
 ) {
-    private val ttl: Duration = if (cacheTimeoutSeconds <= 0) Duration.ZERO else Duration.ofSeconds(cacheTimeoutSeconds)
+    private val ttl: Duration = if (cache.ttlSeconds <= 0) Duration.ZERO else Duration.ofSeconds(cache.ttlSeconds)
     private val cacheScope: CoroutineScope = CoroutineScope(SupervisorJob() + dispatcher)
 
     // refreshAfterWrite serves the cached value past the TTL while one background reload runs; a failed
     // reload keeps the old value. SleepingPill is read at most once per key per TTL and no request waits on it.
     private fun cacheBuilder(): Caffeine<Any, Any> =
-        Caffeine.newBuilder().ticker(ticker).apply { if (!ttl.isZero) refreshAfterWrite(ttl) }
+        Caffeine.newBuilder().ticker(cache.ticker).apply { if (!ttl.isZero) refreshAfterWrite(ttl) }
 
     private val conferencesCache: AsyncLoadingCache<String, List<Conference>> =
         cacheBuilder().buildAsync { _, _ ->

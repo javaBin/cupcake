@@ -22,6 +22,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import no.java.cupcake.bring.BringService
 import no.java.cupcake.plugins.configureSerialization
+import no.java.cupcake.sleepingpill.CacheSettings
 import no.java.cupcake.sleepingpill.SleepingPillService
 import java.time.Clock
 import java.time.LocalDate
@@ -148,21 +149,43 @@ fun buildErrorMockEngine(
         )
     }
 
+private const val TEST_CACHE_TTL_SECONDS = 10L
+
 fun buildSleepingPillService(
     fixture: String,
     client: HttpClient? = null,
     configFixture: String? = "/public_config_2026.json",
     clock: Clock = fixedClock("2026-10-24"),
-    ticker: Ticker = Ticker.systemTicker(),
     block: (suspend (request: HttpRequestData) -> Unit)? = null,
 ): SleepingPillService =
-    SleepingPillService(
+    sleepingPillService(
         client = client ?: buildClient(buildSleepingPillMockEngine(fixture, configFixture, block)),
+        clock = clock,
+        cache = CacheSettings(ttlSeconds = TEST_CACHE_TTL_SECONDS),
+    )
+
+// For cache tests that move the caches' clock forward
+fun buildSleepingPillServiceWithTicker(
+    client: HttpClient,
+    ticker: Ticker,
+): SleepingPillService =
+    sleepingPillService(
+        client = client,
+        clock = fixedClock("2026-10-24"),
+        cache = CacheSettings(ttlSeconds = TEST_CACHE_TTL_SECONDS, ticker = ticker),
+    )
+
+private fun sleepingPillService(
+    client: HttpClient,
+    clock: Clock,
+    cache: CacheSettings,
+): SleepingPillService =
+    SleepingPillService(
+        client = client,
         bringService = buildBringService(fixture = "/postal_codes.json", postalCodeUrl = "/test"),
-        cacheTimeoutSeconds = 10,
+        cache = cache,
         maxPastYears = 3,
         clock = clock,
-        ticker = ticker,
     )
 
 fun buildBringService(

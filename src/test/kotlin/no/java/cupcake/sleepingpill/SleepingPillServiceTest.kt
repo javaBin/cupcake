@@ -17,6 +17,7 @@ import no.java.cupcake.api.SleepingPillUnreachable
 import no.java.cupcake.buildClient
 import no.java.cupcake.buildSleepingPillMockEngine
 import no.java.cupcake.buildSleepingPillService
+import no.java.cupcake.buildSleepingPillServiceWithTicker
 import no.java.cupcake.fixedClock
 import no.java.cupcake.randomString
 import java.io.IOException
@@ -170,7 +171,15 @@ class SleepingPillServiceTest :
             val calls = ConcurrentLinkedQueue<String>()
             val ticker = FakeTicker()
             val service =
-                buildSleepingPillService("/sessions.json", ticker = ticker) { calls.add(it.url.encodedPath) }
+                buildSleepingPillServiceWithTicker(
+                    client =
+                        buildClient(
+                            buildSleepingPillMockEngine("/sessions.json", "/public_config_2026.json") {
+                                calls.add(it.url.encodedPath)
+                            },
+                        ),
+                    ticker = ticker,
+                )
 
             val first = either { service.sessions(ConferenceId(CONFERENCE_2024_ID)) }.getOrNull()!!
 
@@ -200,7 +209,7 @@ class SleepingPillServiceTest :
                     }
                 }
             val service =
-                buildSleepingPillService("/sessions.json", client = buildClient(engine), ticker = ticker)
+                buildSleepingPillServiceWithTicker(client = buildClient(engine), ticker = ticker)
 
             val first = either { service.sessions(ConferenceId(CONFERENCE_2024_ID)) }.getOrNull()!!
 

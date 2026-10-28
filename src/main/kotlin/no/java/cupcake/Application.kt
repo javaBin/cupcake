@@ -18,6 +18,7 @@ import no.java.cupcake.plugins.configureMonitoring
 import no.java.cupcake.plugins.configureRouting
 import no.java.cupcake.plugins.configureSerialization
 import no.java.cupcake.plugins.configureUserInfoRoute
+import no.java.cupcake.sleepingpill.CacheSettings
 import no.java.cupcake.sleepingpill.SleepingPillService
 import kotlin.time.Duration.Companion.hours
 
@@ -62,7 +63,7 @@ private fun Application.sleepingPillService(bringService: BringService): Sleepin
     return SleepingPillService(
         client = sleepingPillClient(config),
         bringService = bringService,
-        cacheTimeoutSeconds = config.cacheTtlSeconds,
+        cache = CacheSettings(ttlSeconds = config.cacheTtlSeconds),
         maxPastYears = config.maxPastYears,
     )
 }
