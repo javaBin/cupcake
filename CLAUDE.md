@@ -30,10 +30,9 @@ Create a `local.env` file in the root (gitignored) for local development. Requir
 | `SP_BASE_URL` | Sleeping Pill base URL |
 | `SP_USER` / `SP_PASSWORD` | Sleeping Pill credentials |
 | `BRING_API_USER` / `BRING_API_KEY` | Bring API credentials (email + key) |
-| `OIDC_WELL_KNOWN_URL` | OIDC discovery endpoint |
-| `JWT_ENABLED` | Set to `false` to disable auth locally |
+| `JWT_ENABLED` | Set to `false` to disable auth locally; `true` (with frosting's `JWT_ENABLED=true`) logs in against the prod Cognito pool |
 
-Optional: `SP_CACHE_TTL_SECONDS` (default 21600; entries refresh in the background after this, never expire), `PORT` (default 8080).
+Optional: `OIDC_WELL_KNOWN_URL` (defaults to the javaBin internal Cognito pool), `SP_CACHE_TTL_SECONDS` (default 21600; entries refresh in the background after this, never expire), `PORT` (default 8080).
 
 ## Architecture
 

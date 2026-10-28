@@ -46,8 +46,8 @@ Set the following environment variables (a `local.env` file in the root is gitig
 | `SP_PASSWORD` | Sleeping Pill password |
 | `BRING_API_KEY` | Bring API key |
 | `BRING_API_USER` | Bring API user (email) |
-| `OIDC_WELL_KNOWN_URL` | OIDC discovery endpoint (e.g. `https://cognito-idp.eu-central-1.amazonaws.com/{pool-id}/.well-known/openid-configuration`) |
 | `JWT_ENABLED` | `true` to enforce JWT authentication, `false` to disable |
+| `OIDC_WELL_KNOWN_URL` | Optional. OIDC discovery endpoint; defaults to the javaBin internal Cognito pool |
 
 Then run:
 
@@ -56,6 +56,8 @@ Then run:
 ```
 
 The server starts on port 8080. With `JWT_ENABLED=false`, no auth is required and `localhost` is fine.
+
+To test with login, set `JWT_ENABLED=true` here and in frosting's `local.env`. Both use the prod Cognito pool, whose client allows `http://localhost:3000/` as a callback, so you sign in with your `@java.no` Google account as in prod. You need to be in the `helter` group.
 
 ## Docker
 
@@ -97,14 +99,11 @@ https://cupcake.javazone.no          →  frontend (frosting)
 
 Users must be members of the `helter` Cognito group (all approved javaBin heroes).
 
-#### OIDC (frontend — must match backend)
+The platform injects `OIDC_WELL_KNOWN_URL` from the Cognito pool (`auth.env` in `app.yaml`).
 
-| Variable | Description |
-|---|---|
-| `NUXT_PUBLIC_OIDC_AUTHORITY` | OIDC authority URL (e.g. `https://auth.example.com/realms/myrealm`) |
-| `NUXT_PUBLIC_OIDC_CLIENT_ID` | OIDC client ID (defaults to `cupcake-client`) |
+#### OIDC (frontend)
 
-See the [frosting README](https://github.com/javaBin/frosting/README.md) for full frontend configuration.
+The frontend uses the same Cognito pool; see the [frosting README](https://github.com/javaBin/frosting/README.md) for its configuration.
 
 #### Sleeping Pill
 
