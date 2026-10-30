@@ -32,6 +32,17 @@ module "routing" {
   deregistration_delay   = 30
 }
 
+module "network" {
+  source = "git::https://github.com/javaBin/platform//terraform/modules/app-network?ref=main"
+
+  name        = "cupcake-backend"
+  team        = "cupcake"
+  project     = "javabin"
+  vpc_id      = module.platform.vpc_id
+  port        = 8080
+  alb_ingress = true
+}
+
 module "secret_sp_user" {
   source = "git::https://github.com/javaBin/platform//terraform/modules/service-secret?ref=main"
 
@@ -112,7 +123,8 @@ module "service" {
   execution_role_arn       = module.platform.execution_role_arn
   task_role_arn            = module.task_role.role_arn
   subnet_ids               = module.platform.private_subnet_ids
-  security_group_ids       = [module.platform.ecs_tasks_security_group_id]
+  security_group_ids       = [module.network.security_group_id]
+  service_registry_arns    = [module.network.registry_arn]
   region                   = "eu-central-1"
   container_user           = "1000"
   readonly_root_filesystem = true
