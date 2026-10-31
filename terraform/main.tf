@@ -32,6 +32,17 @@ module "routing" {
   deregistration_delay   = 30
 }
 
+module "network" {
+  source = "git::https://github.com/javaBin/platform//terraform/modules/app-network?ref=main"
+
+  name        = "cupcake-backend"
+  team        = "cupcake"
+  project     = "javabin"
+  vpc_id      = module.platform.vpc_id
+  port        = 8080
+  alb_ingress = true
+}
+
 module "secret_sp_user" {
   source = "git::https://github.com/javaBin/platform//terraform/modules/service-secret?ref=main"
 
@@ -101,22 +112,24 @@ module "task_role" {
 module "service" {
   source = "git::https://github.com/javaBin/platform//terraform/modules/ecs-service?ref=main"
 
-  name                     = "cupcake-backend"
-  team                     = "cupcake"
-  cluster_id               = module.platform.ecs_cluster_id
-  image                    = module.ecr.repository_url
-  cpu                      = 512
-  memory                   = 1024
-  port                     = 8080
-  desired_count            = 1
-  execution_role_arn       = module.platform.execution_role_arn
-  task_role_arn            = module.task_role.role_arn
-  subnet_ids               = module.platform.private_subnet_ids
-  security_group_ids       = [module.platform.ecs_tasks_security_group_id]
-  region                   = "eu-central-1"
-  container_user           = "1000"
-  readonly_root_filesystem = true
-  target_group_arn         = module.routing.target_group_arn
+  name                              = "cupcake-backend"
+  team                              = "cupcake"
+  cluster_id                        = module.platform.ecs_cluster_id
+  image                             = module.ecr.repository_url
+  cpu                               = 512
+  memory                            = 1024
+  port                              = 8080
+  desired_count                     = 1
+  execution_role_arn                = module.platform.execution_role_arn
+  task_role_arn                     = module.task_role.role_arn
+  subnet_ids                        = module.platform.private_subnet_ids
+  security_group_ids                = [module.network.security_group_id]
+  service_registry_arns             = [module.network.registry_arn]
+  region                            = "eu-central-1"
+  container_user                    = "1000"
+  readonly_root_filesystem          = true
+  target_group_arn                  = module.routing.target_group_arn
+  health_check_grace_period_seconds = 120
   environment = {
     SP_BASE_URL            = "https://sleepingpill.javazone.no"
     COGNITO_USER_POOL_ID   = module.auth.user_pool_id
